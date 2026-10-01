@@ -1,0 +1,51 @@
+# Gamaj Panel — ignored files
+
+# Environment / secrets
+.env
+.gh-token
+*.key
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor_new/
+
+# Xray cores fetched at runtime
+v2ray-core
+xray-core
+
+# don't track custom/dev.json/yaml/yml configs, such as xray-custom.json or clash-dev.yaml
+*-custom.json
+*-custom.yaml
+*-custom.yml
+*-dev.json
+*-dev.yaml
+*-debug.*
+
+# Node / dashboard
+node_modules/
+dashboard/dist/
+dashboard/public/tutorial-content/
+tutorials/.hugo_build.lock
+
+# Dashboard build output (generated, embedded from local build only)
+internal/gateway/static/dashboard/build/*
+!internal/gateway/static/dashboard/build/.gitkeep
+
+# Logs, caches and temp files
+*.log
+.DS_Store
+.tmp*
+tmp/
+artifacts/
+.ruff_cache/
+
+# Database files
+*.sqlite3
+*.db
+data/redis_backup/
