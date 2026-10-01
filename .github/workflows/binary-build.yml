@@ -128,7 +128,7 @@ jobs:
         run: bash -n scripts/gamaj/gamaj.sh scripts/gamaj/gamaj-node.sh
 
       - name: Download dashboard
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dashboard-build
           path: dashboard/build
@@ -170,7 +170,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download dashboard
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dashboard-build
           path: dashboard/build
@@ -243,7 +243,7 @@ jobs:
           echo "release_tag=${RELEASE_TAG}" >> "${GITHUB_OUTPUT}"
 
       - name: Download package artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: gamaj-*
           path: release-assets
@@ -287,7 +287,7 @@ jobs:
           ref: ${{ github.sha }}
 
       - name: Download package artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: gamaj-*
           path: dev-release-assets
