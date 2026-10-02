@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f5">
+<title>Gamaj Subscription</title>
+<link rel="icon" type="image/png" href="/statics/brand/gamaj-logo-32.png">
+<link rel="stylesheet" href="https://v1.fontapi.ir/css/Vazirmatn">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#f5f5f5;--surface:rgba(255,255,255,.92);--surface-solid:#fff;--surface-soft:#ececec;--border:rgba(0,0,0,.12);--text:#111111;--text2:#4a4a4a;--muted:#8a8a8a;--primary:#111111;--primary-strong:#000000;--primary-soft:#c9c9c9;--primary-ultra:#efefef;--navy:#333333;--success:#1f7a44;--danger:#c22f2f;--shadow:0 18px 50px rgba(0,0,0,.10);--shadow-soft:0 8px 25px rgba(0,0,0,.06);--radius:16px;--nav-h:68px}
+html[data-theme=dark]{--bg:#0a0a0c;--surface:rgba(20,20,24,.9);--surface-solid:#15151a;--surface-soft:#1c1c22;--border:rgba(255,255,255,.10);--text:#f5f5f5;--text2:#b8b8b8;--muted:#7a7a7a;--primary:#f5f5f5;--primary-strong:#ffffff;--primary-soft:#3a3a3a;--primary-ultra:#222222;--navy:#d9d9d9;--success:#4a9c70;--danger:#e27c82;--shadow:0 18px 50px rgba(0,0,0,.4);--shadow-soft:0 8px 25px rgba(0,0,0,.3)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:320px;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,Arial,sans-serif;line-height:1.65;transition:background .35s ease,color .35s ease}
+html[data-theme=light] body{background:radial-gradient(circle at 8% 5%,rgba(0,0,0,.04),transparent 30%),radial-gradient(circle at 95% 12%,rgba(0,0,0,.03),transparent 27%),var(--bg)}
+html[data-theme=dark] body{background:radial-gradient(circle at 8% 5%,rgba(255,255,255,.05),transparent 30%),radial-gradient(circle at 95% 12%,rgba(255,255,255,.04),transparent 27%),var(--bg)}
+a{color:inherit;text-decoration:none}
+button,select,input{font:inherit}
+button{border:0;cursor:pointer;background:none;color:inherit}
+.container{width:calc(100% - 28px);max-width:1080px;margin:0 auto}
+.top-controls{position:fixed;z-index:100;top:14px;left:14px;display:flex;gap:8px}
+.icon-btn{width:43px;height:43px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:50%;background:var(--surface);color:var(--text);box-shadow:var(--shadow-soft);transition:transform .2s,background .2s}
+.icon-btn:hover{transform:translateY(-2px);background:var(--surface-solid)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.page{display:none;animation:fade .35s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.page-head{padding:76px 0 20px;text-align:center}
+.page-head h1{margin:0;font-size:22px;font-weight:800}
+.page-head p{margin:5px 0 0;color:var(--text2);font-size:12px}
+.notice{margin:80px auto 20px;max-width:1080px;padding:14px 18px;border:1px solid var(--primary-soft);border-radius:14px;background:var(--surface);box-shadow:var(--shadow-soft);display:flex;align-items:center;gap:12px}
+.notice-icon{flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--primary-ultra)}
+.notice-icon svg{width:20px;height:20px;stroke:var(--primary-strong);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.notice-text{flex:1;font-size:12px;color:var(--text2);line-height:1.6}
+.notice-text strong{color:var(--text);font-weight:800}
+.hero{padding:20px 0}
+.hero-card{position:relative;overflow:hidden;padding:24px;border:1px solid var(--border);border-radius:20px;background:var(--surface);box-shadow:var(--shadow)}
+.hero-card:before{content:"";position:absolute;width:180px;height:180px;top:-95px;left:-55px;border-radius:50%;background:var(--primary);opacity:.12}
+.hero-content{position:relative;display:flex;align-items:center;gap:16px}
+.avatar{flex:0 0 62px;width:62px;height:62px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--primary),var(--navy));color:var(--bg);font-size:26px;font-weight:800}
+.hero-title{margin:0;font-size:clamp(19px,5vw,25px);line-height:1.25}
+.hero-subtitle{margin:5px 0 0;color:var(--text2);font-size:12px}
+.online-pill{margin-inline-start:auto;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:20px;background:var(--primary-ultra);color:var(--primary-strong);font-size:11px;font-weight:700;white-space:nowrap}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--success)}
+.section{margin:16px 0}
+.section-title{margin:0 0 12px;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.section-title svg{width:18px;height:18px;stroke:var(--primary-strong);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.info-card{min-width:0;padding:15px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);transition:transform .2s,border-color .2s}
+.info-card:hover{transform:translateY(-2px);border-color:var(--primary-soft)}
+.info-label{display:flex;align-items:center;gap:5px;margin-bottom:5px;color:var(--text2);font-size:11px}
+.info-label svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.info-value{display:block;overflow:hidden;color:var(--text);font-size:14px;font-weight:700;text-overflow:ellipsis;white-space:nowrap}
+.status-active{color:var(--success)}
+.traffic-card{padding:17px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft)}
+.traffic-header{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:center;margin-bottom:12px}
+.traffic-block{display:flex;flex-direction:column;gap:2px}
+.traffic-block .label{color:var(--text2);font-size:11px}
+.traffic-block .value{color:var(--text);font-weight:800;font-size:13px;direction:ltr;text-align:left}
+.traffic-percent{font-size:13px;font-weight:800;color:var(--primary-strong);padding:4px 12px;border-radius:20px;background:var(--primary-ultra);white-space:nowrap}
+.traffic-bar-wrap{position:relative;height:14px;overflow:hidden;border-radius:10px;background:var(--surface-soft);box-shadow:inset 0 2px 4px rgba(0,0,0,.05)}
+.progress-bar{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--primary),var(--navy));transition:width 1s ease;position:relative;overflow:hidden}
+.progress-bar:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:shine 2s infinite}
+.unlimited-box{text-align:center;padding:12px 0;color:var(--primary-strong);font-size:15px;font-weight:800}
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.stat-card{padding:14px 8px;text-align:center;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft)}
+.stat-icon{display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.stat-icon svg{width:22px;height:22px;stroke:var(--primary-strong);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stat-value{display:block;font-size:13px;font-weight:800;direction:ltr}
+.stat-label{display:block;margin-top:2px;color:var(--muted);font-size:10px}
+.subscription-card{padding:18px;border:1px solid var(--primary-soft);border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.subscription-url{margin:13px 0;padding:13px;border:1px solid var(--border);border-radius:12px;background:var(--surface-solid);direction:ltr;text-align:left;overflow-wrap:anywhere;word-break:break-word;color:var(--text2);font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.6;cursor:pointer;user-select:all}
+.button-row{display:flex;flex-wrap:wrap;gap:7px}
+.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 13px;border-radius:11px;background:var(--surface-solid);border:1px solid var(--border);color:var(--text);font-size:11px;font-weight:700;transition:transform .18s,box-shadow .18s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:var(--bg)}
+.btn-success{background:var(--primary);border-color:var(--primary);color:var(--bg)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:var(--bg)}
+.btn-secondary{background:var(--primary-ultra);border-color:transparent;color:var(--primary-strong)}
+.config-list{display:grid;gap:12px}
+.config-card{padding:15px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft)}
+.config-heading{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.config-number{flex:0 0 38px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:linear-gradient(135deg,var(--primary),var(--navy));color:var(--bg);font-size:13px;font-weight:800}
+.config-name{flex:1;min-width:0}
+.config-name strong{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.protocol-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:8px;background:var(--primary-ultra);color:var(--primary-strong);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.config-url{min-height:58px;margin-bottom:10px;padding:11px;overflow-wrap:anywhere;word-break:break-all;border:1px solid var(--border);border-radius:11px;background:var(--surface-soft);direction:ltr;text-align:left;color:var(--text2);font-family:ui-monospace,Menlo,monospace;font-size:10px;line-height:1.55}
+.config-protocol-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.config-buttons{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
+.config-buttons .btn{width:auto;min-height:34px;padding:6px 12px;font-size:10px}
+.config-buttons .btn svg{width:13px;height:13px}
+.qr-wrapper{display:none;justify-content:center;align-items:center;margin-top:12px;padding:17px;border:1px dashed var(--border);border-radius:13px;background:var(--surface-solid)}
+.qr-wrapper.active{display:flex}
+.qr-box{padding:8px;border-radius:10px;background:#fff}
+.downloads-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.download-card{padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);text-align:center;transition:transform .2s,border-color .2s;display:block}
+.download-card:hover{transform:translateY(-3px);border-color:var(--primary-soft)}
+.download-icon{display:flex;align-items:center;justify-content:center;width:52px;height:52px;margin:0 auto 10px;border-radius:14px;background:var(--primary-ultra)}
+.download-icon svg{width:26px;height:26px;stroke:var(--primary-strong);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.download-name{display:block;font-size:13px;font-weight:800;margin-bottom:3px;color:var(--text)}
+.download-desc{display:block;color:var(--text2);font-size:10px;margin-bottom:10px}
+.download-badges{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.badge{padding:3px 8px;border-radius:8px;background:var(--primary-ultra);color:var(--primary-strong);font-size:9px;font-weight:700}
+.contact-card{padding:24px;border:1px solid var(--border);border-radius:18px;background:var(--surface);box-shadow:var(--shadow);text-align:center}
+.contact-icon{display:flex;align-items:center;justify-content:center;width:64px;height:64px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(135deg,var(--primary),var(--navy))}
+.contact-icon svg{width:32px;height:32px;stroke:var(--bg);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.contact-title{font-size:16px;font-weight:800;margin-bottom:6px}
+.contact-desc{font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.7}
+.contact-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 18px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--navy));color:var(--bg);font-size:13px;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.18);transition:transform .18s}
+.contact-btn:hover{transform:translateY(-2px)}
+.contact-btn svg{width:18px;height:18px;stroke:var(--bg);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.guides{display:grid;gap:8px;margin-top:14px}
+.guide{overflow:hidden;border:1px solid var(--border);border-radius:13px;background:var(--surface)}
+.guide summary{padding:14px;cursor:pointer;list-style:none;font-size:12px;font-weight:800;display:flex;align-items:center;gap:8px}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary svg{width:16px;height:16px;stroke:var(--primary-strong);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.guide-content{padding:0 14px 14px;color:var(--text2);font-size:11px}
+.guide-content ol{margin:0;padding-inline-start:22px}
+.guide-content li{margin-bottom:6px}
+.creator-box{margin:24px 0 20px;padding:14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);text-align:center;display:block;transition:transform .2s}
+.creator-box:hover{transform:translateY(-3px)}
+.creator-box .creator-name{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px;display:flex;align-items:center;justify-content:center;gap:8px}
+.creator-box svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -8px 25px rgba(27,58,92,.07);display:flex;align-items:center;justify-content:space-around}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10px;font-weight:700;padding:8px 2px;transition:color .2s;cursor:pointer;position:relative}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active{color:var(--primary-strong)}
+.nav-item.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:36px;height:3px;border-radius:0 0 3px 3px;background:var(--primary-strong)}
+.toast-container{position:fixed;z-index:9999;right:14px;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom,0px));left:14px;display:flex;align-items:center;flex-direction:column;gap:8px;pointer-events:none}
+.toast{max-width:430px;padding:11px 15px;border:1px solid var(--border);border-radius:12px;background:var(--surface-solid);color:var(--text);box-shadow:var(--shadow);font-size:11px;opacity:0;transform:translateY(15px);animation:tin .25s forwards}
+.toast.success{border-color:rgba(85,173,120,.25)}
+@keyframes tin{to{opacity:1;transform:translateY(0)}}
+.toast.out{animation:tout .25s forwards}
+@keyframes tout{to{opacity:0;transform:translateY(15px)}}
+@media (min-width:600px){.container{width:calc(100% - 42px)}}
+@media (min-width:800px){.config-list{grid-template-columns:repeat(2,minmax(0,1fr))}.downloads-grid{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:900px){.bottom-nav{max-width:640px;left:50%;right:auto;transform:translateX(-50%);border-radius:22px 22px 0 0;border:1px solid var(--border);border-bottom:0}}
+@media (max-width:390px){.container{width:calc(100% - 20px)}.online-pill{display:none}.stats-grid{gap:7px}.nav-item{font-size:9px}.nav-item svg{width:20px;height:20px}}
+</style>
+</head>
+<body>
+<div class="top-controls">
+<button class="icon-btn" id="themeToggle" aria-label="theme">
+<svg viewBox="0 0 24 24" id="themeIcon"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+</button>
+</div>
+
+<div class="notice">
+<div class="notice-icon"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></div>
+<div class="notice-text"><strong>راهنما:</strong> لینک اشتراک را کپی کرده و در برنامه کلاینت خود وارد کنید.</div>
+</div>
+
+<main class="container">
+<div class="page active" id="page-info">
+<div class="hero">
+<div class="hero-card">
+<div class="hero-content">
+<div class="avatar" id="avatar" style="background:linear-gradient(145deg,#111,#333)"><img src="/statics/brand/gamaj-logo.png" alt="Gamaj" style="width:46px;height:46px;border-radius:12px"></div>
+<div>
+<h1 class="hero-title">اشتراک شما</h1>
+<p class="hero-subtitle">مدیریت و دریافت تنظیمات اتصال</p>
+</div>
+<div class="online-pill"><span class="online-dot"></span><span>آنلاین</span></div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="info-grid">
+<div class="info-card"><span class="info-label"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span>نام کاربری</span></span><span class="info-value" id="usernameValue">{{ user.username }}</span></div>
+<div class="info-card"><span class="info-label"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>وضعیت</span></span><span class="info-value" id="statusValue">{{ user.status }}</span></div>
+<div class="info-card"><span class="info-label"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span>حجم کل</span></span><span class="info-value" id="totalValue" data-raw="{{ user.data_limit }}">—</span></div>
+<div class="info-card"><span class="info-label"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>تاریخ انقضا</span></span><span class="info-value" id="expireValue" data-raw="{{ user.expire }}">—</span></div>
+</div>
+<div class="stats-grid">
+<div class="stat-card"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9-4-18-3 9H2"/></svg></span><span class="stat-value" id="connectionState">آنلاین</span><span class="stat-label">وضعیت اتصال</span></div>
+<div class="stat-card"><span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><span class="stat-value" id="daysRemaining">—</span><span class="stat-label">روز باقی‌مانده</span></div>
+<div class="stat-card"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span><span class="stat-value" id="lastUpdate">—</span><span class="stat-label">آخرین بروزرسانی</span></div>
+</div>
+</div>
+<div class="section">
+<h2 class="section-title"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span>مصرف ترافیک</span></h2>
+<div class="traffic-card">
+<div class="traffic-header">
+<div class="traffic-block">
+<span class="label">حجم کل</span>
+<span class="value" id="trafficTotalValue" data-raw="{{ user.data_limit }}">—</span>
+</div>
+<div class="traffic-block">
+<span class="label">مصرف شده</span>
+<span class="value" id="trafficUsedValue" data-raw="{{ user.used_traffic }}">—</span>
+</div>
+<span class="traffic-percent" id="trafficPercent">0%</span>
+</div>
+<div class="traffic-bar-wrap">
+<div class="progress-bar" id="trafficBar" style="width:0%"></div>
+</div>
+<div class="unlimited-box" id="unlimitedBox" style="display:none">∞ ترافیک نامحدود</div>
+</div>
+</div>
+</div>
+
+<div class="page" id="page-configs">
+<div class="page-head"><h1>تنظیمات اتصال</h1><p>تنظیمات موجود برای اتصال شما</p></div>
+<div class="section">
+<div class="subscription-card">
+<div class="section-title" style="margin-bottom:8px"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg><span>لینک اصلی اشتراک</span></div>
+<div class="subscription-url" id="subscriptionUrl" title="برای کپی کلیک کنید"></div>
+<div class="button-row">
+<button class="btn btn-primary" id="copySubscription"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>کپی لینک اشتراک</span></button>
+<button class="btn btn-navy" id="qrSubscription"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM21 14v3M14 21h3"/></svg><span>QR</span></button>
+<button class="btn btn-secondary" id="copyAll"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>کپی همه</span></button>
+</div>
+<div class="qr-wrapper" id="subscriptionQrWrapper"><div class="qr-box" id="subscriptionQr"></div></div>
+</div>
+</div>
+<div class="section">
+<div class="config-list" id="configList">
+{% if user.links %}
+{% for link in user.links %}
+<article class="config-card" data-link="{{ link }}">
+<div class="config-heading">
+<div class="config-number">{{ loop.index }}</div>
+<div class="config-name">
+<strong data-config-name>Config #{{ loop.index }}</strong>
+</div>
+</div>
+<div class="config-url config-link">{{ link }}</div>
+<div class="config-protocol-row"><span class="protocol-badge" data-protocol>—</span></div>
+<div class="config-buttons">
+<button class="btn btn-secondary action-copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>کپی</span></button>
+<button class="btn btn-success action-download" style="display:none"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg><span>دانلود فایل</span></button>
+<button class="btn action-qr"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg><span>QR</span></button>
+</div>
+<div class="qr-wrapper config-qr-wrapper"><div class="qr-box config-qr"></div></div>
+</article>
+{% endfor %}
+{% else %}
+<div class="empty-state" style="padding:30px 15px;text-align:center;border:1px dashed var(--border);border-radius:var(--radius);color:var(--muted);background:var(--surface)"><strong>هیچ کانفیگی موجود نیست</strong></div>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="page" id="page-download">
+<div class="page-head"><h1>دانلود برنامه‌ها</h1><p>برنامه‌های پیشنهادی بر اساس دستگاه شما</p></div>
+<div class="section">
+<div id="recommendedSection" style="margin-bottom:14px"></div>
+<div id="protocolApps" class="downloads-grid"></div>
+</div>
+<div class="section">
+<h2 class="section-title"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>راهنمای اتصال</span></h2>
+<div class="guides">
+<details class="guide"><summary><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/></svg><span>Android</span></summary><div class="guide-content"><ol><li>برنامه v2rayNG یا V2Box را نصب کنید.</li><li>لینک اشتراک را کپی کنید.</li><li>Add Subscription را انتخاب کنید.</li><li>لینک را وارد و Update بزنید.</li><li>یک سرور را انتخاب و متصل شوید.</li></ol></div></details>
+<details class="guide"><summary><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/></svg><span>iPhone / iPad</span></summary><div class="guide-content"><ol><li>V2Box یا Hiddify را از App Store نصب کنید.</li><li>لینک اشتراک را کپی کنید.</li><li>Profiles را باز کنید.</li><li>لینک را اضافه و Update کنید.</li><li>پروفایل را فعال کنید.</li></ol></div></details>
+<details class="guide"><summary><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/></svg><span>Windows</span></summary><div class="guide-content"><ol><li>Hiddify را از GitHub دانلود کنید.</li><li>لینک اشتراک را کپی کنید.</li><li>Add Profile را بزنید.</li><li>لینک را وارد و Update کنید.</li><li>یک کانفیگ را انتخاب و Connect بزنید.</li></ol></div></details>
+<details class="guide"><summary><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/></svg><span>macOS</span></summary><div class="guide-content"><ol><li>Hiddify را نصب کنید.</li><li>Subscription URL را کپی کنید.</li><li>در Profiles اضافه کنید.</li><li>Update را بزنید.</li><li>کانفیگ را انتخاب و متصل شوید.</li></ol></div></details>
+</div>
+</div>
+</div>
+
+<div class="page" id="page-contact">
+<div class="page-head"><h1>ارتباط با پشتیبانی</h1><p>در صورت بروز مشکل با ما در تماس باشید</p></div>
+<div class="section">
+<div class="contact-card">
+<div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+<div class="contact-title">پشتیبانی سرویس</div>
+<div class="contact-desc">برای دریافت پشتیبانی، رفع مشکل اتصال یا سوالات، روی دکمه زیر کلیک کنید</div>
+<a class="contact-btn" id="supportBtn" href="{{ support_url }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span>ارتباط با پشتیبانی</span></a>
+</div>
+</div>
+</div>
+</main>
+
+<nav class="bottom-nav">
+<button class="nav-item active" data-page="page-info"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>اطلاعات</span></button>
+<button class="nav-item" data-page="page-configs"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>کانفیگ‌ها</span></button>
+<button class="nav-item" data-page="page-download"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg><span>دانلود</span></button>
+<button class="nav-item" data-page="page-contact"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>ارتباط</span></button>
+</nav>
+
+<footer class="creator-box" style="cursor:default"><div style="font-size:10px;color:var(--muted);margin-bottom:2px">Coded for Gamaj</div><div class="creator-name"><span>Coded for Gamaj by AsliCode.</span></div></footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function(){
+"use strict";
+var CFG={themeKey:"gamaj_theme"};
+var PROTO={vless:"VLESS",vmess:"VMess",trojan:"Trojan",ss:"Shadowsocks",ssr:"SSR",hysteria:"Hysteria",hysteria2:"Hysteria2",hy2:"Hysteria2",tuic:"TUIC",wireguard:"WireGuard",socks:"SOCKS",v2ray:"V2Ray",openvpn:"OpenVPN",http:"HTTP"};
+var PROTO_APPS={
+vless:[{name:"V2Box",desc:"iOS",url:"https://apps.apple.com/app/v2box/id6446814690",badge:"iOS"},{name:"v2rayNG",desc:"Android",url:"https://github.com/2dust/v2rayNG/releases/latest",badge:"Android"},{name:"Hiddify",desc:"Windows / macOS",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"Desktop"}],
+vmess:[{name:"V2Box",desc:"iOS",url:"https://apps.apple.com/app/v2box/id6446814690",badge:"iOS"},{name:"v2rayNG",desc:"Android",url:"https://github.com/2dust/v2rayNG/releases/latest",badge:"Android"},{name:"Hiddify",desc:"Windows / macOS",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"Desktop"}],
+trojan:[{name:"V2Box",desc:"iOS",url:"https://apps.apple.com/app/v2box/id6446814690",badge:"iOS"},{name:"Hiddify",desc:"Windows / macOS",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"Desktop"}],
+ss:[{name:"V2Box",desc:"iOS",url:"https://apps.apple.com/app/v2box/id6446814690",badge:"iOS"},{name:"Hiddify",desc:"Windows / macOS",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"Desktop"}],
+wireguard:[{name:"AmazingWG",desc:"Android",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"Android"},{name:"WG Tunnel",desc:"Android",url:"https://github.com/wgtunnel/android",badge:"Android"},{name:"WG Tunnel",desc:"Windows / macOS",url:"https://github.com/wgtunnel/desktop",badge:"Desktop"}],
+openvpn:[{name:"OpenVPN Connect",desc:"همه",url:"https://openvpn.net/client/",badge:"All"}],
+hysteria:[{name:"Hiddify",desc:"همه",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"All"}],
+hysteria2:[{name:"Hiddify",desc:"همه",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"All"}],
+tuic:[{name:"Hiddify",desc:"همه",url:"https://github.com/hiddify/hiddify-app/releases/latest",badge:"All"}]
+};
+function byId(i){return document.getElementById(i)}
+function txt(s){var e=document.querySelector(s);return e?e.textContent.trim():""}
+function raw(s){var e=document.querySelector(s);return e?e.getAttribute("data-raw")||"":""}
+function toast(m){var c=byId("toastContainer"),e=document.createElement("div");e.className="toast success";e.textContent=m;c.appendChild(e);setTimeout(function(){e.className+=" out";setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},260)},2300)}
+function getK(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function setK(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function applyTheme(t){if(t!=="dark")t="light";document.documentElement.setAttribute("data-theme",t);setK(CFG.themeKey,t);var i=byId("themeIcon");if(i){i.innerHTML=t==="dark"?'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>'}refreshQR()}
+function toggleTheme(){var c=document.documentElement.getAttribute("data-theme");applyTheme(c==="dark"?"light":"dark")}
+function copyT(t,m){if(!t)return;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast(m)}).catch(function(){fbCopy(t,m)})}else fbCopy(t,m)}
+function fbCopy(t,m){var e=document.createElement("textarea");e.value=t;e.style.position="fixed";e.style.left="-9999px";document.body.appendChild(e);e.focus();e.select();try{document.execCommand("copy");toast(m)}catch(x){toast("خطا در کپی")}document.body.removeChild(e)}
+function qrColor(){var t=document.documentElement.getAttribute("data-theme");return t==="dark"?"#f5f5f5":"#111111"}
+function makeQR(c,t){if(!c||!t||typeof QRCode==="undefined")return;c.innerHTML="";new QRCode(c,{text:t,width:190,height:190,colorDark:qrColor(),colorLight:"#fff",correctLevel:QRCode.CorrectLevel.M})}
+function refreshQR(){var w=document.querySelectorAll(".qr-wrapper.active"),i;for(i=0;i<w.length;i++){var q=w[i].querySelector(".config-qr");if(q){var c=w[i].closest(".config-card");if(c){var l=c.querySelector(".config-link");if(l)makeQR(q,l.textContent.trim())}}}}
+function proto(u){if(!u)return null;var s=u.toLowerCase();if(s.indexOf("vless://")===0)return"vless";if(s.indexOf("vmess://")===0)return"vmess";if(s.indexOf("trojan://")===0)return"trojan";if(s.indexOf("ss://")===0)return"ss";if(s.indexOf("ssr://")===0)return"ssr";if(s.indexOf("hysteria2://")===0||s.indexOf("hy2://")===0)return"hysteria2";if(s.indexOf("hysteria://")===0)return"hysteria";if(s.indexOf("tuic://")===0)return"tuic";if(s.indexOf("wireguard://")===0||s.indexOf("wg://")===0)return"wireguard";if(s.indexOf("openvpn://")===0)return"openvpn";if(s.indexOf("socks://")===0)return"socks";if(s.indexOf("http://")===0)return"http";return"v2ray"}
+function detectOS(){var ua=navigator.userAgent||navigator.vendor||"",p=navigator.platform||"";if(/android/i.test(ua))return"android";if(/iPad|iPhone|iPod/i.test(ua))return"ios";if(/Windows/i.test(ua)||/Win/i.test(p))return"windows";if(/Mac/i.test(ua)||/Macintosh/i.test(p))return"macos";if(/Linux/i.test(p)||/Linux/i.test(ua))return"linux";return"unknown"}
+function hasFile(link){return /\.(conf|ovpn|txt|json|yaml|yml)(\?|#|$)/i.test(link)}
+function getFileName(link,index){try{var m=link.match(/\/([^\/]+?\.(conf|ovpn|txt|json|yaml|yml))(\?|#|$)/i);if(m&&m[1])return decodeURIComponent(m[1])}catch(e){}try{var i=link.indexOf("#");if(i>-1){var h=decodeURIComponent(link.substring(i+1));if(h&&h.length<60)return h}}catch(e){}var p=proto(link),n=(p&&PROTO[p])?PROTO[p]:"V2Ray";return n+" #"+index}
+function setupProto(){var c=document.querySelectorAll(".config-card"),i;for(i=0;i<c.length;i++){var l=c[i].getAttribute("data-link")||"",b=c[i].querySelector("[data-protocol]"),n=c[i].querySelector("[data-config-name]");if(b){var p=proto(l),pr=PROTO[p]||PROTO.v2ray;b.textContent=pr}if(n){var isFile=hasFile(l);if(isFile){n.textContent=getFileName(l,i+1)}else{var pn=(PROTO[proto(l)]||"Config")+" #"+(i+1);n.textContent=pn}}}}
+function setupConfigs(){var c=document.querySelectorAll(".config-card"),i;for(i=0;i<c.length;i++)setupCard(c[i],i+1)}
+function setupCard(card,n){
+var cb=card.querySelector(".action-copy"),qb=card.querySelector(".action-qr"),db=card.querySelector(".action-download"),qw=card.querySelector(".config-qr-wrapper"),qc=card.querySelector(".config-qr"),ue=card.querySelector(".config-link");
+if(!ue)return;
+var u=ue.textContent.trim();
+if(cb)cb.onclick=function(){copyT(u,"لینک کپی شد")};
+if(qb)qb.onclick=function(){if(qw.className.indexOf("active")!==-1)qw.className=qw.className.replace(" active","");else{qw.className+=" active";makeQR(qc,u);toast("QR آماده شد")}};
+if(db){
+if(hasFile(u)){db.style.display="inline-flex";db.onclick=function(){window.location.href=u}}
+else{db.style.display="none"}
+}
+}
+function buildSubUrl(){try{var u=window.location.href;u=u.split("#")[0];return u}catch(e){return""}}
+function setupSub(){var su=buildSubUrl(),el=byId("subscriptionUrl");if(el){el.textContent=su;el.onclick=function(){copyT(su,"لینک اشتراک کپی شد")}}var a=byId("copySubscription");if(a)a.onclick=function(){copyT(su,"لینک اشتراک کپی شد")};var b=byId("qrSubscription");if(b)b.onclick=function(){var w=byId("subscriptionQrWrapper");if(w.className.indexOf("active")!==-1)w.className=w.className.replace(" active","");else{w.className+=" active";makeQR(byId("subscriptionQr"),su);toast("QR آماده شد")}};var c=byId("copyAll");if(c)c.onclick=function(){var ls=document.querySelectorAll(".config-link"),all=[],i;for(i=0;i<ls.length;i++){if(ls[i].textContent.trim())all.push(ls[i].textContent.trim())}if(!all.length)all.push(su);copyT(all.join("\n"),"همه لینک‌ها کپی شدند")}}
+function norm(v){var s=String(v||""),p="۰۱۲۳۴۵۶۷۸۹",a="٠١٢٣٤٥٦٧٨٩",i;for(i=0;i<10;i++){s=s.split(p.charAt(i)).join(String(i));s=s.split(a.charAt(i)).join(String(i))}return s}
+function fmtBytes(b){if(!b||b<=0)return"0 B";var u=["B","KB","MB","GB","TB","PB"],i=0,n=b;while(n>=1024&&i<u.length-1){n/=1024;i++}return n.toFixed(2)+" "+u[i]}
+function pTraffic(v){var s=norm(v).toLowerCase().replace(/,/g,"").replace(/،/g,"").trim();if(!s||s==="∞"||s==="unlimited"||s==="نامحدود")return null;var m=s.match(/([0-9]+(?:\.[0-9]+)?)\s*(kb|kib|mb|mib|gb|gib|tb|tib|b)?/i);if(!m)return null;var n=parseFloat(m[1]),u=(m[2]||"b").toLowerCase(),k=1;if(u==="kb"||u==="kib")k=1024;else if(u==="mb"||u==="mib")k=1048576;else if(u==="gb"||u==="gib")k=1073741824;else if(u==="tb"||u==="tib")k=1099511627776;return n*k}
+function getDate(v){var s=norm(v||"").trim();if(!s)return null;if(/^\d{9,13}$/.test(s)){var n=parseInt(s,10);if(s.length>10)n=n;else n=n*1000;var d=new Date(n);if(!isNaN(d.getTime())&&d.getFullYear()>2000)return d}var d=new Date(s);if(!isNaN(d.getTime()))return d;var m=s.match(/(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);if(m){d=new Date(parseInt(m[1],10),parseInt(m[2],10)-1,parseInt(m[3],10));if(!isNaN(d.getTime()))return d}return null}
+function setupInfo(){
+var el;
+el=byId("totalValue");
+if(el){var l=raw("#totalValue");if(l&&l!=="∞"&&l!=="unlimited"&&l!=="نامحدود"&&l.toLowerCase().indexOf("unlimited")===-1){var lv=pTraffic(l);el.textContent=lv?fmtBytes(lv):l}else{el.textContent="نامحدود"}}
+el=byId("expireValue");
+if(el){var d=getDate(raw("#expireValue"));if(d){var j=Math.ceil((d-new Date())/86400000);if(j>0){el.textContent=d.toLocaleDateString("fa-IR")}else if(j===0){el.textContent="امروز"}else{el.textContent="منقضی شده"}}else{el.textContent=raw("#expireValue")||"—"}}
+el=byId("daysRemaining");
+if(el){var d2=getDate(raw("#expireValue"));if(d2){var j2=Math.ceil((d2-new Date())/86400000);if(j2>0)el.textContent=j2+" روز";else if(j2===0)el.textContent="امروز";else el.textContent="منقضی شده"}else{el.textContent="—"}}
+}
+function setupTraffic(){
+var u=raw("#trafficUsedValue"),l=raw("#trafficTotalValue"),uv=pTraffic(u),lv=pTraffic(l);
+var pct=byId("trafficPercent"),bar=byId("trafficBar"),unl=byId("unlimitedBox");
+var eu=byId("trafficUsedValue"),et=byId("trafficTotalValue");
+if(eu)eu.textContent=uv?fmtBytes(uv):(u||"—");
+if(et)et.textContent=(lv===null||!lv)?"نامحدود":fmtBytes(lv);
+if(lv===null||lv<=0){
+if(bar)bar.style.width="0%";
+if(pct)pct.textContent="∞";
+if(unl)unl.style.display="block";
+return;
+}
+var p=uv?(uv/lv)*100:0;
+if(p<0)p=0;if(p>100)p=100;
+if(bar)bar.style.width=p.toFixed(1)+"%";
+if(pct)pct.textContent=p.toFixed(1)+"%"+(p>=90?" ⚠️":"");
+if(unl)unl.style.display="none";
+}
+function setupStatus(){var s=txt("#statusValue").toLowerCase(),a=s==="active"||s==="on_hold"||s==="فعال"||s==="enabled"||s==="online";if(a){byId("statusValue").className+=" status-active";byId("connectionState").textContent="آنلاین"}else{byId("statusValue").className+=" status-inactive";byId("connectionState").textContent="آفلاین"}}
+function setupAvatar(){var el=byId("avatar");if(el&&el.querySelector("img"))return;var u=txt("#usernameValue"),l="B";if(u)l=u.charAt(0).toUpperCase();el.textContent=l}
+function setupUpdate(){var n=new Date(),h=String(n.getHours()),m=String(n.getMinutes());if(h.length<2)h="0"+h;if(m.length<2)m="0"+m;byId("lastUpdate").textContent=h+":"+m}
+function setupNav(){var items=document.querySelectorAll(".nav-item"),i;for(i=0;i<items.length;i++){items[i].onclick=function(){var p=this.getAttribute("data-page"),all=document.querySelectorAll(".page"),j;for(j=0;j<all.length;j++)all[j].className="page";var t=byId(p);if(t)t.className="page active";var n=document.querySelectorAll(".nav-item"),k;for(k=0;k<n.length;k++)n[k].className="nav-item";this.className="nav-item active";window.scrollTo({top:0,behavior:"smooth"})}}}
+function renderApps(){var cards=document.querySelectorAll(".config-card"),protos={},i;for(i=0;i<cards.length;i++){var l=cards[i].getAttribute("data-link")||"",p=proto(l);if(p)protos[p]=1}var box=byId("protocolApps"),recBox=byId("recommendedSection");if(!box||!recBox)return;var html="",seen={},os=detectOS();for(var pk in protos){var apps=PROTO_APPS[pk]||[];for(var j=0;j<apps.length;j++){var app=apps[j],key=app.name+j;if(seen[key])continue;seen[key]=1;var isRec=false;if(os==="android"&&app.badge==="Android")isRec=true;if(os==="ios"&&app.badge==="iOS")isRec=true;if((os==="windows"||os==="macos"||os==="linux")&&(app.badge==="Desktop"||app.badge==="All"))isRec=true;if(os==="unknown"&&app.badge==="All")isRec=true;if(!isRec)continue;html+='<a class="download-card" href="'+app.url+'" target="_blank" rel="noopener"><div class="download-icon"><svg viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6z"/></svg></div><span class="download-name">'+app.name+'</span><span class="download-desc">'+app.desc+'</span><span class="download-badges"><span class="badge">'+app.badge+'</span></span></a>'}}box.innerHTML=html;recBox.innerHTML="";var osNames={android:"Android",ios:"iOS",windows:"Windows",macos:"macOS",linux:"Linux",unknown:"نامشخص"};if(os!=="unknown"){recBox.innerHTML='<div class="notice" style="margin:0;max-width:none"><div class="notice-icon"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div><div class="notice-text"><strong>دستگاه شما: '+osNames[os]+'</strong><br>برنامه‌های مناسب دستگاه شما نمایش داده شده‌اند.</div></div>'}}
+byId("themeToggle").onclick=toggleTheme;
+function init(){var t=getK(CFG.themeKey)||"light";applyTheme(t);setupAvatar();setupStatus();setupInfo();setupTraffic();setupUpdate();setupSub();setupConfigs();setupProto();setupNav();renderApps();setInterval(function(){setupInfo();setupTraffic();setupUpdate()},10000)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+}());
+</script>
+</body>
+</html>

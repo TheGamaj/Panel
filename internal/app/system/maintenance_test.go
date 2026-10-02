@@ -1,0 +1,286 @@
+package system
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"path/filepath"
+	"sync/atomic"
+	"testing"
+	"time"
+)
+
+// Gamaj has one install path, so a legacy install-mode marker must never leak
+// into the maintenance API.
+func TestDefaultRuntimeDetectorAlwaysReportsBinaryInstall(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("GAMAJ_INSTALL_MODE", "docker")
+	t.Setenv("GAMAJ_APP_DIR", dir)
+	t.Setenv("GAMAJ_BINARY_METADATA_FILE", filepath.Join(dir, "missing-release.json"))
+	if err := os.WriteFile(filepath.Join(dir, ".install-mode"), []byte("docker\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	info := DefaultRuntimeDetector{}.Info()
+	if info.Mode != "binary" || info.InstallMode != "binary" {
+		t.Fatalf("mode=%q install_mode=%q, want binary", info.Mode, info.InstallMode)
+	}
+	if info.Image != BinaryRuntimeImage {
+		t.Fatalf("image=%q, want %q", info.Image, BinaryRuntimeImage)
+	}
+}
+
+func TestGitHubUpdateCheckerCachesSuccessfulStatus(t *testing.T) {
+	var requests int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		atomic.AddInt32(&requests, 1)
+		switch r.URL.Path {
+		case "/repos/TheGamaj/Panel/releases/latest":
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"tag_name":     "v0.2.0",
+				"name":         "v0.2.0",
+				"published_at": "2026-06-24T00:00:00Z",
+			})
+		case "/TheGamaj/Panel/dev-build-manifest/dev-builds.json":
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"latest": map[string]any{
+					"build_tag":    "dev-abcdef0",
+					"sha":          "abcdef0123456789",
+					"run_id":       "123",
+					"generated_at": "2026-06-24T00:00:00Z",
+					"assets": []string{
+						"gamaj-linux-amd64-dev-abcdef0.tar.gz",
+					},
+				},
+			})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+
+	now := time.Unix(1_780_000_000, 0)
+	checker := &GitHubUpdateChecker{
+		APIBase:        server.URL,
+		RawBase:        server.URL,
+		HTTPClient:     server.Client(),
+		ManifestBranch: "dev-build-manifest",
+		ManifestPath:   "dev-builds.json",
+		Now:            func() time.Time { return now },
+		CacheTTL:       time.Hour,
+		ErrorTTL:       time.Hour,
+	}
+	current := "dev-0000000"
+
+	first := checker.Status(context.Background(), "TheGamaj/Panel", &current, "dev")
+	second := checker.Status(context.Background(), "TheGamaj/Panel", &current, "dev")
+
+	if first.Error != "" || second.Error != "" {
+		t.Fatalf("unexpected errors: first=%q second=%q", first.Error, second.Error)
+	}
+	if first.Target == nil || *first.Target != "dev-abcdef0" {
+		t.Fatalf("unexpected first target: %#v", first.Target)
+	}
+	if got := atomic.LoadInt32(&requests); got != 2 {
+		t.Fatalf("expected one release and one manifest request, got %d", got)
+	}
+}
+
+func TestGitHubUpdateCheckerFindsDevBuildThroughWorkflowEndpoint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/repos/TheGamaj/Panel/releases/latest":
+			_ = json.NewEncoder(w).Encode(map[string]any{"tag_name": "v0.2.0"})
+		case "/TheGamaj/Panel/dev-build-manifest/dev-builds.json":
+			http.NotFound(w, r)
+		case "/repos/TheGamaj/Panel/actions/workflows/binary-build.yml/runs":
+			query := r.URL.Query()
+			if query.Get("branch") != "dev" || query.Get("event") != "push" || query.Get("status") != "success" {
+				t.Fatalf("unexpected workflow query: %s", r.URL.RawQuery)
+			}
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"workflow_runs": []map[string]any{
+					{
+						"head_branch": "dev",
+						"event":       "push",
+						"conclusion":  "success",
+						"status":      "completed",
+						"head_sha":    "abcdef0123456789",
+					},
+				},
+			})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+
+	checker := &GitHubUpdateChecker{
+		APIBase:        server.URL,
+		RawBase:        server.URL,
+		HTTPClient:     server.Client(),
+		ManifestBranch: "dev-build-manifest",
+		ManifestPath:   "dev-builds.json",
+	}
+	current := "dev-0000000"
+	status := checker.Status(context.Background(), "TheGamaj/Panel", &current, "dev")
+
+	if status.Error != "" {
+		t.Fatalf("unexpected update error: %q", status.Error)
+	}
+	if status.Target == nil || *status.Target != "dev-abcdef0" {
+		t.Fatalf("unexpected dev target: %#v", status.Target)
+	}
+}
+
+func TestSelectManifestBuildUsesLatestTag(t *testing.T) {
+	data := map[string]any{
+		"latest": "dev-newest",
+		"builds": []any{
+			map[string]any{"tag": "dev-older"},
+			map[string]any{"tag": "dev-newest"},
+		},
+	}
+
+	build := selectManifestBuild(data)
+	if build == nil || stringFromAny((*build)["tag"]) != "dev-newest" {
+		t.Fatalf("unexpected selected manifest build: %#v", build)
+	}
+}
+
+func TestGitHubUpdateCheckerListsBuildsFromSwitchFloor(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/repos/TheGamaj/Panel/releases":
+			_ = json.NewEncoder(w).Encode([]map[string]any{
+				{"tag_name": "v0.0.9"},
+				{"tag_name": "v0.1.0", "published_at": "2026-06-24T00:00:00Z"},
+				{"tag_name": "v0.1.0", "prerelease": true},
+			})
+		case "/TheGamaj/Panel/dev-build-manifest/dev-builds.json":
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"builds": []map[string]any{
+					{"tag": "dev-0123456", "sha": "0123456789abcdef", "run_id": "11", "created_at": "2026-06-23T00:00:00Z"},
+					{"tag": "dev-abcdef0", "sha": "abcdef0123456789", "run_id": "12", "created_at": "2026-06-25T00:00:00Z"},
+					{"tag": "not-a-build", "sha": "bad"},
+				},
+			})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+
+	checker := &GitHubUpdateChecker{
+		APIBase:        server.URL,
+		RawBase:        server.URL,
+		HTTPClient:     server.Client(),
+		ManifestBranch: "dev-build-manifest",
+		ManifestPath:   "dev-builds.json",
+	}
+	catalog, err := checker.Builds(context.Background(), "TheGamaj/Panel")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if catalog.Floor != versionSwitchFloor || len(catalog.Stable) != 1 || catalog.Stable[0].Version != "v0.1.0" || len(catalog.Dev) != 1 || catalog.Dev[0].Commit != "abcdef0123456789" {
+		t.Fatalf("unexpected build catalog: %#v", catalog)
+	}
+}
+
+func TestGitHubUpdateCheckerListsDevBuildsFromWorkflowWhenManifestIsMissing(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/repos/TheGamaj/Node/releases":
+			_ = json.NewEncoder(w).Encode([]map[string]any{})
+		case "/TheGamaj/Node/dev-build-manifest/dev-builds.json":
+			http.NotFound(w, r)
+		case "/repos/TheGamaj/Node/actions/workflows/binary-build.yml/runs":
+			_ = json.NewEncoder(w).Encode(map[string]any{"workflow_runs": []map[string]any{{
+				"head_branch": "dev", "conclusion": "success", "head_sha": "1234567890abcdef",
+			}}})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+	checker := &GitHubUpdateChecker{APIBase: server.URL, RawBase: server.URL, HTTPClient: server.Client()}
+	catalog, err := checker.Builds(context.Background(), "TheGamaj/Node")
+	if err != nil || len(catalog.Dev) != 1 || catalog.Dev[0].Version != "dev-1234567" {
+		t.Fatalf("unexpected workflow build catalog: %#v, error=%v", catalog, err)
+	}
+}
+
+func TestGitHubUpdateCheckerFallsBackToNewestPrerelease(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/repos/TheGamaj/Panel/releases/latest":
+			// GitHub hides prerelease publications from /releases/latest.
+			http.NotFound(w, r)
+		case "/repos/TheGamaj/Panel/releases":
+			_ = json.NewEncoder(w).Encode([]map[string]any{
+				{
+					"tag_name":     "is.0.0.1",
+					"name":         "is.0.0.1",
+					"prerelease":   true,
+					"draft":        false,
+					"published_at": "2026-09-29T09:57:51Z",
+					"html_url":     "https://github.com/TheGamaj/Panel/releases/tag/is.0.0.1",
+				},
+			})
+		case "/TheGamaj/Panel/dev-build-manifest/dev-builds.json":
+			_ = json.NewEncoder(w).Encode(map[string]any{"builds": []any{}})
+		case "/repos/TheGamaj/Panel/actions/workflows/binary-build.yml/runs":
+			_ = json.NewEncoder(w).Encode(map[string]any{"workflow_runs": []any{}})
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+
+	checker := &GitHubUpdateChecker{
+		APIBase:    server.URL,
+		RawBase:    server.URL,
+		HTTPClient: server.Client(),
+	}
+	status := checker.Status(context.Background(), "TheGamaj/Panel", nil, "latest")
+
+	if status.Error != "" {
+		t.Fatalf("unexpected update error: %q", status.Error)
+	}
+	if status.LatestRelease == nil || stringFromAny((*status.LatestRelease)["tag"]) != "is.0.0.1" {
+		t.Fatalf("expected prerelease fallback, got %#v", status.LatestRelease)
+	}
+}
+
+func TestGitHubUpdateCheckerCachesErrors(t *testing.T) {
+	var requests int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		atomic.AddInt32(&requests, 1)
+		http.Error(w, "rate limited", http.StatusForbidden)
+	}))
+	defer server.Close()
+
+	now := time.Unix(1_780_000_000, 0)
+	checker := &GitHubUpdateChecker{
+		APIBase:    server.URL,
+		RawBase:    server.URL,
+		HTTPClient: server.Client(),
+		Now:        func() time.Time { return now },
+		CacheTTL:   time.Hour,
+		ErrorTTL:   time.Hour,
+	}
+
+	first := checker.Status(context.Background(), "TheGamaj/Panel", nil, "latest")
+	second := checker.Status(context.Background(), "TheGamaj/Panel", nil, "latest")
+
+	if first.Error == "" || second.Error == "" {
+		t.Fatalf("expected cached error, got first=%q second=%q", first.Error, second.Error)
+	}
+	// The failed /releases/latest probe and its /releases fallback both count
+	// as one cached Status() failure.
+	if got := atomic.LoadInt32(&requests); got != 2 {
+		t.Fatalf("expected both failed requests to be cached, got %d", got)
+	}
+}
