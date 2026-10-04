@@ -148,7 +148,7 @@ GAMAJ_SCRIPT_BASE_URL="${GAMAJ_SCRIPT_BASE_URL:-https://raw.githubusercontent.co
 GAMAJ_NODE_RELEASE_REPO="${GAMAJ_NODE_RELEASE_REPO:-TheGamaj/Node}"
 GAMAJ_NODE_BINARY_WORKFLOW_NAME="${GAMAJ_NODE_BINARY_WORKFLOW_NAME:-binary-build}"
 GAMAJ_NODE_BINARY_ARTIFACT_PREFIX="${GAMAJ_NODE_BINARY_ARTIFACT_PREFIX:-gamaj-node-binaries}"
-GAMAJ_XRAY_CORE_VERSION_DEFAULT="${GAMAJ_XRAY_CORE_VERSION_DEFAULT:-v26.5.9}"
+GAMAJ_XRAY_CORE_VERSION_DEFAULT="${GAMAJ_XRAY_CORE_VERSION_DEFAULT:-v26.7.11}"
 
 # Default node channel values
 BRANCH="Asli"
@@ -628,7 +628,7 @@ select_xray_core_version() {
     colorized_echo cyan "Select Xray-core version:"
     colorized_echo yellow "  1) Default ($GAMAJ_XRAY_CORE_VERSION_DEFAULT)"
     colorized_echo yellow "  2) Latest Xray release"
-    colorized_echo yellow "  3) Enter a version manually (for example, v26.5.9)"
+    colorized_echo yellow "  3) Enter a version manually (for example, v26.7.11)"
     local choice custom_version
     while true; do
         read -r -p "Xray version [1]: " choice
@@ -971,10 +971,37 @@ EOF
 install_latest_xray_for_binary_node() {
     mkdir -p "$APP_DIR/scripts" "$DATA_DIR/xray-core"
     colorized_echo blue "Installing Xray core ${GAMAJ_XRAY_CORE_VERSION:-$GAMAJ_XRAY_CORE_VERSION_DEFAULT} for binary node"
-    curl -fsSL "$GAMAJ_SCRIPT_BASE_URL/install_latest_xray.sh" -o "$APP_DIR/scripts/install_latest_xray.sh"
-    sed -i 's/\r$//' "$APP_DIR/scripts/install_latest_xray.sh"
-    chmod +x "$APP_DIR/scripts/install_latest_xray.sh"
-    GAMAJ_DATA_DIR="$DATA_DIR" GAMAJ_XRAY_INSTALL_DIR="$DATA_DIR/xray-core" GAMAJ_XRAY_ASSETS_DIR="$DATA_DIR/xray-core" GAMAJ_XRAY_CORE_VERSION="${GAMAJ_XRAY_CORE_VERSION:-$GAMAJ_XRAY_CORE_VERSION_DEFAULT}" bash "$APP_DIR/scripts/install_latest_xray.sh"
+
+    # Prefer the copy shipped in this repository. Falling back to the remote
+    # script kept the install path working only for as long as another
+    # repository kept a matching file at a matching branch.
+    local xray_installer=""
+    local script_dir_here=""
+    if [ -f "${SCRIPT_PATH:-}" ]; then
+        script_dir_here="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+    fi
+    for candidate in \
+        "$APP_DIR/scripts/install_latest_xray.sh" \
+        "${script_dir_here:+$script_dir_here/install_latest_xray.sh}" \
+        "${script_dir_here:+$script_dir_here/gamaj/install_latest_xray.sh}"; do
+        if [ -n "$candidate" ] && [ -f "$candidate" ]; then
+            xray_installer="$candidate"
+            break
+        fi
+    done
+
+    if [ -z "$xray_installer" ]; then
+        xray_installer="$APP_DIR/scripts/install_latest_xray.sh"
+        if ! curl -fsSL --retry 3 --retry-delay 2 --retry-all-errors \
+            "$GAMAJ_SCRIPT_BASE_URL/install_latest_xray.sh" -o "$xray_installer"; then
+            colorized_echo red "Could not download the Xray core installer from $GAMAJ_SCRIPT_BASE_URL" >&2
+            exit 1
+        fi
+    fi
+
+    sed -i 's/\r$//' "$xray_installer"
+    chmod +x "$xray_installer"
+    GAMAJ_DATA_DIR="$DATA_DIR" GAMAJ_XRAY_INSTALL_DIR="$DATA_DIR/xray-core" GAMAJ_XRAY_ASSETS_DIR="$DATA_DIR/xray-core" GAMAJ_XRAY_CORE_VERSION="${GAMAJ_XRAY_CORE_VERSION:-$GAMAJ_XRAY_CORE_VERSION_DEFAULT}" bash "$xray_installer"
 }
 
 read_node_certificate_bundle() {

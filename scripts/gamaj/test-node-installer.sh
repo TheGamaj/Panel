@@ -16,10 +16,10 @@ select_node_version is.0.0.1
 [ "$SELECTED_NODE_VERSION" = "is.0.0.1" ]
 
 eval "$(sed -n '/^select_xray_core_version() {$/,/^}$/p' "$SCRIPT")"
-GAMAJ_XRAY_CORE_VERSION_DEFAULT=v26.5.9
+GAMAJ_XRAY_CORE_VERSION_DEFAULT=v26.7.11
 GAMAJ_XRAY_CORE_VERSION=""
 select_xray_core_version
-[ "$GAMAJ_XRAY_CORE_VERSION" = "v26.5.9" ]
+[ "$GAMAJ_XRAY_CORE_VERSION" = "v26.7.11" ]
 
 eval "$(sed -n '/^read_node_certificate_bundle() {$/,/^}$/p' "$SCRIPT")"
 CERT_FILE="$TMP/cert.pem"
