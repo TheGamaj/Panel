@@ -31,7 +31,7 @@ import {
 	UserGroupIcon,
 	WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
-import logoUrl from "assets/logo-mark.svg";
+import markUrl from "assets/gamaj-mark.svg";
 import useGetUser from "hooks/useGetUser";
 import {
 	type ElementType,
@@ -426,9 +426,10 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 	const sponsorItems: SponsorCarouselItem[] = [
 		{
 			id: "gamaj",
-			src: logoUrl,
+			src: markUrl,
 			alt: "Gamaj",
 			label: "Gamaj",
+			isGamajMark: true,
 		},
 		...sponsors.map((asset) => ({
 			id: asset.id,
@@ -658,7 +659,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 						textAlign="center"
 						w="full"
 					>
-						Coded by AsliCode
+						{t("app.version")}
 					</Text>
 				)}
 			</VStack>

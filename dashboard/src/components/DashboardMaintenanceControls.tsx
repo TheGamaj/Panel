@@ -367,7 +367,6 @@ export const DashboardMaintenanceControls = ({
 				w="min(480px, calc(100vw - 24px))"
 				maxW="480px"
 				borderRadius="2xl"
-				boxShadow="0 24px 60px rgba(0,0,0,0.5)"
 				bg="panel.surface"
 				borderColor="panel.border"
 				borderWidth="1px"
@@ -668,7 +667,6 @@ export const DashboardMaintenanceControls = ({
 					bg="panel.surface"
 					borderColor="panel.border"
 					borderWidth="1px"
-					boxShadow="0 24px 60px -12px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)"
 					mx={4}
 				>
 					<ModalHeader
@@ -916,7 +914,6 @@ export const DashboardMaintenanceControls = ({
 					borderColor="panel.border"
 					borderWidth="1px"
 					borderRadius="2xl"
-					boxShadow="0 24px 60px rgba(0,0,0,0.4)"
 					mx={4}
 				>
 					<ModalHeader fontSize="md" fontWeight="700" color="panel.text" pb={2}>

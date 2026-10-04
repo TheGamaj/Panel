@@ -22,72 +22,130 @@
   font-display: swap;
 }
 
+/*
+ * Gamaj brand tokens.
+ *
+ * These are the identity values from the Gamaj brand system: a strictly
+ * monochrome palette, the neutral grey ramp, the spacing scale on 4px
+ * increments, the three corner radii, and a single calm transition curve.
+ * Every surface, control and breakpoint in the panel is built from them, so
+ * the UI stays identical in both colour modes.
+ */
 :root {
-  --gm-font-stack: "Arad", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  /* Brand neutrals. */
+  --gamaj-black: #000000;
+  --gamaj-white: #FFFFFF;
+  --gamaj-gray-950: #0A0A0A;
+  --gamaj-gray-900: #111111;
+  --gamaj-gray-800: #1A1A1A;
+  --gamaj-gray-700: #333333;
+  --gamaj-gray-600: #4A4A4A;
+  --gamaj-gray-500: #666666;
+  --gamaj-gray-400: #999999;
+  --gamaj-gray-300: #CCCCCC;
+  --gamaj-gray-200: #E5E5E5;
+  --gamaj-gray-100: #F5F5F5;
+  --gamaj-gray-50: #FAFAFA;
+
+  /* Spacing scale: 4px increments. */
+  --gm-space-1: 4px;
+  --gm-space-2: 8px;
+  --gm-space-3: 12px;
+  --gm-space-4: 16px;
+  --gm-space-5: 24px;
+  --gm-space-6: 32px;
+  --gm-space-7: 48px;
+  --gm-space-8: 64px;
+  --gm-space-9: 96px;
+  --gm-space-10: 128px;
+
+  /* Corner radii. */
+  --gm-radius-sm: 2px;
+  --gm-radius-md: 4px;
+  --gm-radius-lg: 8px;
+
+  /* Layout. */
+  --gm-sidebar-width: 240px;
+  --gm-max-width: 1120px;
+  --gm-transition: 180ms cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Status colours are the only hues in the product; they sit outside the
+     monochrome identity because they carry meaning, not decoration. */
+  --gm-danger: #C62828;
+  --gm-warning: #8D6E00;
+  --gm-success: #1B5E20;
+
+  --gm-font-stack: "Arad", "Inter", "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --gm-mono-stack: "SF Mono", "Fira Code", Consolas, ui-monospace, monospace;
   --gm-dialog-viewport-height: 100dvh;
   --gm-dialog-safe-bottom: max(0.75rem, env(safe-area-inset-bottom));
-  /* GAMAJ monochrome brand: dark theme defaults (near-black surfaces, white accent) */
-  --gm-panel-bg: #0A0A0A;
-  --gm-panel-main: #111111;
-  --gm-panel-sidebar: #141414;
-  --gm-panel-surface: #1A1A1A;
-  --gm-panel-elevated: #222222;
-  --gm-panel-border: #262626;
-  --gm-panel-border-strong: #3A3A3A;
-  --gm-panel-text: #FFFFFF;
-  --gm-panel-text-secondary: #CCCCCC;
-  --gm-panel-text-muted: #888888;
-  --gm-panel-accent: #FFFFFF;
-  --gm-panel-accent-hover: #E5E5E5;
-  --gm-panel-row-hover: #161616;
-  --gm-panel-row-selected: #1C1C1C;
+
+  /* Dark is the default mode: black canvas, grey-950 surfaces. */
+  --gm-panel-bg: var(--gamaj-gray-950);
+  --gm-panel-main: var(--gamaj-gray-950);
+  --gm-panel-sidebar: var(--gamaj-gray-950);
+  --gm-panel-surface: var(--gamaj-gray-900);
+  --gm-panel-elevated: var(--gamaj-gray-800);
+  --gm-panel-border: var(--gamaj-gray-800);
+  --gm-panel-border-strong: var(--gamaj-gray-700);
+  --gm-panel-text: var(--gamaj-white);
+  --gm-panel-text-secondary: var(--gamaj-gray-300);
+  --gm-panel-text-muted: var(--gamaj-gray-400);
+  --gm-panel-accent: var(--gamaj-white);
+  --gm-panel-accent-hover: var(--gamaj-gray-200);
+  --gm-panel-row-hover: var(--gamaj-gray-900);
+  --gm-panel-row-selected: var(--gamaj-gray-800);
   --gm-sidebar-offset: 0px;
-  --primary-50: #F5F5F5;
-  --primary-100: #E8E8E8;
-  --primary-200: #D4D4D4;
-  --primary-300: #B0B0B0;
-  --primary-400: #808080;
-  --primary-500: #3D3D3D;
-  --primary-600: #2E2E2E;
-  --primary-700: #222222;
-  --primary-800: #171717;
-  --primary-900: #0D0D0D;
-  --gm-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --gm-ease-standard: cubic-bezier(0.77, 0, 0.175, 1);
-  --gm-duration-fast: 140ms;
+  --primary-50: var(--gamaj-gray-100);
+  --primary-100: var(--gamaj-gray-100);
+  --primary-200: var(--gamaj-gray-300);
+  --primary-300: var(--gamaj-gray-400);
+  --primary-400: var(--gamaj-gray-500);
+  --primary-500: var(--gamaj-gray-600);
+  --primary-600: var(--gamaj-gray-700);
+  --primary-700: var(--gamaj-gray-800);
+  --primary-800: var(--gamaj-gray-900);
+  --primary-900: var(--gamaj-gray-950);
+  --gm-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --gm-ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --gm-duration-fast: 180ms;
   --gm-duration-ui: 180ms;
 }
 
 .gm-theme-dark,
 .chakra-ui-dark {
-  --gm-panel-bg: #0A0A0A;
-  --gm-panel-main: #111111;
-  --gm-panel-sidebar: #141414;
-  --gm-panel-surface: #1A1A1A;
-  --gm-panel-elevated: #222222;
-  --gm-panel-border: #262626;
-  --gm-panel-border-strong: #3A3A3A;
-  --gm-panel-text: #FFFFFF;
-  --gm-panel-text-secondary: #CCCCCC;
-  --gm-panel-text-muted: #888888;
-  --gm-panel-row-hover: #161616;
-  --gm-panel-row-selected: #1C1C1C;
+  --gm-panel-bg: var(--gamaj-gray-950);
+  --gm-panel-main: var(--gamaj-gray-950);
+  --gm-panel-sidebar: var(--gamaj-gray-950);
+  --gm-panel-surface: var(--gamaj-gray-900);
+  --gm-panel-elevated: var(--gamaj-gray-800);
+  --gm-panel-border: var(--gamaj-gray-800);
+  --gm-panel-border-strong: var(--gamaj-gray-700);
+  --gm-panel-text: var(--gamaj-white);
+  --gm-panel-text-secondary: var(--gamaj-gray-300);
+  --gm-panel-text-muted: var(--gamaj-gray-400);
+  --gm-panel-accent: var(--gamaj-white);
+  --gm-panel-accent-hover: var(--gamaj-gray-200);
+  --gm-panel-row-hover: var(--gamaj-gray-900);
+  --gm-panel-row-selected: var(--gamaj-gray-800);
 }
 
 .gm-theme-light,
 .chakra-ui-light {
-  --gm-panel-bg: #FAFAFA;
-  --gm-panel-main: #FFFFFF;
-  --gm-panel-sidebar: #FFFFFF;
-  --gm-panel-surface: #FFFFFF;
-  --gm-panel-elevated: #F2F2F2;
-  --gm-panel-border: #EAEAEA;
-  --gm-panel-border-strong: #D4D4D4;
-  --gm-panel-text: #000000;
-  --gm-panel-text-secondary: #555555;
-  --gm-panel-text-muted: #888888;
-  --gm-panel-row-hover: #F5F5F5;
-  --gm-panel-row-selected: #FFFFFF;
+  --gm-panel-bg: var(--gamaj-white);
+  --gm-panel-main: var(--gamaj-white);
+  --gm-panel-sidebar: var(--gamaj-white);
+  --gm-panel-surface: var(--gamaj-white);
+  --gm-panel-elevated: var(--gamaj-gray-100);
+  --gm-panel-border: var(--gamaj-gray-200);
+  --gm-panel-border-strong: var(--gamaj-gray-300);
+  --gm-panel-text: var(--gamaj-black);
+  --gm-panel-text-secondary: var(--gamaj-gray-600);
+  --gm-panel-text-muted: var(--gamaj-gray-500);
+  --gm-panel-accent: var(--gamaj-black);
+  --gm-panel-accent-hover: var(--gamaj-gray-800);
+  --gm-panel-row-hover: var(--gamaj-gray-100);
+  --gm-panel-row-selected: var(--gamaj-gray-50);
 }
 
 @supports (height: 100svh) {
@@ -133,11 +191,11 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--gm-panel-border-strong);
   border: 2px solid var(--gm-panel-main);
-  border-radius: 999px;
+  border-radius: var(--gm-radius-md);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5a5a5a;
+  background: var(--gamaj-gray-500);
 }
 
 .gm-sidebar-scroll {
@@ -835,7 +893,7 @@ body {
   padding-block: 0 !important;
   padding-inline: 0.75rem !important;
   line-height: 1.1 !important;
-  border-radius: 0.5rem !important;
+  border-radius: var(--gm-radius-md) !important;
 }
 
 @media (max-width: 768px) {
@@ -876,7 +934,7 @@ body {
     height: auto !important;
     max-height: calc(var(--gm-dialog-viewport-height) - 2rem) !important;
     margin: auto !important;
-    border-radius: 1rem !important;
+    border-radius: var(--gm-radius-lg) !important;
     display: block !important;
   }
 
@@ -907,7 +965,6 @@ body {
     gap: 0.5rem;
     width: 100%;
     padding-bottom: var(--gm-dialog-safe-bottom) !important;
-    box-shadow: 0 -12px 28px rgb(0 0 0 / 18%);
   }
 
   .chakra-modal__footer > .chakra-stack,
@@ -1204,13 +1261,13 @@ table thead {
 }
 
 .react-datepicker__day:hover {
-  border-radius: 0.3rem;
+  border-radius: var(--gm-radius-md);
   background-color: var(--chakra-colors-primary-300) !important;
   color: var(--chakra-colors-white) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day:hover {
-  border-radius: 0.3rem;
+  border-radius: var(--gm-radius-md);
   background-color: var(--chakra-colors-primary-500) !important;
   color: var(--chakra-colors-gray-800) !important;
 }
@@ -1735,52 +1792,9 @@ img.apple-emoji {
   gap: 4px;
 }
 
-/* Seasonal: soft snowfall overlay */
-.gm-snow-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  background:
-    radial-gradient(1px 1px at 20px 20px, rgba(255, 255, 255, 0.5), transparent 55%),
-    radial-gradient(1px 1px at 120px 10px, rgba(240, 245, 255, 0.5), transparent 55%),
-    radial-gradient(1.4px 1.4px at 200px 30px, rgba(255, 255, 255, 0.45), transparent 60%);
-  background-size: 240px 260px, 260px 280px, 320px 320px;
-  animation: gm-snow-fall 14s linear infinite;
-  opacity: 0.3;
-  z-index: 5;
-}
 
-.gm-snow-layer::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(1px 1px at 60px 40px, rgba(255, 255, 255, 0.5), transparent 55%),
-    radial-gradient(1.2px 1.2px at 10px 80px, rgba(255, 255, 255, 0.45), transparent 55%),
-    radial-gradient(1.6px 1.6px at 180px 120px, rgba(240, 245, 255, 0.5), transparent 55%);
-  background-size: 260px 280px, 300px 320px, 340px 340px;
-  animation: gm-snow-fall 18s linear infinite reverse;
-}
 
-@keyframes gm-snow-fall {
-  from {
-    transform: translate3d(0, -30px, 0);
-  }
-  to {
-    transform: translate3d(0, 90px, 0);
-  }
-}
 
-/* Seasonal: festive cursor */
-.gm-seasonal-christmas body,
-.gm-seasonal-christmas button,
-.gm-seasonal-christmas a,
-.gm-seasonal-christmas input,
-.gm-seasonal-christmas select,
-.gm-seasonal-christmas textarea {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg transform='rotate(-18 20 20)'%3E%3Cpath d='M20 4l-4 6h8l-4-6z' fill='%23fff' stroke='%23c62828' stroke-width='1.6'/%3E%3Cpath d='M20 8l-5 7h10l-5-7z' fill='%23e8f5e9' stroke='%232e7d32' stroke-width='1.6'/%3E%3Cpath d='M20 12l-6 8h12l-6-8z' fill='%23c8e6c9' stroke='%232e7d32' stroke-width='1.6'/%3E%3Cpath d='M20 17l-7 9h14l-7-9z' fill='%23a5d6a7' stroke='%232e7d32' stroke-width='1.6'/%3E%3Crect x='17' y='26' width='6' height='7' rx='1.2' fill='%238d6e63'/%3E%3Ccircle cx='20' cy='10' r='1.4' fill='%23c62828'/%3E%3Ccircle cx='18' cy='15' r='1.4' fill='%23fbc02d'/%3E%3Ccircle cx='22' cy='17' r='1.4' fill='%2300acc1'/%3E%3Ccircle cx='16.5' cy='20' r='1.4' fill='%23ef6c00'/%3E%3Ccircle cx='23.5' cy='22' r='1.4' fill='%238e24aa'/%3E%3C/g%3E%3C/svg%3E") 10 4, auto;
-}
 
 /* ============================================================
    Users section
@@ -2104,18 +2118,12 @@ img.apple-emoji {
 
 /* mobile cards: rounder, and glowing accent while expanded */
 .gm-users-section .gm-resource-card {
-  border-radius: 14px;
+  border-radius: var(--gm-radius-lg);
   padding: 0.85rem;
 }
 
 .gm-users-section .gm-resource-card[data-expanded="true"] {
-  border-color: color-mix(in srgb, var(--gm-panel-accent) 45%, var(--gm-panel-border));
-  box-shadow: 0 12px 30px rgb(0 0 0 / 24%);
-}
-
-.gm-theme-light .gm-users-section .gm-resource-card[data-expanded="true"],
-.chakra-ui-light .gm-users-section .gm-resource-card[data-expanded="true"] {
-  box-shadow: 0 12px 26px rgb(15 23 42 / 12%);
+  border-color: var(--gm-panel-accent);
 }
 
 /* crisp scale-in when a card expands */
@@ -2165,7 +2173,7 @@ img.apple-emoji {
 
 /* floating bulk action bar: fast slide up, accent tint */
 .gm-users-section .gm-bulk-action-bar {
-  border-radius: 14px;
+  border-radius: var(--gm-radius-lg);
   border-color: color-mix(in srgb, var(--gm-panel-accent) 35%, var(--gm-panel-border-strong));
   background: color-mix(in srgb, var(--gm-panel-surface) 94%, var(--gm-panel-accent));
 }
@@ -2194,9 +2202,7 @@ img.apple-emoji {
 
 @media (prefers-reduced-motion: reduce) {
   .gm-users-section .gm-resource-expanded,
-  .gm-users-section .gm-bulk-action-bar[data-visible="true"],
-  .gm-snow-layer,
-  .gm-snow-layer::after {
+  .gm-users-section .gm-bulk-action-bar[data-visible="true"] {
     animation: none !important;
     transition-duration: 1ms !important;
   }

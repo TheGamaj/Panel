@@ -1,5 +1,4 @@
 import {
-	Badge,
 	Box,
 	Button,
 	chakra,
@@ -19,14 +18,11 @@ import {
 	CalendarDaysIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
-	SparklesIcon,
 } from "@heroicons/react/24/outline";
-import { useSeasonal } from "contexts/SeasonalContext";
 import { type FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const CalendarIcon = chakra(CalendarDaysIcon, { baseStyle: { w: 4, h: 4 } });
-const Sparkles = chakra(SparklesIcon, { baseStyle: { w: 4, h: 4 } });
 const ChevronLeft = chakra(ChevronLeftIcon, { baseStyle: { w: 4, h: 4 } });
 const ChevronRight = chakra(ChevronRightIcon, { baseStyle: { w: 4, h: 4 } });
 
@@ -100,7 +96,6 @@ export const HeaderCalendar: FC = () => {
 	const { t, i18n } = useTranslation();
 	const [today, setToday] = useState(() => new Date());
 	const [displayDate, setDisplayDate] = useState(() => new Date());
-	const { isChristmas, window: seasonWindow } = useSeasonal();
 	const isPersian = i18n.language?.startsWith("fa");
 	const isRTL = i18n.dir(i18n.language) === "rtl";
 	const displayLocale = isPersian
@@ -162,15 +157,6 @@ export const HeaderCalendar: FC = () => {
 	const prevIcon = isRTL ? <ChevronRight /> : <ChevronLeft />;
 	const nextIcon = isRTL ? <ChevronLeft /> : <ChevronRight />;
 
-	const christmasRange = useMemo(() => {
-		if (!seasonWindow) return null;
-		const locale = i18n.language || "en";
-		const formatter = new Intl.DateTimeFormat(locale, {
-			month: "short",
-			day: "numeric",
-		});
-		return `${formatter.format(seasonWindow.start)} - ${formatter.format(seasonWindow.end)}`;
-	}, [i18n.language, seasonWindow]);
 
 	return (
 		<Popover placement="bottom-start">
@@ -214,17 +200,6 @@ export const HeaderCalendar: FC = () => {
 									}}
 								/>
 								<Text fontWeight="semibold">{monthLabel}</Text>
-								{isChristmas && (
-									<Badge
-										colorScheme="red"
-										display="inline-flex"
-										alignItems="center"
-										gap={1}
-									>
-										<Sparkles />
-										{t("season.christmas")}
-									</Badge>
-								)}
 								<IconButton
 									size="xs"
 									variant="ghost"
@@ -276,11 +251,6 @@ export const HeaderCalendar: FC = () => {
 								);
 							})}
 						</SimpleGrid>
-						{isChristmas && christmasRange && (
-							<Text fontSize="xs" color="gray.500" textAlign="center">
-								{t("season.window")} ({christmasRange})
-							</Text>
-						)}
 					</Stack>
 				</PopoverBody>
 			</PopoverContent>

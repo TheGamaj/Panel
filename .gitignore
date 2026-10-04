@@ -34,6 +34,7 @@ dashboard/public/tutorial-content/
 tutorials/.hugo_build.lock
 
 # Dashboard build output (generated, embedded from local build only)
+dashboard/build/
 internal/gateway/static/dashboard/build/*
 !internal/gateway/static/dashboard/build/.gitkeep
 

@@ -684,7 +684,6 @@ const HistoryModal: FC<{
 				borderWidth="1px"
 				borderColor="panel.border"
 				borderRadius="20px"
-				boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 32px 80px rgba(0,0,0,0.6)"
 				mx={{ base: 3, sm: 6 }}
 				overflow="hidden"
 			>
@@ -991,7 +990,6 @@ const ResourceCard: FC<{
 			display="flex"
 			flexDirection="column"
 			justifyContent="space-between"
-			boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 			transition="border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease"
 			_hover={{
 				md: {
@@ -1306,7 +1304,6 @@ const SectionCard: FC<{
 		borderColor="panel.border"
 		borderRadius="20px"
 		overflow="hidden"
-		boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 		transition="border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease"
 		_hover={
 			noHover
@@ -1595,7 +1592,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 							display="flex"
 							flexDirection="column"
 							justifyContent="space-between"
-							boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 						>
 							<Box>
 								<Flex justify="space-between" align="center" mb={3}>
@@ -1647,7 +1643,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 						borderWidth="1px"
 						borderColor="panel.border"
 						overflow="hidden"
-						boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 					>
 						<Flex px={{ base: 4, sm: 5, md: 6 }} py={3.5} justify="space-between" align="center" borderBottomWidth="1px" borderColor="panel.border">
 							<HStack spacing={2.5}>
@@ -1683,7 +1678,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 						borderWidth="1px"
 						borderColor="panel.border"
 						overflow="hidden"
-						boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 					>
 						<Flex px={{ base: 4, sm: 5, md: 6 }} py={3.5} justify="space-between" align="center" borderBottomWidth="1px" borderColor="panel.border">
 							<HStack spacing={2.5}>
@@ -1719,7 +1713,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 					borderWidth="1px"
 					borderColor="panel.border"
 					overflow="hidden"
-					boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 				>
 					<Flex px={{ base: 4, sm: 5, md: 6 }} py={3.5} justify="space-between" align="center" borderBottomWidth="1px" borderColor="panel.border">
 						<HStack spacing={2.5}>
@@ -1741,7 +1734,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 									display="flex"
 									flexDirection="column"
 									justifyContent="space-between"
-									boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 								>
 									<Box>
 										<Flex justify="space-between" align="center" mb={3}>
@@ -1778,7 +1770,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 					borderWidth="1px"
 					borderColor="panel.border"
 					overflow="hidden"
-					boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 				>
 					<Flex px={{ base: 4, sm: 5, md: 6 }} py={3.5} justify="space-between" align="center" borderBottomWidth="1px" borderColor="panel.border">
 						<HStack spacing={2.5}>
@@ -1831,7 +1822,6 @@ export const Statistics: FC<BoxProps> = (props) => {
 						borderWidth="1px"
 						borderColor="panel.border"
 						overflow="hidden"
-						boxShadow="inset 0 1px 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -6px rgba(0, 0, 0, 0.12)"
 					>
 						<Flex px={{ base: 4, sm: 5, md: 6 }} py={3.5} justify="space-between" align="center" borderBottomWidth="1px" borderColor="panel.border">
 							<HStack spacing={2.5}>

@@ -34,7 +34,6 @@ export const PageLoadingSkeleton: FC = () => (
 			borderRadius="20px"
 			bg="panel.surface"
 			p={{ base: 4, md: 5 }}
-			boxShadow="inset 0 1px 1px rgba(255,255,255,0.04), 0 8px 24px -6px rgba(0,0,0,0.14)"
 		>
 			<Stack
 				direction={{ base: "column", xl: "row" }}
@@ -89,7 +88,6 @@ export const PageLoadingSkeleton: FC = () => (
 			borderRadius="20px"
 			bg="panel.surface"
 			overflow="hidden"
-			boxShadow="inset 0 1px 1px rgba(255,255,255,0.04), 0 8px 24px -6px rgba(0,0,0,0.14)"
 		>
 			<Flex
 				display={{ base: "none", md: "flex" }}

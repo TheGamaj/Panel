@@ -167,7 +167,6 @@ export const DashboardBackupControls = ({
 				<PopoverContent
 					w="min(280px, calc(100vw - 24px))"
 					borderRadius="2xl"
-					boxShadow="0 24px 60px rgba(0,0,0,0.5)"
 					bg="panel.surface"
 					borderColor="panel.border"
 					borderWidth="1px"
@@ -220,7 +219,6 @@ export const DashboardBackupControls = ({
 					borderWidth="1px"
 					borderColor="panel.border"
 					borderRadius="2xl"
-					boxShadow="0 32px 80px rgba(0,0,0,0.5)"
 					bg="panel.surface"
 					mx={{ base: 4, sm: 0 }}
 				>
@@ -309,7 +307,6 @@ export const DashboardBackupControls = ({
 					borderWidth="1px"
 					borderColor="panel.border"
 					borderRadius="2xl"
-					boxShadow="0 32px 80px rgba(0,0,0,0.5)"
 					bg="panel.surface"
 					mx={{ base: 4, sm: 0 }}
 				>

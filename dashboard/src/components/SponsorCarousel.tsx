@@ -6,6 +6,7 @@ import {
 	type FC,
 	type ReactNode,
 } from "react";
+import { GamajMark } from "./GamajMark";
 
 export interface SponsorCarouselItem {
 	id: string;
@@ -14,6 +15,12 @@ export interface SponsorCarouselItem {
 	href?: string;
 	label?: string;
 	isSponsor?: boolean;
+	/**
+	 * Set for the Gamaj entry itself: the mark is drawn inline so it inherits
+	 * the current text colour in both light and dark mode, instead of being
+	 * loaded as an image and colour-filtered.
+	 */
+	isGamajMark?: boolean;
 }
 
 interface SponsorCarouselProps {
@@ -51,6 +58,7 @@ export const SponsorCarousel: FC<SponsorCarouselProps> = ({
 	collapsed = false,
 }) => {
 	const { colorMode } = useColorMode();
+	const markColor = colorMode === "dark" ? "#FFFFFF" : "#000000";
 	const stableItems = useMemo(() => items.filter((item) => item.src), [items]);
 	const [index, setIndex] = useState(0);
 	const [paused, setPaused] = useState(false);
@@ -82,7 +90,6 @@ export const SponsorCarousel: FC<SponsorCarouselProps> = ({
 			w="full"
 			border="none"
 			borderRadius="md"
-			boxShadow="none"
 			aspectRatio={
 				isBanner
 					? { base: "4 / 1", md: "8 / 1" }
@@ -105,31 +112,29 @@ export const SponsorCarousel: FC<SponsorCarouselProps> = ({
 					"@media (prefers-reduced-motion: reduce)": { transition: "none" },
 					img: { border: "none", outline: "none" },
 				}}
-			>
-				{stableItems.map((item) => {						const image = (
-							<Image
-								src={item.src}
-								alt={item.alt}
-								loading="lazy"
-								display="block"
-								maxW="full"
-								maxH="full"
-								objectFit={isBanner ? "cover" : "contain"}
-								w={isBanner || isSidebarBanner ? "full" : 8}
-								h={isBanner || isSidebarBanner ? "full" : 8}
-								border="none"
-								borderRadius="md"
-								// The GAMAJ mark is a monochrome SVG (black in light mode);
-								// invert it in dark mode so the brand stays visible.
-								filter={
-									item.isSponsor
-										? undefined
-										: colorMode === "dark"
-											? "brightness(0) invert(1)"
-											: undefined
-								}
-							/>
-						);
+			>				{stableItems.map((item) => {
+					const isMark = Boolean(item.isGamajMark);
+					const image = isMark ? (
+						<GamajMark
+							color={markColor}
+							w={isBanner || isSidebarBanner ? "full" : 8}
+							h={isBanner || isSidebarBanner ? "full" : 8}
+						/>
+					) : (
+						<Image
+							src={item.src}
+							alt={item.alt}
+							loading="lazy"
+							display="block"
+							maxW="full"
+							maxH="full"
+							objectFit={isBanner ? "cover" : "contain"}
+							w={isBanner || isSidebarBanner ? "full" : 8}
+							h={isBanner || isSidebarBanner ? "full" : 8}
+							border="none"
+							borderRadius="md"
+						/>
+					);
 					return (
 						<Box
 							key={item.id}
@@ -144,10 +149,10 @@ export const SponsorCarousel: FC<SponsorCarouselProps> = ({
 								{image}
 								{variant === "logo" && !collapsed && (
 									<Text
-										fontSize={{ base: "lg", md: "2xl" }}
-										fontWeight="bold"
-										fontFamily="'Inter', system-ui, sans-serif"
-										letterSpacing="tight"
+										fontSize={{ base: "md", md: "lg" }}
+										fontWeight="semibold"
+										letterSpacing="0.14em"
+										textTransform="uppercase"
 										lineHeight="1"
 										whiteSpace="nowrap"
 										color="panel.text"

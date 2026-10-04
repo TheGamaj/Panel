@@ -1,18 +1,97 @@
 import { extendTheme } from "@chakra-ui/react";
 import { mode, type StyleFunctionProps } from "@chakra-ui/theme-tools";
 
+/**
+ * Gamaj panel theme.
+ *
+ * Every colour, radius, font size and transition below comes from the Gamaj
+ * brand system: a strictly monochrome palette (black, white, and the neutral
+ * grey ramp), the 4px spacing scale, the three corner radii (2 / 4 / 8), and a
+ * single calm transition curve. There are no gradients, no glows and no
+ * shadows on resting surfaces.
+ *
+ * Dark is the default mode. Light mode is the same system with the ramp
+ * inverted, so the two read as one identity rather than two themes.
+ */
 const sharedThemeConfig = {
 	config: {
 		initialColorMode: "dark",
 		useSystemColorMode: false,
 	},
 	direction: "ltr" as const,
-	shadows: { outline: "0 0 0 2px var(--chakra-colors-primary-200)" },
+
+	// The identity forbids decorative shadow; focus is shown with a ring.
+	shadows: { outline: "0 0 0 2px var(--gamaj-gray-500)" },
+
 	fonts: {
-		body: `Arad,Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",sans-serif`,
+		body: `Arad,Inter,"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue","Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",sans-serif`,
+		heading: `Inter,"SF Pro Display",Arad,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif`,
+		mono: `"SF Mono","Fira Code",Consolas,ui-monospace,monospace`,
 	},
+
+	// The type scale from the identity: display, H1-H4, body, caption.
+	fontSizes: {
+		xs: "11px",
+		sm: "13px",
+		base: "15px",
+		md: "15px",
+		lg: "18px",
+		xl: "24px",
+		"2xl": "28px",
+		"3xl": "32px",
+		"4xl": "48px",
+	},
+
+	fontWeights: {
+		normal: 400,
+		medium: 500,
+		semibold: 600,
+		bold: 600,
+	},
+
+	// Three radii, and nothing in between.
+	radii: {
+		none: "0",
+		sm: "var(--gm-radius-sm)",
+		md: "var(--gm-radius-md)",
+		lg: "var(--gm-radius-lg)",
+		xl: "var(--gm-radius-lg)",
+		"2xl": "var(--gm-radius-lg)",
+		"3xl": "var(--gm-radius-lg)",
+		full: "var(--gm-radius-lg)",
+	},
+
+	space: {
+		px: "1px",
+		0.5: "2px",
+		1: "4px",
+		1.5: "6px",
+		2: "8px",
+		2.5: "10px",
+		3: "12px",
+		3.5: "14px",
+		4: "16px",
+		5: "24px",
+		6: "32px",
+		7: "48px",
+		8: "64px",
+		9: "96px",
+		10: "128px",
+	},
+
+	sizes: {
+		container: {
+			sm: "640px",
+			md: "768px",
+			lg: "1024px",
+			xl: "1120px",
+		},
+	},
+
 	colors: {
-		"light-border": "#d2d2d4",
+		"light-border": "var(--gamaj-gray-200)",
+		// Semantic panel surface roles, resolved through the CSS variables so
+		// a colour-mode switch needs no component changes.
 		panel: {
 			app: "var(--gm-panel-bg)",
 			main: "var(--gm-panel-main)",
@@ -26,9 +105,28 @@ const sharedThemeConfig = {
 			textMuted: "var(--gm-panel-text-muted)",
 			accent: "var(--gm-panel-accent)",
 			accentHover: "var(--gm-panel-accent-hover)",
-			warning: "#f59e0b",
-			success: "#22c55e",
-			danger: "#ef4444",
+			rowHover: "var(--gm-panel-row-hover)",
+			rowSelected: "var(--gm-panel-row-selected)",
+			danger: "var(--gm-danger)",
+			warning: "var(--gm-warning)",
+			success: "var(--gm-success)",
+		},
+		// The brand neutral ramp, exposed to Chakra so component defaults can
+		// reference the exact identity values.
+		gamaj: {
+			black: "var(--gamaj-black)",
+			white: "var(--gamaj-white)",
+			50: "var(--gamaj-gray-50)",
+			100: "var(--gamaj-gray-100)",
+			200: "var(--gamaj-gray-200)",
+			300: "var(--gamaj-gray-300)",
+			400: "var(--gamaj-gray-400)",
+			500: "var(--gamaj-gray-500)",
+			600: "var(--gamaj-gray-600)",
+			700: "var(--gamaj-gray-700)",
+			800: "var(--gamaj-gray-800)",
+			900: "var(--gamaj-gray-900)",
+			950: "var(--gamaj-gray-950)",
 		},
 		bg: {
 			light: "var(--bg-light)",
@@ -38,6 +136,8 @@ const sharedThemeConfig = {
 			light: "var(--surface-light)",
 			dark: "var(--surface-dark)",
 		},
+		// The accent scale is the neutral ramp: primary actions are the black
+		// end in light mode and the white end in dark mode.
 		primary: {
 			50: "var(--primary-50)",
 			100: "var(--primary-100)",
@@ -50,14 +150,13 @@ const sharedThemeConfig = {
 			800: "var(--primary-800)",
 			900: "var(--primary-900)",
 		},
-		gray: {
-			750: "#222C3B",
-		},
 	},
+
 	styles: {
 		global: {
+			// Flat overlay: the identity uses no blur or tint behind dialogs.
 			".chakra-modal__overlay": {
-				bg: "blackAlpha.500 !important",
+				bg: "blackAlpha.600 !important",
 				backdropFilter: "none !important",
 				WebkitBackdropFilter: "none !important",
 			},
@@ -65,98 +164,86 @@ const sharedThemeConfig = {
 				backgroundColor: "var(--gm-panel-surface) !important",
 				color: "var(--gm-panel-text) !important",
 				borderColor: "var(--gm-panel-border) !important",
-				borderRadius: "16px !important",
-				boxShadow: "0 24px 72px rgba(0, 0, 0, 0.46) !important",
+				borderRadius: "var(--gm-radius-lg) !important",
+				boxShadow: "none !important",
 			},
-			":root": {
-				/* GAMAJ monochrome brand — near-black surfaces, white accent */
-				"--primary-50": "#F5F5F5",
-				"--primary-100": "#E8E8E8",
-				"--primary-200": "#D4D4D4",
-				"--primary-300": "#B0B0B0",
-				"--primary-400": "#808080",
-				"--primary-500": "#3D3D3D",
-				"--primary-600": "#2E2E2E",
-				"--primary-700": "#222222",
-				"--primary-800": "#171717",
-				"--primary-900": "#0D0D0D",
-				"--bg-light": "#0A0A0A",
-				"--bg-dark": "#0A0A0A",
-				"--surface-light": "#1A1A1A",
-				"--surface-dark": "#1A1A1A",
+			// A single place for the mode-scoped surface variables, so Chakra
+			// components and plain CSS always read the same values.
+			":root, .gm-theme-dark, .chakra-ui-dark": {
+				"--bg-light": "var(--gamaj-gray-950)",
+				"--bg-dark": "var(--gamaj-gray-950)",
+				"--surface-light": "var(--gamaj-gray-900)",
+				"--surface-dark": "var(--gamaj-gray-900)",
 			},
-
-			".gm-theme-dark": {
-				"--gm-panel-bg": "#0A0A0A",
-				"--gm-panel-main": "#111111",
-				"--gm-panel-sidebar": "#141414",
-				"--gm-panel-surface": "#1A1A1A",
-				"--gm-panel-elevated": "#222222",
-				"--gm-panel-border": "#262626",
-				"--gm-panel-border-strong": "#3A3A3A",
-				"--gm-panel-text": "#FFFFFF",
-				"--gm-panel-text-secondary": "#CCCCCC",
-				"--gm-panel-text-muted": "#888888",
-				"--bg-light": "#0A0A0A",
-				"--bg-dark": "#0A0A0A",
-				"--surface-light": "#1A1A1A",
-				"--surface-dark": "#1A1A1A",
-			},
-			".gm-theme-light": {
-				/* GAMAJ monochrome light theme — pure white surfaces, black text */
-				"--gm-panel-bg": "#FAFAFA",
-				"--gm-panel-main": "#FFFFFF",
-				"--gm-panel-sidebar": "#FFFFFF",
-				"--gm-panel-surface": "#FFFFFF",
-				"--gm-panel-elevated": "#F2F2F2",
-				"--gm-panel-border": "#EAEAEA",
-				"--gm-panel-border-strong": "#D4D4D4",
-				"--gm-panel-text": "#000000",
-				"--gm-panel-text-secondary": "#555555",
-				"--gm-panel-text-muted": "#888888",
-				"--bg-light": "#FAFAFA",
-				"--bg-dark": "#FAFAFA",
-				"--surface-light": "#FFFFFF",
-				"--surface-dark": "#FFFFFF",
+			".gm-theme-light, .chakra-ui-light": {
+				"--bg-light": "var(--gamaj-white)",
+				"--bg-dark": "var(--gamaj-white)",
+				"--surface-light": "var(--gamaj-white)",
+				"--surface-dark": "var(--gamaj-white)",
 			},
 			body: {
 				backgroundColor: "panel.main",
 				color: "panel.text",
+				fontSize: "base",
 			},
 			"[data-theme='dark'] body, .chakra-ui-dark body": {
 				backgroundColor: "panel.main",
 				color: "panel.text",
 			},
-
-			".gm-seasonal-christmas": {
-				"--primary-50": "#ffe6e6",
-				"--primary-100": "#ffcdd2",
-				"--primary-200": "#ef9a9a",
-				"--primary-300": "#e57373",
-				"--primary-400": "#ef5350",
-				"--primary-500": "#d32f2f",
-				"--primary-600": "#c62828",
-				"--primary-700": "#b71c1c",
-				"--primary-800": "#8d0f0f",
-				"--primary-900": "#5f0a0a",
-				"--bg-light": "#fdf7f2",
-				"--bg-dark": "#0b0f19",
-				"--surface-light": "#f7eee8",
-				"--surface-dark": "#172235",
+			"[data-theme='light'] body, .chakra-ui-light body": {
+				backgroundColor: "panel.main",
+				color: "panel.text",
+			},
+			// The wordmark, section labels and buttons all share the identity's
+			// tracked uppercase treatment.
+			".gm-wordmark": {
+				fontFamily: "heading",
+				fontWeight: "semibold",
+				letterSpacing: "0.14em",
+				textTransform: "uppercase",
+			},
+			".gm-eyebrow": {
+				fontSize: "11px",
+				fontWeight: "medium",
+				letterSpacing: "0.12em",
+				textTransform: "uppercase",
+				color: "panel.textMuted",
 			},
 		},
 	},
+
 	components: {
 		Card: {
-			baseStyle: (props: StyleFunctionProps) => ({
+			baseStyle: {
 				container: {
-					bg: mode("panel.surface", "panel.surface")(props),
+					bg: "panel.surface",
 					borderWidth: "1px",
-					borderColor: mode("panel.border", "panel.border")(props),
+					borderColor: "panel.border",
 					boxShadow: "none",
-					borderRadius: "6px",
+					borderRadius: "var(--gm-radius-md)",
 				},
-			}),
+			},
+		},
+		Badge: {
+			baseStyle: {
+				borderRadius: "var(--gm-radius-sm)",
+				fontSize: "11px",
+				fontWeight: "medium",
+				letterSpacing: "0.06em",
+				textTransform: "uppercase",
+				px: "2px",
+				py: "1px",
+			},
+		},
+		Tag: {
+			baseStyle: {
+				container: {
+					borderRadius: "var(--gm-radius-sm)",
+					fontSize: "11px",
+					fontWeight: "medium",
+					letterSpacing: "0.06em",
+				},
+			},
 		},
 		Modal: {
 			baseStyle: (props: StyleFunctionProps) => ({
@@ -164,12 +251,18 @@ const sharedThemeConfig = {
 					bg: mode("panel.surface", "panel.surface")(props),
 					borderWidth: "1px",
 					borderColor: mode("panel.border", "panel.border")(props),
-					borderRadius: "6px",
-					boxShadow: "0 20px 60px rgba(0, 0, 0, 0.42)",
+					borderRadius: "var(--gm-radius-lg)",
+					boxShadow: "none",
 				},
 				header: {
+					fontSize: "lg",
+					fontWeight: "semibold",
+					letterSpacing: "-0.015em",
 					borderBottomWidth: "1px",
 					borderColor: mode("panel.border", "panel.border")(props),
+				},
+				body: {
+					fontSize: "base",
 				},
 				footer: {
 					borderTopWidth: "1px",
@@ -194,20 +287,16 @@ const sharedThemeConfig = {
 						bg: mode("panel.surface", "panel.surface")(props),
 						borderWidth: "1px",
 						borderColor: mode("panel.border", "panel.border")(props),
-						boxShadow: "0 18px 48px rgba(0, 0, 0, 0.38)",
+						boxShadow: "none",
+						borderRadius: "var(--gm-radius-md)",
 					},
 					item: {
 						bg: "transparent !important",
 						color: mode("panel.text", "panel.text")(props),
-						_hover: {
-							bg: `${hoverBg} !important`,
-						},
-						_focus: {
-							bg: `${hoverBg} !important`,
-						},
-						_active: {
-							bg: `${hoverBg} !important`,
-						},
+						_fontSize: "sm",
+						_hover: { bg: `${hoverBg} !important` },
+						_focus: { bg: `${hoverBg} !important` },
+						_active: { bg: `${hoverBg} !important` },
 					},
 				};
 			},
@@ -218,7 +307,8 @@ const sharedThemeConfig = {
 					bg: mode("panel.surface", "panel.surface")(props),
 					borderWidth: "1px",
 					borderColor: mode("panel.border", "panel.border")(props),
-					boxShadow: "0 18px 48px rgba(0, 0, 0, 0.38)",
+					boxShadow: "none",
+					borderRadius: "var(--gm-radius-md)",
 				},
 				header: {
 					borderBottomWidth: "1px",
@@ -236,15 +326,12 @@ const sharedThemeConfig = {
 					borderTopWidth: "0",
 					borderBottomWidth: "1px",
 					borderColor: mode("panel.border", "panel.border")(props),
-					_last: {
-						borderBottomWidth: "1px",
-					},
+					_last: { borderBottomWidth: "1px" },
 				},
 				button: {
 					bg: "transparent",
-					_hover: {
-						bg: mode("panel.elevated", "panel.elevated")(props),
-					},
+					_fontSize: "base",
+					_hover: { bg: mode("panel.elevated", "panel.elevated")(props) },
 					_expanded: {
 						bg: mode("panel.elevated", "panel.elevated")(props),
 					},
@@ -257,9 +344,20 @@ const sharedThemeConfig = {
 		Alert: {
 			baseStyle: {
 				container: {
-					borderRadius: "6px",
+					borderRadius: "var(--gm-radius-md)",
+					borderWidth: "1px",
 					fontSize: "sm",
 				},
+			},
+		},
+		Tooltip: {
+			baseStyle: {
+				bg: "gamaj.950",
+				color: "gamaj.white",
+				borderRadius: "var(--gm-radius-sm)",
+				fontSize: "xs",
+				px: "2",
+				py: "1",
 			},
 		},
 		Select: {
@@ -267,12 +365,12 @@ const sharedThemeConfig = {
 				field: {
 					bg: "panel.surface",
 					color: "panel.text",
+					borderRadius: "var(--gm-radius-md)",
 					_dark: {
 						borderColor: "panel.borderStrong",
-						borderRadius: "6px",
 					},
 					_light: {
-						borderRadius: "6px",
+						borderColor: "panel.borderStrong",
 					},
 				},
 			},
@@ -280,138 +378,160 @@ const sharedThemeConfig = {
 		FormHelperText: {
 			baseStyle: {
 				fontSize: "xs",
+				color: "panel.textMuted",
 			},
 		},
 		FormLabel: {
 			baseStyle: {
 				fontSize: "sm",
 				fontWeight: "medium",
+				color: "panel.textSecondary",
 				mb: "1",
 				_dark: { color: "panel.textSecondary" },
+				_light: { color: "panel.textSecondary" },
 			},
 		},
 		Input: {
 			baseStyle: {
 				addon: {
 					bg: "panel.elevated",
+					borderColor: "panel.border",
 					_dark: {
 						borderColor: "panel.borderStrong",
-						_placeholder: {
-							color: "panel.textMuted",
-						},
+						_placeholder: { color: "panel.textMuted" },
+					},
+					_light: {
+						borderColor: "panel.borderStrong",
+						_placeholder: { color: "panel.textMuted" },
 					},
 				},
 				field: {
 					bg: "panel.surface",
 					color: "panel.text",
+					borderRadius: "var(--gm-radius-md)",
 					_focusVisible: {
 						boxShadow: "none",
-						borderColor: "primary.500",
-						outlineColor: "primary.500",
+						borderColor: "gamaj.black",
+						outlineColor: "gamaj.black",
 					},
 					_dark: {
 						borderColor: "panel.borderStrong",
+						_focusVisible: { borderColor: "gamaj.white" },
 						_disabled: {
 							color: "panel.textMuted",
 							borderColor: "panel.border",
 						},
-						_placeholder: {
+						_placeholder: { color: "panel.textMuted" },
+					},
+					_light: {
+						borderColor: "panel.borderStrong",
+						_focusVisible: { borderColor: "gamaj.black" },
+						_disabled: {
 							color: "panel.textMuted",
+							borderColor: "panel.border",
 						},
+						_placeholder: { color: "panel.textMuted" },
 					},
 				},
 			},
 		},
+		// Tables follow the identity: hairline separators, an uppercase muted
+		// header row, and no zebra fill or hover shadow.
 		Table: {
 			baseStyle: {
 				table: {
-					borderCollapse: "separate",
+					borderCollapse: "collapse",
 					borderSpacing: 0,
+					fontSize: "sm",
 				},
 				thead: {
-					borderBottomColor: "light-border",
+					borderBottomColor: "panel.border",
 				},
 				th: {
-					background: "panel.elevated",
-					color: "panel.text",
-					borderColor: "panel.border !important",
-					borderBottomColor: "panel.border !important",
-					borderTop: "1px solid ",
-					borderTopColor: "panel.border !important",
-					_first: {
-						borderLeft: "1px solid",
-						borderColor: "panel.border !important",
-					},
-					_last: {
-						borderRight: "1px solid",
-						borderColor: "panel.border !important",
-					},
-					_dark: {
-						borderColor: "panel.border !important",
-						background: "panel.elevated",
-					},
+					borderColor: "panel.border",
+					borderBottomColor: "panel.border",
+					borderTopWidth: "1px",
+					color: "panel.textMuted",
+					fontSize: "xs",
+					fontWeight: "medium",
+					letterSpacing: "0.06em",
+					textTransform: "uppercase",
+					px: "3",
+					py: "2.5",
+					_first: { borderLeftWidth: "1px" },
+					_last: { borderRightWidth: "1px" },
 				},
 				td: {
-					transition: "all .1s ease-out",
+					transition: "background var(--gm-transition)",
 					borderColor: "panel.border",
-					borderBottomColor: "panel.border !important",
-					_first: {
-						borderLeft: "1px solid",
-						borderColor: "panel.border",
-						_dark: {
-							borderColor: "panel.border",
-						},
-					},
-					_last: {
-						borderRight: "1px solid",
-						borderColor: "panel.border",
-						_dark: {
-							borderColor: "panel.border",
-						},
-					},
-					_dark: {
-						borderColor: "panel.border",
-						borderBottomColor: "panel.border !important",
-					},
+					borderBottomColor: "panel.border",
+					px: "3",
+					py: "2.5",
+					_first: { borderLeftWidth: "1px" },
+					_last: { borderRightWidth: "1px" },
+					_dark: { borderColor: "panel.border" },
+					_light: { borderColor: "panel.border" },
 				},
 				tr: {
 					"&.interactive": {
 						cursor: "pointer",
 						_hover: {
-							"& > td": {
-								bg: "panel.elevated",
-							},
-							_dark: {
-								"& > td": {
-									bg: "panel.elevated",
-								},
-							},
+							"& > td": { bg: "panel.rowHover" },
 						},
 					},
-					_last: {
-						"& > td": {
-							_first: {
-								borderBottomLeftRadius: "8px",
-							},
-							_last: {
-								borderBottomRightRadius: "8px",
-							},
-						},
-					},
+					_last: { "& > td": { borderBottomWidth: "1px" } },
 				},
 			},
 		},
 		Button: {
+			baseStyle: {
+				_fontSize: "sm",
+				_fontWeight: "medium",
+				borderRadius: "var(--gm-radius-md)",
+				transition: "background var(--gm-transition), border-color var(--gm-transition), color var(--gm-transition)",
+			},
 			variants: {
-				outline: (props: StyleFunctionProps) => ({
-					borderColor: mode("blackAlpha.300", "whiteAlpha.300")(props),
+				solid: (props: StyleFunctionProps) => ({
+					bg: mode("gamaj.black", "gamaj.white")(props),
+					color: mode("gamaj.white", "gamaj.black")(props),
 					_hover: {
-						bg: mode("blackAlpha.50", "whiteAlpha.100")(props),
+						bg: mode("gamaj.800", "gamaj.200")(props),
+						_disabled: {
+							bg: mode("gamaj.800", "gamaj.200")(props),
+						},
+					},
+					_active: { bg: mode("gamaj.900", "gamaj.100")(props) },
+				}),
+				outline: (props: StyleFunctionProps) => ({
+					borderColor: mode("gamaj.300", "gamaj.700")(props),
+					color: mode("gamaj.black", "gamaj.white")(props),
+					_hover: {
+						bg: mode("gamaj.50", "gamaj.900")(props),
+						borderColor: mode("gamaj.black", "gamaj.white")(props),
 					},
 					_active: {
-						bg: mode("blackAlpha.100", "whiteAlpha.200")(props),
+						bg: mode("gamaj.100", "gamaj.800")(props),
 					},
 				}),
+				ghost: (props: StyleFunctionProps) => ({
+					color: mode("gamaj.500", "gamaj.400")(props),
+					_hover: {
+						bg: mode("gamaj.100", "gamaj.800")(props),
+						color: mode("gamaj.black", "gamaj.white")(props),
+					},
+					_active: {
+						bg: mode("gamaj.200", "gamaj.800")(props),
+					},
+				}),
+			},
+			sizes: {
+				sm: { h: "28px", px: "10px", fontSize: "xs" },
+				md: { h: "36px", px: "14px" },
+				lg: { h: "44px", px: "20px" },
+			},
+			defaultProps: {
+				size: "md",
+				colorScheme: "gray",
 			},
 		},
 	},

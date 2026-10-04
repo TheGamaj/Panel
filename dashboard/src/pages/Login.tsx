@@ -35,7 +35,7 @@ import {
 	UserIcon,
 } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
-import logoUrl from "assets/logo-mark.svg";
+import { GamajMark } from "components/GamajMark";
 import { Language } from "components/Language";
 import {
 	type FC,
@@ -68,13 +68,6 @@ import { z } from "zod";
 const schema = z.object({
 	username: z.string().min(1, "login.fieldRequired"),
 	password: z.string().min(1, "login.fieldRequired"),
-});
-
-export const LogoIcon = chakra("img", {
-	baseStyle: {
-		h: 8,
-		w: 8,
-	},
 });
 
 const LoginIcon = chakra(ArrowRightOnRectangleIcon, {
@@ -315,11 +308,11 @@ export const Login: FC = () => {
 		"var(--gm-panel-text-muted)",
 		"var(--gm-panel-text-muted)",
 	);
-	const logoFilter = useColorModeValue(
-		"brightness(0) invert(1)",
-		"brightness(0) invert(1)",
-	);
+	const markColor = "var(--gm-panel-text)";
 	const accentColor = "var(--gm-panel-accent)";
+	// The accent flips with the colour mode (white in dark, black in light),
+	// so its label must flip with it to stay readable.
+	const accentContrast = "var(--gm-panel-bg)";
 
 	const {
 		register,
@@ -469,7 +462,6 @@ export const Login: FC = () => {
 					borderColor={borderColor}
 					borderRadius="8px"
 					borderWidth="1px"
-					boxShadow="0 18px 60px rgba(0, 0, 0, 0.22)"
 					p={{ base: 5, sm: 6 }}
 					w="full"
 				>
@@ -479,7 +471,7 @@ export const Login: FC = () => {
 								alignItems="center"
 								bg={elevatedBg}
 								borderColor={borderColor}
-								borderRadius="8px"
+								borderRadius="var(--gm-radius-md)"
 								borderWidth="1px"
 								display="inline-flex"
 								flexShrink={0}
@@ -487,13 +479,16 @@ export const Login: FC = () => {
 								justifyContent="center"
 								w={10}
 							>
-								<LogoIcon
-									alt={t("menu")}
-									filter={logoFilter}
-									src={logoUrl}
-								/>
+								<GamajMark color={markColor} h={8} w={8} />
 							</Box>
-							<Text fontSize="lg" fontWeight="800" noOfLines={1}>
+							<Text
+								className="gm-wordmark"
+								fontSize="lg"
+								fontWeight="semibold"
+								letterSpacing="0.14em"
+								noOfLines={1}
+								textTransform="uppercase"
+							>
 								Gamaj
 							</Text>
 						</HStack>
@@ -569,7 +564,7 @@ export const Login: FC = () => {
 								<Button
 									bg={accentColor}
 									borderRadius="8px"
-									color="white"
+									color={accentContrast}
 									h="44px"
 									isDisabled={!canSubmit}
 									isLoading={isSubmitting}
@@ -615,7 +610,7 @@ export const Login: FC = () => {
 								)}
 								<Button
 									bg={accentColor}
-									color="white"
+									color={accentContrast}
 									h="44px"
 									isDisabled={otp.length !== 6}
 									isLoading={challengeLoading}
@@ -642,7 +637,7 @@ export const Login: FC = () => {
 				pt={8}
 				textAlign="center"
 			>
-				Coded by AsliCode
+				{t("app.version")}
 			</Text>
 		</Box>
 	);

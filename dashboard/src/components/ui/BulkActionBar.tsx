@@ -45,7 +45,6 @@ export const BulkActionBar: FC<BulkActionBarProps> = ({
 			bg="panel.surface"
 			borderWidth="1px"
 			borderColor="panel.borderStrong"
-			boxShadow="0 -12px 30px rgba(0, 0, 0, 0.28)"
 			borderRadius="6px"
 			px={{ base: 4, md: 6 }}
 			py={4}

@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="./docs/assets/gamaj-logo.svg" alt="Gamaj" width="104" height="104">
+  <img src="./docs/assets/gamaj-mark.svg" alt="Gamaj" width="104" height="104">
 </p>
 
 <h1>GAMAJ</h1>
@@ -208,7 +208,7 @@ added anywhere in the tree.
 ## Brand assets
 
 The favicon set in `dashboard/public/statics/favicon/` is generated from the
-geometric G mark, not hand-drawn, so it cannot drift from the logo:
+Gamaj symbol geometry, not hand-drawn, so it cannot drift from the logo:
 
 ```bash
 node tools/render-brand-assets.mjs dashboard/public/statics/favicon

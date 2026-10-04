@@ -1,14 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- GAMAJ mark (monochrome): a squared-off G in a solid tile. -->
-  <defs>
-    <mask id="gamaj-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
-      <rect width="512" height="512" fill="#FFFFFF"/>
-      <g fill="none" stroke="#000000" stroke-width="60" stroke-linecap="square">
-        <path d="M324.9 161.7 A112 112 0 1 0 368 250"/>
-        <path d="M368 250 H 288"/>
-      </g>
-    </mask>
-  </defs>
-  <rect x="24" y="24" width="464" height="464" rx="128" fill="#000000" mask="url(#gamaj-cut)"/>
+  <!-- GAMAJ mark (monochrome): four modules on a modular grid. -->
+  <path d="M85.33 85.33h142.22v142.22h-142.22zM284.44 85.33h142.22v142.22h-142.22zM85.33 284.44h142.22v142.22h-142.22zM284.44 341.33h85.33v85.33h-85.33z" fill="#000000"/>
 </svg>
