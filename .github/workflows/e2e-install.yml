@@ -3,6 +3,8 @@ name: E2E Binary Install
 on:
   workflow_dispatch:
   pull_request:
+    branches:
+      - Asli
   push:
     branches:
       - Asli
