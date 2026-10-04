@@ -30,7 +30,7 @@ export const Icon: FC<PropsWithChildren<IconType>> = ({
 				height: "calc(100%)",
 				bg: `${color}.400`,
 				opacity: ".5",
-				borderRadius: "5px",
+				borderRadius: "4px",
 				zIndex: "1",
 				_dark: {
 					bg: `${color}.400`,

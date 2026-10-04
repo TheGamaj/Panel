@@ -130,7 +130,7 @@ const Surface = ({ children }: { children: React.ReactNode }) => (
 	<Box
 		borderWidth="1px"
 		borderColor="panel.border"
-		borderRadius="12px"
+		borderRadius="8px"
 		bg="panel.surface"
 		boxShadow="sm"
 		p={{ base: 4, md: 5 }}
@@ -792,7 +792,7 @@ const BulkDeletePanel = () => {
 									key={condition}
 									borderWidth="1px"
 									borderColor="panel.border"
-									borderRadius="6px"
+									borderRadius="4px"
 									p={3}
 								>
 									<Stack spacing={3}>
@@ -901,7 +901,7 @@ const BulkDeletePanel = () => {
 										? "warning"
 										: "info"
 							}
-							borderRadius="6px"
+							borderRadius="4px"
 						>
 							<AlertIcon />
 							{previewCount > MAX_BATCH_SIZE

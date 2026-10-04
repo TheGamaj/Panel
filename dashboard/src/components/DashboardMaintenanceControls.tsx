@@ -662,7 +662,7 @@ export const DashboardMaintenanceControls = ({
 			>
 				<ModalOverlay bg="blackAlpha.700" backdropFilter="blur(16px)" />
 				<ModalContent
-					borderRadius="24px"
+					borderRadius="8px"
 					overflow="hidden"
 					bg="panel.surface"
 					borderColor="panel.border"
@@ -683,7 +683,7 @@ export const DashboardMaintenanceControls = ({
 									h="36px"
 									align="center"
 									justify="center"
-									borderRadius="12px"
+									borderRadius="8px"
 									bg="panel.elevated"
 									color="var(--gm-panel-accent)"
 									border="1px solid"
@@ -738,7 +738,7 @@ export const DashboardMaintenanceControls = ({
 						<Stack spacing={4}>
 							<Box
 								p={4}
-								borderRadius="16px"
+								borderRadius="8px"
 								bg="panel.elevated"
 								border="1px solid"
 								borderColor="panel.border"
@@ -818,7 +818,7 @@ export const DashboardMaintenanceControls = ({
 							)}
 
 							<Box
-								borderRadius="16px"
+								borderRadius="8px"
 								bg={outputBg}
 								border="1px solid"
 								borderColor={outputBorder}
@@ -855,7 +855,7 @@ export const DashboardMaintenanceControls = ({
 											h="22px"
 											w="22px"
 											minW="22px"
-											borderRadius="6px"
+											borderRadius="4px"
 											color={logsCopied ? "green.500" : "panel.textMuted"}
 											_hover={{ color: "panel.text" }}
 											onClick={() => {

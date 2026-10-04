@@ -553,7 +553,7 @@ body {
 
   .gm-resource-card {
     border: 1px solid var(--gm-panel-border);
-    border-radius: 6px;
+    border-radius: 4px;
     background: var(--gm-panel-surface);
     padding: 0.8rem;
     overflow: hidden;
@@ -871,7 +871,7 @@ body {
 .gm-resource-state {
   width: 100%;
   border: 1px solid var(--gm-panel-border);
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--gm-panel-surface);
   color: var(--gm-panel-text-muted);
   padding: 1.25rem;
@@ -1294,7 +1294,7 @@ table thead {
 .react-datepicker__day--selected,
 .react-datepicker__day--in-selecting-range,
 .react-datepicker__day--in-range {
-  border-radius: 0.3rem;
+  border-radius: 4px;
   background-color: var(--chakra-colors-primary-500) !important;
   color: var(--chakra-colors-white) !important;
 }
@@ -1303,18 +1303,18 @@ table thead {
 .chakra-ui-dark .react-datepicker__day--selected,
 .chakra-ui-dark .react-datepicker__day--in-selecting-range,
 .chakra-ui-dark .react-datepicker__day--in-range {
-  border-radius: 0.3rem;
+  border-radius: 4px;
   background-color: var(--chakra-colors-primary-200) !important;
   color: var(--chakra-colors-gray-800) !important;
 }
 
 .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
-  border-radius: 0.3rem;
+  border-radius: 4px;
   background-color: var(--chakra-colors-primary-400) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
-  border-radius: 0.3rem;
+  border-radius: 4px;
   background-color: var(--chakra-colors-primary-400) !important;
 }
 
@@ -1409,7 +1409,7 @@ table thead {
   top: 8px;
   width: 28px;
   height: 28px;
-  border-radius: 6px;
+  border-radius: 4px;
   transition:
     background-color var(--gm-duration-ui) var(--gm-ease-out),
     color var(--gm-duration-ui) var(--gm-ease-out);
@@ -1462,7 +1462,7 @@ table thead {
   height: 2.2rem;
   line-height: 2.2rem;
   margin: 2px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 0.9rem;
   transition:
     background-color var(--gm-duration-ui) var(--gm-ease-out),

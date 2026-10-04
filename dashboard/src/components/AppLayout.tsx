@@ -222,16 +222,8 @@ export function AppLayout() {
 		"rgba(255, 255, 255, 0.18)",
 		"rgba(255, 255, 255, 0.08)",
 	);
-	const activePillShadow = useColorModeValue(
-		"0 6px 14px rgba(15, 23, 42, 0.1)",
-		"0 6px 14px rgba(0, 0, 0, 0.24)",
-	);
 	const shellBorder = useColorModeValue("panel.border", "panel.border");
 	const shellHeaderBg = useColorModeValue("panel.surface", "panel.surface");
-	const shellHeaderShadow = useColorModeValue(
-		"0 18px 48px rgba(15, 23, 42, 0.10)",
-		"0 18px 48px rgba(0, 0, 0, 0.32)",
-	);
 	const shellMainBg = useColorModeValue("panel.main", "panel.main");
 	const headerButtonBg = useColorModeValue("panel.elevated", "panel.elevated");
 	const headerButtonHoverBg = useColorModeValue(
@@ -868,7 +860,8 @@ export function AppLayout() {
 						borderColor={shellBorder}
 						borderRadius="2xl"
 						bg={shellHeaderBg}
-						boxShadow={shellHeaderShadow}
+						// Surfaces separate by hairline, never by elevation.
+							boxShadow="none"
 						mt="3"
 						mx={{ base: "3", md: "4" }}
 						display="flex"
@@ -1258,7 +1251,7 @@ export function AppLayout() {
 							>
 								<Box
 									bg={menuBg}
-									borderRadius="20px"
+									borderRadius="8px"
 									borderWidth="1px"
 									borderColor={menuBorder}
 									px="4"
@@ -1320,7 +1313,7 @@ export function AppLayout() {
 								borderColor={menuBorder}
 								boxShadow="xl"
 								borderWidth="1px"
-								borderRadius="26px"
+								borderRadius="8px"
 								px="3"
 								pt="2"
 								pb="calc(env(safe-area-inset-bottom) + 6px)"
@@ -1395,7 +1388,8 @@ export function AppLayout() {
 																inset: 0,
 																borderRadius: 999,
 																background: activePillBg,
-																boxShadow: activePillShadow,
+																// The active tab is a flat fill; nothing is lifted.
+									boxShadow: "none",
 																zIndex: 0,
 																pointerEvents: "none",
 															}}
@@ -1512,7 +1506,7 @@ export function AppLayout() {
 															maxW="calc(100vw - 24px)"
 															maxH="calc(100vh - 160px)"
 															overflowY="auto"
-															borderRadius="18px"
+															borderRadius="8px"
 															bg={menuBg}
 															borderColor={menuBorder}
 															borderWidth="1px"
@@ -1640,7 +1634,7 @@ export function AppLayout() {
 															maxW="calc(100vw - 24px)"
 															maxH="calc(100vh - 160px)"
 															overflowY="auto"
-															borderRadius="18px"
+															borderRadius="8px"
 															bg={menuBg}
 															borderColor={menuBorder}
 															borderWidth="1px"

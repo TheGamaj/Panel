@@ -31,7 +31,7 @@ export const PageLoadingSkeleton: FC = () => (
 			spacing={4}
 			borderWidth="1px"
 			borderColor="panel.border"
-			borderRadius="20px"
+			borderRadius="8px"
 			bg="panel.surface"
 			p={{ base: 4, md: 5 }}
 		>
@@ -85,7 +85,7 @@ export const PageLoadingSkeleton: FC = () => (
 		<Box
 			borderWidth="1px"
 			borderColor="panel.border"
-			borderRadius="20px"
+			borderRadius="8px"
 			bg="panel.surface"
 			overflow="hidden"
 		>

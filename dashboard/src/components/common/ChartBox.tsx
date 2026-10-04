@@ -38,7 +38,8 @@ export const ChartBox: FC<ChartBoxProps> = ({
 			}}
 			_hover={{
 				"@media (min-width: 768px)": {
-					boxShadow: "sm",
+					// Surfaces separate by hairline, never by elevation.
+					boxShadow: "none",
 					borderColor: "panel.borderStrong",
 				},
 			}}

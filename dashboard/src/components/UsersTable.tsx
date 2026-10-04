@@ -1898,7 +1898,7 @@ export const UsersTable: FC<UsersTableProps> = ({
 										p={3}
 										borderWidth="1px"
 										borderColor="panel.border"
-										borderRadius="6px"
+										borderRadius="4px"
 									>
 										<Flex
 											justify="space-between"

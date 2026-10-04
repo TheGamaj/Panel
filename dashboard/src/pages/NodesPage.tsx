@@ -2699,7 +2699,8 @@ export const NodesPage: FC = () => {
 				transition="box-shadow 0.2s ease, border-color 0.2s ease"
 				_hover={{
 					"@media (min-width: 768px)": {
-						boxShadow: "sm",
+						// Hairline and fill change on hover; nothing is lifted.
+						boxShadow: "none",
 						borderColor: "panel.borderStrong",
 					},
 				}}
@@ -2792,7 +2793,8 @@ export const NodesPage: FC = () => {
 				transition="box-shadow 0.2s ease, border-color 0.2s ease"
 				_hover={{
 					"@media (min-width: 768px)": {
-						boxShadow: "sm",
+						// Hairline and fill change on hover; nothing is lifted.
+						boxShadow: "none",
 						borderColor: "panel.borderStrong",
 					},
 				}}

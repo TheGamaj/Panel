@@ -2247,7 +2247,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																			>
 																				<ChakraInput
 																					type="text"
-																					borderRadius="6px"
+																					borderRadius="4px"
 																					placeholder={t("username")}
 																					isDisabled={disabled || isEditing}
 																					{...(!isEditing ? endPadding : {})}
@@ -2476,7 +2476,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		render={({ field }) => (
 																			<Input
 																				size="sm"
-																				borderRadius="6px"
+																				borderRadius="4px"
 																				placeholder={t(
 																					"userDialog.ipLimitPlaceholder",
 																				)}

@@ -1263,7 +1263,7 @@ export const MyAccountPage: React.FC = () => {
 															w="9"
 															h="9"
 															flexShrink={0}
-															borderRadius="6px"
+															borderRadius="4px"
 															bg="panel.elevated"
 															color="panel.accent"
 															aria-hidden="true"

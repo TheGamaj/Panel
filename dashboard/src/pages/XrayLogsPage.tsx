@@ -440,7 +440,7 @@ export const XrayLogsPage: FC<XrayLogsPageProps> = ({ showTitle = true }) => {
 				borderWidth="1px"
 				borderColor="panel.border"
 				bg="panel.surface"
-				borderRadius="6px"
+				borderRadius="4px"
 				minHeight="200px"
 				maxHeight="500px"
 				p={3}

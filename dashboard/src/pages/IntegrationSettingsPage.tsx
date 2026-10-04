@@ -1850,7 +1850,7 @@ export const IntegrationSettingsPage = () => {
 					borderColor,
 					borderRadius: "2xl",
 					p: { base: 4, md: 5 },
-					boxShadow: "sm",
+					boxShadow: "none",
 					overflow: "hidden",
 				},
 				".master-settings-subcard": {

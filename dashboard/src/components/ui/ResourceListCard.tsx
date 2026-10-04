@@ -57,7 +57,8 @@ export const ResourceListCard: FC<ResourceListCardProps> = ({
 			transition="border-color 0.25s ease, box-shadow 0.25s ease"
 			_hover={{
 				"@media (min-width: 768px)": {
-					boxShadow: "sm",
+					// Hairline and fill change on hover; nothing is lifted.
+					boxShadow: "none",
 					borderColor: "panel.borderStrong",
 				},
 			}}
