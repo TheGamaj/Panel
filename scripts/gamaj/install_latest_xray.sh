@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# Download the default Xray core used by Gamaj node installs.
-
-GAMAJ_XRAY_CORE_VERSION_DEFAULT="${GAMAJ_XRAY_CORE_VERSION_DEFAULT:-v26.5.9}"
+GAMAJ_XRAY_CORE_VERSION_DEFAULT="${GAMAJ_XRAY_CORE_VERSION_DEFAULT:-v26.7.11}"
 RELEASE_TAG="${GAMAJ_XRAY_CORE_VERSION:-$GAMAJ_XRAY_CORE_VERSION_DEFAULT}"
 DATA_DIR="${GAMAJ_DATA_DIR:-/var/lib/gamaj}"
 INSTALL_DIR="${GAMAJ_XRAY_INSTALL_DIR:-$DATA_DIR/xray-core}"
@@ -17,7 +15,6 @@ if [[ "$RELEASE_TAG" != "latest" && "$RELEASE_TAG" != v* ]]; then
 fi
 
 check_if_running_as_root() {
-    # If you want to run as another user, please modify $EUID to be owned by this user
     if [[ "$EUID" -ne '0' ]]; then
         echo "error: You must run this script as root!"
         exit 1
@@ -89,18 +86,18 @@ download_xray() {
     else
         DOWNLOAD_LINK="https://github.com/XTLS/Xray-core/releases/download/$RELEASE_TAG/Xray-linux-$ARCH.zip"
     fi
-    
+
     echo "Downloading Xray archive: $DOWNLOAD_LINK"
     if ! curl -RL -H 'Cache-Control: no-cache' -o "$ZIP_FILE" "$DOWNLOAD_LINK"; then
-        echo 'error: Download failed! Please check your network or try again.'
+        echo "error: Download failed! Please check your network or try again."
         return 1
     fi
 }
 
 extract_xray() {
     if ! unzip -q "$ZIP_FILE" -d "$TMP_DIRECTORY"; then
-        echo 'error: Xray decompression failed.'
-        "rm" -rf "$TMP_DIRECTORY"
+        echo "error: Xray decompression failed."
+        rm -rf "$TMP_DIRECTORY"
         echo "removed: $TMP_DIRECTORY"
         exit 1
     fi
@@ -114,7 +111,7 @@ place_xray() {
     install -m 644 "${TMP_DIRECTORY}/geoip.dat" "${ASSETS_DIR}/geoip.dat"
     install -m 644 "${TMP_DIRECTORY}/geosite.dat" "${ASSETS_DIR}/geosite.dat"
 
-    # Backward-compatible links for tools that still look under /usr/local.
+    # Keep compatibility paths for tooling that still uses /usr/local.
     install -d "/usr/local/bin" "/usr/local/share"
     ln -sf "${INSTALL_DIR}/xray" "/usr/local/bin/xray" || true
     ln -sfn "${ASSETS_DIR}" "/usr/local/share/xray" || true
@@ -132,4 +129,4 @@ download_xray
 extract_xray
 place_xray
 
-"rm" -rf "$TMP_DIRECTORY"
+rm -rf "$TMP_DIRECTORY"

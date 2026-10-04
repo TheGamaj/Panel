@@ -439,10 +439,14 @@ service_uptime() {
 }
 
 get_xray_runtime_status() {
-    if pgrep -x xray >/dev/null 2>&1; then
-        echo "running"
+    # The panel does not run a local Xray core — nodes do. Reporting
+    # "stopped" here implied a fault that cannot occur on a healthy install,
+    # so say where Xray actually lives instead. A leftover core from an older
+    # install is still surfaced rather than hidden.
+    if [ -x "$DATA_DIR/xray-core/xray" ]; then
+        echo "local core present (unused)"
     else
-        echo "stopped"
+        echo "managed by nodes"
     fi
 }
 
