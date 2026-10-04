@@ -524,10 +524,10 @@ func (c *cli) adminCreate(args []string) error {
 	_, err = tx.ExecContext(ctx, `
 INSERT INTO admins (
     username, hashed_password, created_at, role, permissions, telegram_id,
-    subscription_settings, users_usage, lifetime_usage, created_traffic,
+    subscription_settings, reseller_settings, users_usage, lifetime_usage, created_traffic,
     deleted_users_usage, traffic_limit_mode, use_service_traffic_limits,
     show_user_traffic, delete_user_usage_limit_enabled, status
-) VALUES (?, ?, ?, ?, ?, ?, '{}', 0, 0, 0, 0, 'used_traffic', ?, 1, 0, 'active')`,
+) VALUES (?, ?, ?, ?, ?, ?, '{}', '{}', 0, 0, 0, 0, 'used_traffic', ?, 1, 0, 'active')`,
 		username,
 		hash,
 		time.Now().UTC(),

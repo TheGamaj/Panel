@@ -183,10 +183,10 @@ func (s *Server) handleCreateAdmin(w http.ResponseWriter, r *http.Request) {
 			r.Context(),
 			`INSERT INTO admins (
 	username, created_by, hashed_password, role, permissions, status, telegram_id, subscription_domain,
-	subscription_settings, users_usage, lifetime_usage, created_traffic, deleted_users_usage, data_limit, traffic_limit_mode,
+	subscription_settings, reseller_settings, users_usage, lifetime_usage, created_traffic, deleted_users_usage, data_limit, traffic_limit_mode,
 	use_service_traffic_limits, show_user_traffic, delete_user_usage_limit_enabled,
 	delete_user_usage_limit, expire, users_limit, require_2fa
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '{}', 0, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			payload.Username,
 			principal.Context.Admin.Username,
 			hash,

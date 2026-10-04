@@ -20,7 +20,7 @@ var gooseMu sync.Mutex
 var migrationDialect string
 
 const (
-	latestGooseVersion         int64 = 58
+	latestGooseVersion         int64 = 59
 	legacySchemaTable                = "schema_version"
 	legacySchemaFinalRevision        = "23_drop_access_insights"
 	legacySchemaFinalBaseline  int64 = 16
