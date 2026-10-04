@@ -189,11 +189,30 @@ go test ./internal/app/system/ ./internal/app/api/ ./internal/gateway/ \
 
 # End-to-end install check (Linux, systemd, root)
 sudo bash scripts/tests/e2e-binary-install.sh
+
+# Release asset resolution, including the "no matching asset" error path
+bash scripts/tests/test-binary-release-assets.sh
+
+# Repository guard: workflows, branches, asset names, brand assets
+bash scripts/ci/workflow-guard.sh
 ```
 
 `go test ./internal/platform/envguard/` fails the build when an environment
 variable without the `GAMAJ_` prefix (or a legacy name from before Gamaj) is
 added anywhere in the tree.
+
+## Brand assets
+
+The favicon set in `dashboard/public/statics/favicon/` is generated from the
+geometric G mark, not hand-drawn, so it cannot drift from the logo:
+
+```bash
+node tools/render-brand-assets.mjs dashboard/public/statics/favicon
+bash scripts/ci/brand-assets-check.sh   # regenerate and diff against brand-assets.sha256
+```
+
+`brand-assets-check.sh` fails if the committed rasters differ from a fresh
+render. The same script runs inside the `workflow-guard` CI job.
 
 ## Documentation
 

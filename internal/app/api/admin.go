@@ -14,6 +14,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	adminapp "github.com/TheGamaj/Panel/internal/app/admin"
@@ -1396,8 +1397,30 @@ func scanInt64Rows(rows *sql.Rows) ([]int64, error) {
 	return result, rows.Err()
 }
 
+// enqueueTimestampSeq keeps queued_at strictly increasing for the lifetime of
+// the process. Some platforms (notably Windows) expose a wall clock whose
+// resolution is coarser than the interval between two independent API calls,
+// so two distinct operations can be stamped with the exact same time. Because
+// queued_at participates in the node_operations idempotency key, a shared
+// timestamp silently collapses the second operation. Advancing by one
+// nanosecond guarantees a unique key without changing the payload shape.
+var enqueueTimestampSeq atomic.Int64
+
+func nextEnqueueTimestamp() time.Time {
+	for {
+		nanos := time.Now().UTC().UnixNano()
+		last := enqueueTimestampSeq.Load()
+		if nanos <= last {
+			nanos = last + 1
+		}
+		if enqueueTimestampSeq.CompareAndSwap(last, nanos) {
+			return time.Unix(0, nanos).UTC()
+		}
+	}
+}
+
 func enqueueNodeOperationTx(ctx context.Context, tx *sql.Tx, operationType string, nodeID *int64, userID *int64, payload any) error {
-	now := time.Now().UTC()
+	now := nextEnqueueTimestamp()
 	if nodeID == nil && userID != nil && operationType != "sync_config" {
 		rows, err := tx.QueryContext(ctx, `SELECT id FROM nodes WHERE LOWER(COALESCE(status, '')) = 'connected' ORDER BY id`)
 		if err != nil {

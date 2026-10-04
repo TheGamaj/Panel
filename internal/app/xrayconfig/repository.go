@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 )
 
@@ -404,8 +405,27 @@ func (r Repository) enqueueSyncConfigTx(ctx context.Context, tx *sql.Tx, nodeID 
 	return enqueueNodeOperationTx(ctx, tx, NodeOperationSyncConfig, nodeID, nil, payload)
 }
 
+// enqueueTimestampSeq keeps queued_at strictly increasing for the lifetime of
+// the process so that two operations enqueued within the same (potentially
+// coarse) wall-clock tick never share an idempotency key. See the identical
+// guard in internal/app/api/admin.go.
+var enqueueTimestampSeq atomic.Int64
+
+func nextEnqueueTimestamp() time.Time {
+	for {
+		nanos := time.Now().UTC().UnixNano()
+		last := enqueueTimestampSeq.Load()
+		if nanos <= last {
+			nanos = last + 1
+		}
+		if enqueueTimestampSeq.CompareAndSwap(last, nanos) {
+			return time.Unix(0, nanos).UTC()
+		}
+	}
+}
+
 func enqueueNodeOperationTx(ctx context.Context, tx *sql.Tx, operationType string, nodeID *int64, userID *int64, payload any) error {
-	nowTime := time.Now().UTC()
+	nowTime := nextEnqueueTimestamp()
 	if nodeID == nil && userID != nil && operationType != NodeOperationSyncConfig {
 		rows, err := tx.QueryContext(ctx, `SELECT id FROM nodes WHERE LOWER(COALESCE(status, '')) = 'connected' ORDER BY id`)
 		if err != nil {

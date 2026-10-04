@@ -38,6 +38,9 @@ jobs:
         with:
           go-version-file: "go.mod"
 
+      - name: Check release asset resolution and the no-matching-asset path
+        run: bash scripts/tests/test-binary-release-assets.sh
+
       - name: Run binary install end-to-end test
         env:
           GAMAJ_E2E_PREFIX: /tmp/gamaj-e2e
