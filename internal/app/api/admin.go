@@ -108,6 +108,22 @@ func (s *Server) handleAdminRoot(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// insertAdminSQL creates a master admin for the dashboard.
+//
+// Every column that is NOT NULL without a usable default must be named here.
+// Migration 000058 added reseller_settings as "JSON NOT NULL" on MySQL, and
+// MySQL will not attach a literal default to a JSON column on older servers, so
+// this statement originally omitted the column and every create failed with
+// error 1364. It is declared as a constant so the regression test can execute
+// this exact SQL rather than a copy of it.
+const insertAdminSQL = `
+INSERT INTO admins (
+	username, created_by, hashed_password, role, permissions, status, telegram_id, subscription_domain,
+	subscription_settings, reseller_settings, users_usage, lifetime_usage, created_traffic, deleted_users_usage, data_limit, traffic_limit_mode,
+	use_service_traffic_limits, show_user_traffic, delete_user_usage_limit_enabled,
+	delete_user_usage_limit, expire, users_limit, require_2fa
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '{}', 0, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
 func (s *Server) handleCreateAdmin(w http.ResponseWriter, r *http.Request) {
 	principal, _ := r.Context().Value(adminContextKey).(adminPrincipal)
 	if !canEditAdmins(principal.Context.Admin) {
@@ -181,12 +197,7 @@ func (s *Server) handleCreateAdmin(w http.ResponseWriter, r *http.Request) {
 		require2FA := optionalBool(payload.Require2FA, false)
 		result, err := tx.ExecContext(
 			r.Context(),
-			`INSERT INTO admins (
-	username, created_by, hashed_password, role, permissions, status, telegram_id, subscription_domain,
-	subscription_settings, reseller_settings, users_usage, lifetime_usage, created_traffic, deleted_users_usage, data_limit, traffic_limit_mode,
-	use_service_traffic_limits, show_user_traffic, delete_user_usage_limit_enabled,
-	delete_user_usage_limit, expire, users_limit, require_2fa
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '{}', 0, 0, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			insertAdminSQL,
 			payload.Username,
 			principal.Context.Admin.Username,
 			hash,
