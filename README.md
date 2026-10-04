@@ -190,6 +190,10 @@ go test ./internal/app/system/ ./internal/app/api/ ./internal/gateway/ \
 # End-to-end install check (Linux, systemd, root)
 sudo bash scripts/tests/e2e-binary-install.sh
 
+# Same check, delegating into WSL2/Docker/Podman/Lima/Colima/Multipass
+# when run from Windows or macOS (reports SKIP if no runtime is available)
+bash scripts/tests/e2e-vm-runner.sh
+
 # Release asset resolution, including the "no matching asset" error path
 bash scripts/tests/test-binary-release-assets.sh
 
