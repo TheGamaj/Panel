@@ -42,19 +42,20 @@ func containsAny(haystack string, needles ...string) bool {
 }
 
 // retiredIdentityNeedles returns the branding the rendered subscription page
-// must never contain: the fork it was ported from, the author signature the old
-// footers carried, and the replaced mark with its cut-out asset.
+// must never contain: the fork it was ported from, and the replaced mark with
+// its cut-out asset.
+//
+// The author line is required here, not retired, so it is asserted as a
+// marker below rather than listed as a needle.
 //
 // The fragments are concatenated at run time so this file never spells the
 // retired strings out in full; Web/tools/check-brand-geometry.cjs scans every
 // source file for them, and a literal here would make the guard flag its own
 // defensive assertion.
 func retiredIdentityNeedles() []string {
-	author := "Asli" + "Code"
 	return []string{
 		"BaToHub",
 		"bato_theme",
-		author,
 		"squared-off " + "G",
 		"gamaj" + "-cut",
 	}
@@ -85,7 +86,7 @@ func TestGamajSubscriptionTemplatesRender(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%s: render: %v", name, err)
 		}
-		for _, marker := range []string{"buyer", "vless://example", "Gamaj is.0.0.1", "GAMAJ"} {
+		for _, marker := range []string{"buyer", "vless://example", "Coded by AsliCode", "GAMAJ"} {
 			if !contains(out, marker) {
 				t.Fatalf("%s: rendered output missing %q", name, marker)
 			}

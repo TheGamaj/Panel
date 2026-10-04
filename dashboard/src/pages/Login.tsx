@@ -37,6 +37,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GamajMark } from "components/GamajMark";
 import { Language } from "components/Language";
+import PageFooter from "components/PageFooter";
 import {
 	type FC,
 	type ReactElement,
@@ -450,6 +451,9 @@ export const Login: FC = () => {
 			alignItems="center"
 			bg={pageBg}
 			display="flex"
+			// Column, so the card stacks above the author line and the line
+			// can anchor to the bottom of the page.
+			flexDirection="column"
 			justifyContent="center"
 			minH="100dvh"
 			px={{ base: 4, md: 10 }}
@@ -627,18 +631,7 @@ export const Login: FC = () => {
 					</Box>
 				</Box>
 			</VStack>
-			<Text
-				as="footer"
-				color="var(--gm-panel-text-muted)"
-				fontSize="xs"
-				letterSpacing="wide"
-				mt="auto"
-				pb={4}
-				pt={8}
-				textAlign="center"
-			>
-				{t("app.version")}
-			</Text>
+			<PageFooter />
 		</Box>
 	);
 };

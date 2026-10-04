@@ -79,6 +79,7 @@
 	"admins.validation.telegramNumeric": "Telegram ID must be numeric.",
 	"admins.validation.usernameMin": "Username must be at least 3 characters.",
 	"admins.validation.usersLimitTooLow": "Users limit cannot be lower than current active users ({{active}}).",
+	"app.codedBy": "Coded by AsliCode",
 	"app.version": "Gamaj is.0.0.1",
 	"apply": "应用",
 	"cancel": "取消",

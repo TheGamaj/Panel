@@ -72,6 +72,7 @@ import { clearClientSession } from "utils/session";
 import { getSponsors, type SponsorAsset } from "service/sponsors";
 import { ReactComponent as ImperialIranFlag } from "../assets/imperial-iran-flag.svg";
 import { AppSidebar } from "./AppSidebar";
+import PageFooter from "./PageFooter";
 import { GitHubStars } from "./GitHubStars";
 import { HeaderCalendar } from "./HeaderCalendar";
 import ThemeSelector from "./ThemeSelector";
@@ -1211,8 +1212,13 @@ export function AppLayout() {
 						overflow="auto"
 						minH="0"
 						bg={shellMainBg}
+						// A column so the author line can sit at the bottom of
+						// the page instead of floating under the header.
+						display="flex"
+						flexDirection="column"
 					>
 						<Outlet />
+						<PageFooter />
 					</Box>
 				</Flex>
 

@@ -649,19 +649,8 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 						/>
 					</Box>
 				)}
-				{!collapsed && (
-					<Text
-						color="panel.textMuted"
-						flexShrink={0}
-						fontSize="2xs"
-						letterSpacing="wide"
-						pb={2}
-						textAlign="center"
-						w="full"
-					>
-						{t("app.version")}
-					</Text>
-				)}
+				{/* No version in the sidebar: the author line at the bottom of the
+				page is the only closing line the interface shows. */}
 			</VStack>
 		</Box>
 	);
