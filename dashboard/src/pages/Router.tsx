@@ -1,18 +1,9 @@
-import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
 import { PageLoadingSkeleton } from "../components/ui";
-import { type ComponentType, lazy, Suspense, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import {
-	createBrowserRouter,
-	isRouteErrorResponse,
-	Navigate,
-	redirect,
-	useNavigate,
-	useRouteError,
-} from "react-router-dom";
+import { type ComponentType, lazy, Suspense } from "react";
+import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import { fetch } from "../service/http";
-import { recoverFromStaleChunk } from "../utils/chunkRecovery";
 import { Login } from "./Login";
+import RouteErrorPage from "./RouteErrorPage";
 
 const AppLayout = lazy(async () => ({
 	default: (await import("../components/AppLayout")).AppLayout,
@@ -64,51 +55,6 @@ const LazyPage = ({ Page }: { Page: ComponentType }) => (
 	</Suspense>
 );
 
-const routeErrorMessage = (error: unknown) => {
-	if (isRouteErrorResponse(error)) {
-		return error.statusText || `Request failed with status ${error.status}`;
-	}
-	if (error instanceof Error) {
-		return error.message;
-	}
-	return "The page could not be loaded.";
-};
-
-const RouteErrorPage = () => {
-	const error = useRouteError();
-	const navigate = useNavigate();
-	const { t } = useTranslation();
-
-	useEffect(() => {
-		recoverFromStaleChunk(error);
-	}, [error]);
-
-	return (
-		<Box minH="100vh" bg="gray.950" color="white" px={6} py={10}>
-			<VStack align="start" spacing={4} maxW="720px" mx="auto">
-				<Heading size="lg">{t("router.errorTitle")}</Heading>
-				<Text color="gray.300">{t("router.errorDescription")}</Text>
-				<Text
-					bg="whiteAlpha.100"
-					border="1px solid"
-					borderColor="whiteAlpha.200"
-					borderRadius="md"
-					color="red.200"
-					fontFamily="mono"
-					fontSize="sm"
-					p={4}
-					w="full"
-					whiteSpace="pre-wrap"
-				>
-					{routeErrorMessage(error)}
-				</Text>
-				<Button colorScheme="blue" onClick={() => navigate("/")}>
-					{t("router.backToDashboard")}
-				</Button>
-			</VStack>
-		</Box>
-	);
-};
 
 const routeSegments = new Set([
 	"login",
