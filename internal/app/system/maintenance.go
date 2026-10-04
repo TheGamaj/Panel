@@ -21,12 +21,9 @@ import (
 
 const hostOperationDisabledDetail = "This host-level action is available only on binary installations. Migrate this panel to the binary version before using update, restart, runtime, or geo actions from the web UI."
 
-// Release and dev tag shapes live in versionparse so the panel, the node and
+// Release tag shapes live in versionparse so the panel, the node and
 // the shell installers always accept the same tags.
-var (
-	releaseVersionPattern = versionparse.ReleasePattern
-	devVersionPattern     = versionparse.DevPattern
-)
+var releaseVersionPattern = versionparse.ReleasePattern
 
 const versionSwitchFloor = "v0.1.0"
 
@@ -61,7 +58,6 @@ type UpdateStatus struct {
 	Available     bool         `json:"available"`
 	Target        *string      `json:"target"`
 	LatestRelease *ReleaseInfo `json:"latest_release"`
-	LatestDev     *ReleaseInfo `json:"latest_dev"`
 	CheckedAt     int64        `json:"checked_at"`
 	Error         string       `json:"error,omitempty"`
 }
@@ -77,7 +73,6 @@ type BuildVersion struct {
 type BuildCatalog struct {
 	Floor  string         `json:"floor"`
 	Stable []BuildVersion `json:"stable"`
-	Dev    []BuildVersion `json:"dev"`
 }
 
 type MaintenanceInfo struct {
@@ -240,11 +235,6 @@ func BuildGamajUpdateArgs(channel string, version string) ([]string, error) {
 		switch normalizedVersion {
 		case "latest":
 			return append(args, "--version", "latest"), nil
-		case "dev":
-			return append(args, "--dev"), nil
-		}
-		if devVersionPattern.MatchString(normalizedVersion) {
-			return append(args, "--version", normalizedVersion), nil
 		}
 		if !releaseVersionPattern.MatchString(normalizedVersion) {
 			return nil, MaintenanceError{Status: http.StatusUnprocessableEntity, Detail: "Invalid update version"}
@@ -255,8 +245,6 @@ func BuildGamajUpdateArgs(channel string, version string) ([]string, error) {
 	switch normalizedChannel {
 	case "", "current", "auto":
 		return args, nil
-	case "dev":
-		return append(args, "--dev"), nil
 	case "latest", "stable", "release":
 		return append(args, "--version", "latest"), nil
 	default:
@@ -428,14 +416,11 @@ func resolveGamajCLI() (string, error) {
 }
 
 type GitHubUpdateChecker struct {
-	APIBase        string
-	RawBase        string
-	HTTPClient     *http.Client
-	ManifestBranch string
-	ManifestPath   string
-	Now            func() time.Time
-	CacheTTL       time.Duration
-	ErrorTTL       time.Duration
+	APIBase    string
+	HTTPClient *http.Client
+	Now        func() time.Time
+	CacheTTL   time.Duration
+	ErrorTTL   time.Duration
 
 	mu       sync.Mutex
 	cache    map[string]githubUpdateCacheEntry
@@ -460,14 +445,11 @@ type githubBuildCacheEntry struct {
 
 func NewGitHubUpdateChecker() *GitHubUpdateChecker {
 	return &GitHubUpdateChecker{
-		APIBase:        "https://api.github.com",
-		RawBase:        "https://raw.githubusercontent.com",
-		HTTPClient:     &http.Client{Timeout: 8 * time.Second},
-		ManifestBranch: firstEnv("GAMAJ_BINARY_DEV_MANIFEST_BRANCH", "dev-build-manifest"),
-		ManifestPath:   "dev-builds.json",
-		Now:            time.Now,
-		CacheTTL:       10 * time.Minute,
-		ErrorTTL:       5 * time.Minute,
+		APIBase:    "https://api.github.com",
+		HTTPClient: &http.Client{Timeout: 8 * time.Second},
+		Now:        time.Now,
+		CacheTTL:   10 * time.Minute,
+		ErrorTTL:   5 * time.Minute,
 	}
 }
 
@@ -535,15 +517,11 @@ func (c *GitHubUpdateChecker) Builds(ctx context.Context, repo string) (BuildCat
 	}
 	c.mu.Unlock()
 
-	stable, floorTime, err := c.buildStableVersions(ctx, repo)
+	stable, _, err := c.buildStableVersions(ctx, repo)
 	if err != nil {
 		return BuildCatalog{}, err
 	}
-	dev, err := c.buildDevVersions(ctx, repo, floorTime)
-	if err != nil {
-		return BuildCatalog{}, err
-	}
-	catalog := BuildCatalog{Floor: versionSwitchFloor, Stable: stable, Dev: dev}
+	catalog := BuildCatalog{Floor: versionSwitchFloor, Stable: stable}
 	ttl := c.CacheTTL
 	if ttl <= 0 {
 		ttl = 10 * time.Minute
@@ -575,17 +553,8 @@ func (c *GitHubUpdateChecker) statusUncached(ctx context.Context, repo string, c
 		status.Error = err.Error()
 		return status
 	}
-	latestDev, err := c.latestDev(ctx, repo)
-	if err != nil {
-		status.Error = err.Error()
-		return status
-	}
 	status.LatestRelease = latestRelease
-	status.LatestDev = latestDev
 	target := latestRelease
-	if currentChannel == "dev" {
-		target = latestDev
-	}
 	if target != nil {
 		if tag := strings.TrimSpace(stringFromAny((*target)["tag"])); tag != "" {
 			status.Target = &tag
@@ -635,17 +604,12 @@ func cloneUpdateStatus(status UpdateStatus) UpdateStatus {
 		release := cloneReleaseInfo(*status.LatestRelease)
 		clone.LatestRelease = &release
 	}
-	if status.LatestDev != nil {
-		dev := cloneReleaseInfo(*status.LatestDev)
-		clone.LatestDev = &dev
-	}
 	return clone
 }
 
 func cloneBuildCatalog(catalog BuildCatalog) BuildCatalog {
 	clone := catalog
 	clone.Stable = append([]BuildVersion(nil), catalog.Stable...)
-	clone.Dev = append([]BuildVersion(nil), catalog.Dev...)
 	return clone
 }
 
@@ -743,188 +707,6 @@ func (c *GitHubUpdateChecker) buildStableVersions(ctx context.Context, repo stri
 	return versions, floorTime, nil
 }
 
-func (c *GitHubUpdateChecker) buildDevVersions(ctx context.Context, repo string, floorTime time.Time) ([]BuildVersion, error) {
-	data, err := c.devManifest(ctx, repo)
-	if err != nil {
-		return c.buildDevVersionsFromWorkflow(ctx, repo, floorTime)
-	}
-	builds, _ := data["builds"].([]any)
-	versions := make([]BuildVersion, 0, len(builds))
-	for _, item := range builds {
-		build, ok := item.(map[string]any)
-		if !ok {
-			continue
-		}
-		version := firstNonEmptyString(stringFromAny(build["tag"]), stringFromAny(build["build_tag"]))
-		if !devVersionPattern.MatchString(version) {
-			continue
-		}
-		published := firstNonEmptyString(stringFromAny(build["created_at"]), stringFromAny(build["generated_at"]))
-		publishedAt := parseBuildTime(published)
-		if !floorTime.IsZero() && !publishedAt.IsZero() && !publishedAt.After(floorTime) {
-			continue
-		}
-		sha := strings.TrimSpace(stringFromAny(build["sha"]))
-		url := stringFromAny(build["html_url"])
-		if url == "" {
-			if runID := strings.TrimSpace(stringFromAny(build["run_id"])); runID != "" {
-				url = "https://github.com/" + repo + "/actions/runs/" + runID
-			}
-		}
-		versions = append(versions, BuildVersion{
-			Version:   version,
-			Channel:   "dev",
-			Commit:    sha,
-			Published: published,
-			URL:       url,
-		})
-	}
-	return versions, nil
-}
-
-func (c *GitHubUpdateChecker) buildDevVersionsFromWorkflow(ctx context.Context, repo string, floorTime time.Time) ([]BuildVersion, error) {
-	var data map[string]any
-	url := strings.TrimRight(c.APIBase, "/") + "/repos/" + repo + "/actions/workflows/binary-build.yml/runs?branch=dev&event=push&status=success&per_page=100"
-	if err := c.getJSON(ctx, url, &data); err != nil {
-		return nil, err
-	}
-	runs, _ := data["workflow_runs"].([]any)
-	versions := make([]BuildVersion, 0, len(runs))
-	for _, item := range runs {
-		run, ok := item.(map[string]any)
-		if !ok || stringFromAny(run["head_branch"]) != "dev" || stringFromAny(run["conclusion"]) != "success" {
-			continue
-		}
-		sha := strings.TrimSpace(stringFromAny(run["head_sha"]))
-		if sha == "" {
-			continue
-		}
-		published := firstNonEmptyString(stringFromAny(run["created_at"]), stringFromAny(run["updated_at"]))
-		publishedAt := parseBuildTime(published)
-		if !floorTime.IsZero() && !publishedAt.IsZero() && !publishedAt.After(floorTime) {
-			continue
-		}
-		short := sha
-		if len(short) > 7 {
-			short = short[:7]
-		}
-		versions = append(versions, BuildVersion{
-			Version:   "dev-" + short,
-			Channel:   "dev",
-			Commit:    sha,
-			Published: published,
-			URL:       stringFromAny(run["html_url"]),
-		})
-	}
-	return versions, nil
-}
-
-func (c *GitHubUpdateChecker) latestDev(ctx context.Context, repo string) (*ReleaseInfo, error) {
-	if info, err := c.latestDevFromManifest(ctx, repo); err == nil && info != nil {
-		return info, nil
-	}
-	var data map[string]any
-	workflowURL := strings.TrimRight(c.APIBase, "/") + "/repos/" + repo + "/actions/workflows/binary-build.yml/runs?branch=dev&event=push&status=success&per_page=100"
-	if err := c.getJSON(ctx, workflowURL, &data); err != nil {
-		return nil, err
-	}
-	runs, _ := data["workflow_runs"].([]any)
-	for _, item := range runs {
-		run, ok := item.(map[string]any)
-		if !ok {
-			continue
-		}
-		if stringFromAny(run["head_branch"]) != "dev" ||
-			stringFromAny(run["conclusion"]) != "success" ||
-			(stringFromAny(run["status"]) != "" && stringFromAny(run["status"]) != "completed") {
-			continue
-		}
-		sha := strings.TrimSpace(stringFromAny(run["head_sha"]))
-		if sha == "" {
-			continue
-		}
-		short := sha
-		if len(short) > 7 {
-			short = short[:7]
-		}
-		info := ReleaseInfo{
-			"tag":        "dev-" + short,
-			"sha":        sha,
-			"branch":     "dev",
-			"created_at": run["created_at"],
-			"updated_at": run["updated_at"],
-			"html_url":   run["html_url"],
-		}
-		return &info, nil
-	}
-	return nil, nil
-}
-
-func (c *GitHubUpdateChecker) latestDevFromManifest(ctx context.Context, repo string) (*ReleaseInfo, error) {
-	data, err := c.devManifest(ctx, repo)
-	if err != nil {
-		return nil, err
-	}
-	manifestPath := strings.Trim(strings.TrimSpace(c.ManifestPath), "/")
-	if manifestPath == "" {
-		manifestPath = "dev-builds.json"
-	}
-	branch := strings.TrimSpace(c.ManifestBranch)
-	if branch == "" {
-		branch = "dev-build-manifest"
-	}
-	url := strings.TrimRight(c.RawBase, "/") + "/" + repo + "/" + branch + "/" + manifestPath
-	return c.releaseInfoFromManifest(data, repo, url)
-}
-
-func (c *GitHubUpdateChecker) devManifest(ctx context.Context, repo string) (map[string]any, error) {
-	manifestPath := strings.Trim(strings.TrimSpace(c.ManifestPath), "/")
-	if manifestPath == "" {
-		manifestPath = "dev-builds.json"
-	}
-	branch := strings.TrimSpace(c.ManifestBranch)
-	if branch == "" {
-		branch = "dev-build-manifest"
-	}
-	url := strings.TrimRight(c.RawBase, "/") + "/" + repo + "/" + branch + "/" + manifestPath
-	var data map[string]any
-	if err := c.getJSON(ctx, url, &data); err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-func (c *GitHubUpdateChecker) releaseInfoFromManifest(data map[string]any, repo string, url string) (*ReleaseInfo, error) {
-	build := selectManifestBuild(data)
-	if build == nil {
-		return nil, nil
-	}
-	tag := firstNonEmptyString(stringFromAny((*build)["tag"]), stringFromAny((*build)["build_tag"]))
-	if tag == "" {
-		return nil, nil
-	}
-	runID := strings.TrimSpace(stringFromAny((*build)["run_id"]))
-	var htmlURL any
-	if runID != "" {
-		htmlURL = "https://github.com/" + repo + "/actions/runs/" + runID
-	}
-	info := ReleaseInfo{
-		"tag":          tag,
-		"sha":          (*build)["sha"],
-		"branch":       firstNonEmptyString(stringFromAny((*build)["branch"]), "dev"),
-		"created_at":   firstNonEmptyAny((*build)["created_at"], (*build)["generated_at"]),
-		"updated_at":   firstNonEmptyAny(data["updated_at"], (*build)["generated_at"]),
-		"html_url":     htmlURL,
-		"manifest_url": url,
-	}
-	if assets, ok := (*build)["assets"].(map[string]any); ok {
-		info["assets"] = assets
-	} else {
-		info["assets"] = map[string]any{}
-	}
-	return &info, nil
-}
-
 func versionAtLeast(version string, floor string) bool {
 	return versionparse.AtLeast(version, floor)
 }
@@ -942,72 +724,10 @@ func parseBuildTime(value string) time.Time {
 	return parsed
 }
 
-func selectManifestBuild(data map[string]any) *map[string]any {
-	builds, _ := data["builds"].([]any)
-	latest := strings.TrimSpace(stringFromAny(data["latest"]))
-	if len(builds) > 0 && latest != "" {
-		for _, item := range builds {
-			build, ok := item.(map[string]any)
-			if ok && stringFromAny(build["tag"]) == latest {
-				return &build
-			}
-		}
-	}
-	for _, item := range builds {
-		build, ok := item.(map[string]any)
-		if ok {
-			return &build
-		}
-	}
-	if legacy, ok := data["latest"].(map[string]any); ok {
-		return &legacy
-	}
-	return nil
-}
-
-func firstNonEmptyAny(values ...any) any {
-	for _, value := range values {
-		if strings.TrimSpace(stringFromAny(value)) != "" {
-			return value
-		}
-	}
-	return nil
-}
-
-func (c *GitHubUpdateChecker) getJSON(ctx context.Context, url string, target any) error {
-	client := c.HTTPClient
-	if client == nil {
-		client = http.DefaultClient
-	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Accept", "application/vnd.github+json")
-	req.Header.Set("User-Agent", "Gamaj-update-check")
-	if token := firstEnv("GITHUB_TOKEN", ""); token != "" {
-		req.Header.Set("Authorization", "Bearer "+token)
-	} else if token := firstEnv("GH_TOKEN", ""); token != "" {
-		req.Header.Set("Authorization", "Bearer "+token)
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return fmt.Errorf("github request failed: %s", res.Status)
-	}
-	return json.NewDecoder(res.Body).Decode(target)
-}
-
 func InferUpdateChannel(tag *string) string {
 	normalized := ""
 	if tag != nil {
 		normalized = strings.ToLower(strings.TrimSpace(*tag))
-	}
-	if strings.HasPrefix(normalized, "dev-") {
-		return "dev"
 	}
 	if normalized != "" {
 		return "latest"
@@ -1052,6 +772,33 @@ func stringFromAny(value any) string {
 	default:
 		return fmt.Sprint(typed)
 	}
+}
+
+func (c *GitHubUpdateChecker) getJSON(ctx context.Context, url string, target any) error {
+	client := c.HTTPClient
+	if client == nil {
+		client = http.DefaultClient
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("User-Agent", "Gamaj-update-check")
+	if token := firstEnv("GITHUB_TOKEN", ""); token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	} else if token := firstEnv("GH_TOKEN", ""); token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		return fmt.Errorf("github request failed: %s", res.Status)
+	}
+	return json.NewDecoder(res.Body).Decode(target)
 }
 
 func firstNonEmptyString(values ...string) string {

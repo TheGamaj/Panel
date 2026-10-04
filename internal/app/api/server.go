@@ -33,6 +33,7 @@ import (
 	webhookapp "github.com/TheGamaj/Panel/internal/app/webhook"
 	"github.com/TheGamaj/Panel/internal/app/xrayconfig"
 	"github.com/TheGamaj/Panel/internal/platform/db"
+	"github.com/TheGamaj/Panel/internal/platform/versionparse"
 )
 
 type Server struct {
@@ -256,6 +257,20 @@ type nodesServiceUpdatePayload struct {
 	Nodes []nodeServiceUpdateTarget `json:"nodes"`
 }
 
+// validNodeServiceUpdateTarget keeps node service updates on release builds.
+// Dev builds are no longer published, so dev channels and dev tags are
+// rejected here instead of failing on every node during the rollout.
+func validNodeServiceUpdateTarget(channel string, version string) bool {
+	if !versionparse.IsUpdateTarget(version) {
+		return false
+	}
+	switch strings.ToLower(strings.TrimSpace(channel)) {
+	case "", "current", "auto", "latest", "stable", "release":
+		return true
+	}
+	return false
+}
+
 func (s *Server) handleNodesServiceUpdate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		writeError(w, http.StatusMethodNotAllowed, "method not allowed")
@@ -272,6 +287,10 @@ func (s *Server) handleNodesServiceUpdate(w http.ResponseWriter, r *http.Request
 	for _, target := range payload.Nodes {
 		if target.ID <= 0 {
 			writeError(w, http.StatusUnprocessableEntity, "every node id must be positive")
+			return
+		}
+		if !validNodeServiceUpdateTarget(target.Channel, target.Version) {
+			writeError(w, http.StatusUnprocessableEntity, "every node update target must use a release channel and version")
 			return
 		}
 		if _, exists := seen[target.ID]; exists {
@@ -668,6 +687,10 @@ func (s *Server) handleNodeServiceUpdate(w http.ResponseWriter, r *http.Request,
 	}
 	if err := decodeOptionalJSON(r, &payload); err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	if !validNodeServiceUpdateTarget(payload.Channel, payload.Version) {
+		writeError(w, http.StatusUnprocessableEntity, "node service update accepts release channels and versions only")
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Minute)

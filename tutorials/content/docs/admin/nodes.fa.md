@@ -37,7 +37,7 @@ adminOnly: true
 دستور نصب باینری را روی سرور نود اجرا کنید:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/TheGamaj/Panel/master/scripts/gamaj/gamaj-node-binary.sh | sudo bash -s -- install
+curl -sL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj-node.sh | sudo bash -s -- install
 ```
 
 1. وقتی installer مقدار **Node install bundle** را خواست، کل بلوکی را که از پنل گرفته‌اید Paste کنید. installer گواهی و private key را خودکار جدا می‌کند.

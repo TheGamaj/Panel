@@ -85,18 +85,9 @@ while [[ $# -gt 0 ]]; do
             INSTALL_MODE_REQUESTED="binary"
             shift
         ;;
-        --dev)
-            if [ "$NODE_VERSION_SET" -eq 1 ] && [ "$NODE_VERSION_REQUESTED" != "dev" ]; then
-                echo "Error: Cannot use --dev and --version options simultaneously."
-                exit 1
-            fi
-            NODE_VERSION_REQUESTED="dev"
-            NODE_VERSION_SET=1
-            shift
-        ;;
         --version)
             if [ "$NODE_VERSION_SET" -eq 1 ]; then
-                echo "Error: Cannot use --dev and --version options simultaneously."
+                echo "Error: Cannot use --version twice."
                 exit 1
             fi
             if [ -z "${2:-}" ]; then
@@ -155,8 +146,6 @@ if [ -n "${GAMAJ_SCRIPT_BASE_URL+x}" ]; then
 fi
 GAMAJ_SCRIPT_BASE_URL="${GAMAJ_SCRIPT_BASE_URL:-https://raw.githubusercontent.com/${GAMAJ_REPO}/${GAMAJ_REF}/scripts/gamaj}"
 GAMAJ_NODE_RELEASE_REPO="${GAMAJ_NODE_RELEASE_REPO:-TheGamaj/Node}"
-GAMAJ_NODE_BINARY_DEV_BRANCH="${GAMAJ_NODE_BINARY_DEV_BRANCH:-dev}"
-GAMAJ_NODE_BINARY_DEV_RELEASE_TAG="${GAMAJ_NODE_BINARY_DEV_RELEASE_TAG:-dev-binaries}"
 GAMAJ_NODE_BINARY_WORKFLOW_NAME="${GAMAJ_NODE_BINARY_WORKFLOW_NAME:-binary-build}"
 GAMAJ_NODE_BINARY_ARTIFACT_PREFIX="${GAMAJ_NODE_BINARY_ARTIFACT_PREFIX:-gamaj-node-binaries}"
 GAMAJ_XRAY_CORE_VERSION_DEFAULT="${GAMAJ_XRAY_CORE_VERSION_DEFAULT:-v26.5.9}"
@@ -515,47 +504,16 @@ set_app_context
 set_branch_variables() {
     local selected_branch="${1:-Asli}"
     case "$selected_branch" in
-        dev|development)
-            BRANCH="dev"
-        ;;
         *)
             BRANCH="Asli"
         ;;
     esac
     SCRIPT_BRANCH="$BRANCH"
-    if [ "$BRANCH" = "dev" ]; then
-        GAMAJ_REF="dev"
-    else
-        GAMAJ_REF="${GAMAJ_SCRIPT_REF:-Asli}"
-    fi
+    GAMAJ_REF="${GAMAJ_SCRIPT_REF:-Asli}"
     if [ "${GAMAJ_SCRIPT_BASE_URL_EXPLICIT:-0}" != "1" ]; then
         GAMAJ_SCRIPT_BASE_URL="https://raw.githubusercontent.com/${GAMAJ_REPO}/${GAMAJ_REF}/scripts/gamaj"
     fi
     SCRIPT_URL="$GAMAJ_SCRIPT_BASE_URL/$GAMAJ_NODE_SCRIPT_SOURCE_FILE"
-}
-
-prompt_branch_selection() {
-    local question
-    if [[ "$BRANCH" == "dev" ]]; then
-        question="Keep using the dev branch? (Y/n): "
-    else
-        question="Do you want to install Gamaj-node using the dev branch? (y/N): "
-    fi
-    read -p "$question" -r branch_answer
-    if [[ "$BRANCH" == "dev" ]]; then
-        if [[ -z "$branch_answer" || "$branch_answer" =~ ^[Yy]$ ]]; then
-            set_branch_variables dev
-        else
-            set_branch_variables Asli
-        fi
-    else
-        if [[ "$branch_answer" =~ ^[Yy]$ ]]; then
-            set_branch_variables dev
-        else
-            set_branch_variables Asli
-        fi
-    fi
-    colorized_echo blue "Selected channel: $BRANCH"
 }
 
 normalize_install_mode() {
@@ -640,13 +598,6 @@ select_node_version() {
     read -r -p "Release channel [1]: " node_version_answer
 
     case "$node_version_answer" in
-        dev|Dev|2)
-            if [ "$node_version_answer" = "2" ] && [ "${#release_tags[@]}" -ge 1 ] && [ "${release_tags[0]}" != "dev" ]; then
-                SELECTED_NODE_VERSION="${release_tags[0]}"
-                return
-            fi
-            SELECTED_NODE_VERSION="dev"
-        ;;
         ""|1|latest|Latest|stable|Stable)
             SELECTED_NODE_VERSION="latest"
         ;;
@@ -963,146 +914,7 @@ get_node_binary_release_asset_metadata() {
         colorized_echo red "Unable to read Gamaj-node release metadata: $release_api" >&2
     else
         colorized_echo red "No Gamaj-node binary release assets found for linux-${binary_arch}." >&2
-        colorized_echo yellow "Use --dev after the dev binary workflow succeeds." >&2
     fi
-    exit 1
-}
-
-get_node_binary_dev_artifact_metadata() {
-    local binary_arch="$1"
-    local release_api
-    local release_payload
-    local release_asset_name
-    local release_asset_url
-    local release_target
-    local workflow_runs_api
-    local workflow_runs_payload
-    local matching_runs
-    local run_json
-    local run_id
-    local head_sha
-    local artifacts_api
-    local artifacts_payload
-    local artifact_name
-    local artifact_url
-    local nightly_workflow
-    local workflow_path
-
-    release_asset_name="gamaj-node-dev-linux-${binary_arch}"
-    release_api="https://api.github.com/repos/${GAMAJ_NODE_RELEASE_REPO}/releases/tags/${GAMAJ_NODE_BINARY_DEV_RELEASE_TAG}"
-    if release_payload=$(curl -fsSL "$release_api" 2>/dev/null); then
-        release_asset_url=$(echo "$release_payload" | jq -r --arg name "$release_asset_name" '
-            .assets[]?
-            | select(.name == $name)
-            | .browser_download_url
-        ' | head -n 1)
-        if [ -n "$release_asset_url" ] && [ "$release_asset_url" != "null" ]; then
-            release_target=$(echo "$release_payload" | jq -r '.target_commitish // empty')
-            if [[ "$release_target" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
-                printf '%s|%s\n' "dev-${release_target:0:7}" "$release_asset_url"
-            else
-                printf '%s|%s\n' "dev-${GAMAJ_NODE_BINARY_DEV_BRANCH}" "$release_asset_url"
-            fi
-            return 0
-        fi
-    fi
-
-    nightly_workflow="$GAMAJ_NODE_BINARY_WORKFLOW_NAME"
-    case "$nightly_workflow" in
-        *.yml|*.yaml) ;;
-        *) nightly_workflow="${nightly_workflow}.yml" ;;
-    esac
-    workflow_path=".github/workflows/${nightly_workflow}"
-    workflow_runs_api="https://api.github.com/repos/${GAMAJ_NODE_RELEASE_REPO}/actions/runs?per_page=50"
-    workflow_runs_payload=$(curl -fsSL "$workflow_runs_api") || {
-        colorized_echo red "Unable to read Gamaj-node binary workflow metadata: $workflow_runs_api" >&2
-        exit 1
-    }
-
-    matching_runs=$(echo "$workflow_runs_payload" | jq -c --arg branch "$GAMAJ_NODE_BINARY_DEV_BRANCH" --arg workflow_path "$workflow_path" '
-        .workflow_runs[]?
-        | select(
-            .head_branch == $branch
-            and (.event == "push" or .event == "workflow_dispatch")
-            and .conclusion == "success"
-            and .path == $workflow_path
-        )
-    ')
-
-    if [ -z "$matching_runs" ]; then
-        colorized_echo red "No successful Gamaj-node binary workflow run was found on branch ${GAMAJ_NODE_BINARY_DEV_BRANCH}." >&2
-        exit 1
-    fi
-
-    while IFS= read -r run_json; do
-        [ -n "$run_json" ] || continue
-
-        run_id=$(echo "$run_json" | jq -r '.id // empty')
-        head_sha=$(echo "$run_json" | jq -r '.head_sha // empty')
-        artifacts_api="https://api.github.com/repos/${GAMAJ_NODE_RELEASE_REPO}/actions/runs/${run_id}/artifacts"
-        if ! artifacts_payload=$(curl -fsSL "$artifacts_api"); then
-            colorized_echo yellow "Unable to read Gamaj-node binary artifacts for workflow run ${run_id}; checking an older successful run." >&2
-            continue
-        fi
-
-        artifact_name=$(echo "$artifacts_payload" | jq -r --arg preferred "${GAMAJ_NODE_BINARY_ARTIFACT_PREFIX}-linux-${binary_arch}" --arg arch "linux-${binary_arch}" '
-            [
-                .artifacts[]?
-                | select((.expired | not) and (.name == $preferred or ((.name | startswith("gamaj-node")) and (.name | contains($arch)))))
-            ]
-            | sort_by(if .name == $preferred then 0 else 1 end, .created_at)
-            | .[0].name // empty
-        ')
-
-        if [ -n "$artifact_name" ]; then
-            artifact_url="https://nightly.link/${GAMAJ_NODE_RELEASE_REPO}/workflows/${nightly_workflow}/${GAMAJ_NODE_BINARY_DEV_BRANCH}/${artifact_name}.zip"
-            printf '%s|%s\n' "dev-${head_sha:0:7}" "$artifact_url"
-            return 0
-        fi
-
-        colorized_echo yellow "Gamaj-node binary workflow run ${run_id} has no usable linux-${binary_arch} artifact; checking an older successful run." >&2
-    done <<< "$matching_runs"
-
-    colorized_echo red "No usable Gamaj-node linux-${binary_arch} dev artifact was found on branch ${GAMAJ_NODE_BINARY_DEV_BRANCH}." >&2
-    colorized_echo yellow "The dev binary workflow must publish ${GAMAJ_NODE_BINARY_ARTIFACT_PREFIX}-linux-${binary_arch} before this server can install the dev binary." >&2
-    exit 1
-}
-
-get_node_binary_dev_artifact_metadata_for_version() {
-    local requested_version="$1"
-    local binary_arch="$2"
-    local requested_sha="${requested_version#dev-}"
-    local workflow_name="${GAMAJ_NODE_BINARY_WORKFLOW_NAME}"
-    local workflow_path
-    local runs_url
-    local run_json
-    local run_id
-    local head_sha
-    local artifact_name
-
-    if ! [[ "$requested_version" =~ ^dev-[0-9a-fA-F]{7,40}$ ]]; then
-        colorized_echo red "Invalid Gamaj-node dev build: $requested_version" >&2
-        exit 1
-    fi
-    case "$workflow_name" in
-        *.yml|*.yaml) ;;
-        *) workflow_name="${workflow_name}.yml" ;;
-    esac
-    workflow_path=".github/workflows/${workflow_name}"
-    runs_url="https://api.github.com/repos/${GAMAJ_NODE_RELEASE_REPO}/actions/runs?branch=${GAMAJ_NODE_BINARY_DEV_BRANCH}&event=push&status=success&per_page=100"
-    while IFS= read -r run_json; do
-        [ -n "$run_json" ] || continue
-        run_id=$(echo "$run_json" | jq -r '.id // empty')
-        head_sha=$(echo "$run_json" | jq -r '.head_sha // empty')
-        [ -n "$run_id" ] && [ -n "$head_sha" ] || continue
-        [[ "$head_sha" == "$requested_sha"* ]] || continue
-        [[ "$(echo "$run_json" | jq -r '.path // empty')" == "$workflow_path" ]] || continue
-        artifact_name="${GAMAJ_NODE_BINARY_ARTIFACT_PREFIX}-linux-${binary_arch}"
-        printf '%s|%s\n' "$requested_version" "https://nightly.link/${GAMAJ_NODE_RELEASE_REPO}/workflows/${workflow_name}/${head_sha}/${artifact_name}.zip"
-        return 0
-    done < <(curl -fsSL "$runs_url" | jq -c '.workflow_runs[]?')
-
-    colorized_echo red "Gamaj-node dev build $requested_version was not found in successful workflow runs." >&2
     exit 1
 }
 
@@ -1247,38 +1059,6 @@ configure_binary_node_env() {
     set_env_value "GAMAJ_XRAY_ASSETS_PATH" "$DATA_DIR/xray-core"
 }
 
-normalize_node_dev_artifact() {
-    local tmp_dir="$1"
-    local binary_arch="$2"
-    local candidate
-
-    if [ -f "$tmp_dir/gamaj-node" ]; then
-        chmod +x "$tmp_dir/gamaj-node"
-        return 0
-    fi
-
-    while IFS= read -r archive; do
-        [ -n "$archive" ] || continue
-        tar -xzf "$archive" -C "$tmp_dir" >/dev/null 2>&1 || true
-    done < <(find "$tmp_dir" -maxdepth 3 -type f \( -name "*.tar.gz" -o -name "*.tgz" \) 2>/dev/null)
-
-    candidate=$(
-        find "$tmp_dir" -maxdepth 5 -type f \
-            \( -name "gamaj-node" -o -name "gamaj-node*linux-${binary_arch}" -o -name "gamaj-node-*" \) \
-            ! -name "*.sha256" ! -name "*.zip" ! -name "*.tar.gz" ! -name "*.tgz" 2>/dev/null \
-        | while IFS= read -r file; do
-            size=$(wc -c < "$file" 2>/dev/null || echo 0)
-            printf '%s\t%s\n' "$size" "$file"
-        done \
-        | sort -nr \
-        | cut -f2- \
-        | head -n 1
-    )
-
-    if [ -n "$candidate" ]; then
-        install -m 755 "$candidate" "$tmp_dir/gamaj-node"
-    fi
-}
 
 install_binary_gamaj_node() {
     local node_version="$1"
@@ -1312,22 +1092,8 @@ install_binary_gamaj_node() {
         resolved_version="${GAMAJ_NODE_BINARY_OVERRIDE_VERSION:-custom}"
         artifact_url="local-override"
     elif [[ "$node_version" =~ ^dev-[0-9a-fA-F]{7,40}$ ]]; then
-        IFS='|' read -r resolved_version artifact_url < <(get_node_binary_dev_artifact_metadata_for_version "$node_version" "$binary_arch")
-        package_path="$tmp_dir/gamaj-node-binaries.zip"
-        ui_spinner_run "Downloading Gamaj-node dev binary artifact" curl -fL "$artifact_url" -o "$package_path"
-        ui_spinner_run "Extracting Gamaj-node dev artifact" unzip -j -o "$package_path" -d "$tmp_dir"
-        normalize_node_dev_artifact "$tmp_dir" "$binary_arch"
-    elif [ "$node_version" = "dev" ]; then
-        IFS='|' read -r resolved_version artifact_url < <(get_node_binary_dev_artifact_metadata "$binary_arch")
-        if [[ "$artifact_url" == *.zip ]]; then
-            package_path="$tmp_dir/gamaj-node-binaries.zip"
-            ui_spinner_run "Downloading Gamaj-node dev binary artifact" curl -fL "$artifact_url" -o "$package_path"
-            ui_spinner_run "Extracting Gamaj-node dev artifact" unzip -j -o "$package_path" -d "$tmp_dir"
-            normalize_node_dev_artifact "$tmp_dir" "$binary_arch"
-        else
-            ui_spinner_run "Downloading Gamaj-node dev binary" curl -fL "$artifact_url" -o "$tmp_dir/gamaj-node"
-            chmod +x "$tmp_dir/gamaj-node"
-        fi
+        colorized_echo red "Gamaj-node dev builds are no longer supported; install a release instead." >&2
+        exit 1
     else
         IFS='|' read -r resolved_version node_asset_url < <(get_node_binary_release_asset_metadata "$node_version" "$binary_arch")
         ui_spinner_run "Downloading Gamaj-node binary" curl -fL "$node_asset_url" -o "$tmp_dir/gamaj-node"
@@ -1499,9 +1265,6 @@ reexec_updated_node_script() {
 
     if [ "$NODE_VERSION_SET" -eq 1 ]; then
         case "${NODE_VERSION_REQUESTED:-}" in
-            dev)
-                args+=("--dev")
-            ;;
             "")
                 args+=("--version" "latest")
             ;;
@@ -1518,9 +1281,6 @@ reexec_updated_node_script() {
 update_gamaj_node() {
     local requested_version="${1:-}"
     local node_version="${requested_version:-latest}"
-    if [ -z "$requested_version" ] && [ "$BRANCH" = "dev" ]; then
-        node_version="dev"
-    fi
     install_binary_gamaj_node "$node_version" "0"
 }
 
@@ -1559,9 +1319,6 @@ install_command() {
         node_version="$SELECTED_NODE_VERSION"
     fi
     case "$node_version" in
-        dev)
-            set_branch_variables dev
-        ;;
         latest|"")
             set_branch_variables Asli
             node_version="latest"
@@ -1816,9 +1573,6 @@ update_command() {
     if [ "$NODE_VERSION_SET" -eq 1 ]; then
         node_version="${NODE_VERSION_REQUESTED:-latest}"
         case "$node_version" in
-            dev)
-                set_branch_variables dev
-            ;;
             latest|"")
                 set_branch_variables Asli
                 node_version="latest"
@@ -2038,7 +1792,7 @@ usage() {
     colorized_echo yellow "  status          – Show status"
     colorized_echo yellow "  logs            – Show logs"
     colorized_echo yellow "  install         - Install/reinstall Gamaj-node"
-    colorized_echo yellow "  update          - Update to latest/dev or a specific version"
+    colorized_echo yellow "  update          - Update to latest or a specific version"
     colorized_echo yellow "  uninstall       - Uninstall Gamaj-node"
     colorized_echo blue "  script-install  - Install Gamaj-node script"
     colorized_echo blue "  script-update   - Update Gamaj-node CLI script"
@@ -2052,7 +1806,7 @@ usage() {
     colorized_echo magenta "  Node IP: $NODE_IP"
     echo
     colorized_echo cyan "Install/update options:"
-    colorized_echo magenta "  --dev or --version vX.Y.Z"
+    colorized_echo magenta "  --version vX.Y.Z"
     echo
     current_version=$(get_current_xray_core_version)
     colorized_echo cyan "Current Xray-core version: " 1  # 1 for bold

@@ -29,13 +29,8 @@ func (fakeUpdateChecker) Builds(context.Context, string) (systemapp.BuildCatalog
 
 func (fakeUpdateChecker) Status(_ context.Context, repo string, current *string, channel string) systemapp.UpdateStatus {
 	releaseTag := "v0.2.0"
-	devTag := "dev-abcdef0"
-	latestRelease := systemapp.ReleaseInfo{"tag": releaseTag, "name": "v0.2.0"}
-	latestDev := systemapp.ReleaseInfo{"tag": devTag, "sha": "abcdef0123456789", "branch": "dev"}
+	latestRelease := systemapp.ReleaseInfo{"tag": releaseTag, "name": "v0.2.0", "branch": "main"}
 	target := releaseTag
-	if channel == "dev" {
-		target = devTag
-	}
 	return systemapp.UpdateStatus{
 		Repo:          repo,
 		Current:       current,
@@ -43,7 +38,6 @@ func (fakeUpdateChecker) Status(_ context.Context, repo string, current *string,
 		Available:     systemapp.IsDifferentVersion(current, &target),
 		Target:        &target,
 		LatestRelease: &latestRelease,
-		LatestDev:     &latestDev,
 		CheckedAt:     1_780_000_000,
 	}
 }
@@ -85,7 +79,7 @@ func TestMaintenanceInfoBinaryMock(t *testing.T) {
 	server, db := testAdminServer(t)
 	insertMasterAPIAdmin(t, db, 1, "owner", "pass123", adminapp.RoleFullAccess, adminapp.StatusActive)
 	token := adminBearerToken(t, server, "owner", "pass123")
-	tag := "dev-1234567"
+	tag := "v0.2.5"
 	server.maintenance = systemapp.NewMaintenanceServiceWithDeps(
 		fakeRuntimeDetector{info: systemapp.RuntimeInfo{
 			Mode:        "binary",
@@ -93,7 +87,7 @@ func TestMaintenanceInfoBinaryMock(t *testing.T) {
 			Service:     "gamaj",
 			Image:       "gamaj-server (binary)",
 			Tag:         &tag,
-			Channel:     "dev",
+			Channel:     "latest",
 			Binary:      map[string]any{"tag": tag, "install_mode": "binary"},
 		}},
 		fakeUpdateChecker{},
@@ -126,10 +120,10 @@ func TestMaintenanceInfoBinaryMock(t *testing.T) {
 		info.Panel.Image != "gamaj-server (binary)" ||
 		info.Panel.Tag == nil ||
 		*info.Panel.Tag != tag ||
-		info.Panel.Channel != "dev" ||
+		info.Panel.Channel != "latest" ||
 		info.Panel.Update == nil ||
 		info.Panel.Update.Target == nil ||
-		*info.Panel.Update.Target != "dev-abcdef0" ||
+		*info.Panel.Update.Target != "v0.2.0" ||
 		info.Node != nil ||
 		info.NodeUpdate.Repo != "TheGamaj/Node" {
 		t.Fatalf("unexpected maintenance info: %#v", info)
@@ -158,7 +152,7 @@ func TestMaintenanceActionsAcceptedAndValidated(t *testing.T) {
 		scheduler,
 	)
 
-	rec := adminJSONRequest(t, server, http.MethodPost, "/api/maintenance/update", token, `{"channel":"dev"}`)
+	rec := adminJSONRequest(t, server, http.MethodPost, "/api/maintenance/update", token, `{"channel":"latest"}`)
 	if rec.Code != http.StatusOK {
 		t.Fatalf("update status=%d body=%s", rec.Code, rec.Body.String())
 	}
@@ -193,7 +187,7 @@ func TestMaintenanceActionsAcceptedAndValidated(t *testing.T) {
 	}
 	args := scheduler.snapshot()
 	if len(args) != 3 ||
-		!equalStringSlices(args[0], []string{"update", "--dev"}) ||
+		!equalStringSlices(args[0], []string{"update", "--version", "latest"}) ||
 		!equalStringSlices(args[1], []string{"restart", "-n"}) ||
 		!equalStringSlices(args[2], []string{"restart", "-n"}) {
 		t.Fatalf("unexpected scheduled args: %#v", args)
@@ -203,9 +197,17 @@ func TestMaintenanceActionsAcceptedAndValidated(t *testing.T) {
 	if rec.Code != http.StatusUnprocessableEntity {
 		t.Fatalf("invalid channel status=%d body=%s", rec.Code, rec.Body.String())
 	}
+	rec = adminJSONRequest(t, server, http.MethodPost, "/api/maintenance/update", token, `{"channel":"dev"}`)
+	if rec.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("dev channel status=%d body=%s", rec.Code, rec.Body.String())
+	}
 	rec = adminJSONRequest(t, server, http.MethodPost, "/api/maintenance/update", token, `{"version":"bad version"}`)
 	if rec.Code != http.StatusUnprocessableEntity {
 		t.Fatalf("invalid version status=%d body=%s", rec.Code, rec.Body.String())
+	}
+	rec = adminJSONRequest(t, server, http.MethodPost, "/api/maintenance/update", token, `{"version":"dev-abcdef0"}`)
+	if rec.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("dev version status=%d body=%s", rec.Code, rec.Body.String())
 	}
 }
 

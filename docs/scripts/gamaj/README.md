@@ -11,10 +11,9 @@ container install, no compose file, and no install-mode switch to remember.
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install
 ```
 
-Install the dev channel or a specific release:
+Install a specific release:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --dev
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --version is.0.0.1
 ```
 
@@ -40,7 +39,6 @@ sudo gamaj status
 sudo gamaj restart
 sudo gamaj logs
 sudo gamaj backup
-sudo gamaj update --dev
 sudo gamaj update --version is.0.0.1
 sudo gamaj core-update
 sudo gamaj uninstall

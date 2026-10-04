@@ -1,46 +1,13 @@
-<svg id="gamaj-logo-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Panda Group -->
-          <g id="panda-icon">
-            <!-- Left Ear -->
-            <circle cx="180" cy="142" r="34" fill="#000000"></circle>
-            <!-- Right Ear -->
-            <circle cx="320" cy="142" r="34" fill="#000000"></circle>
-
-            <!-- Face Contour -->
-            <circle cx="250" cy="206" r="88" fill="#FFFFFF" stroke="#000000" stroke-width="12" stroke-linecap="round"></circle>
-
-            <!-- Left Eye Patch (Angled pill) -->
-            <ellipse cx="216" cy="204" rx="20" ry="26" transform="rotate(18 216 204)" fill="#000000"></ellipse>
-            <!-- Left Pupil Reflection -->
-            <circle cx="218" cy="198" r="6" fill="#FFFFFF"></circle>
-
-            <!-- Right Eye Patch (Angled pill) -->
-            <ellipse cx="284" cy="204" rx="20" ry="26" transform="rotate(-18 284 204)" fill="#000000"></ellipse>
-            <!-- Right Pupil Reflection -->
-            <circle cx="282" cy="198" r="6" fill="#FFFFFF"></circle>
-
-            <!-- Nose (Soft rounded pill) -->
-            <ellipse cx="250" cy="235" rx="10" ry="6.5" fill="#000000"></ellipse>
-
-            <!-- Subtle Happy Smile -->
-            <path d="M 239 248 C 242 254 247 254 250 250 C 253 254 258 254 261 248" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
-          </g>
-
-          <!-- Typography: GAMAJ (Clean geometric vector paths) -->
-          <g id="wordmark" fill="#000000">
-            <!-- G -->
-            <path d="M 124 358 C 112 358 102 368 102 381 C 102 394 112 404 124 404 C 136 404 144 396 145 385 L 126 385 C 123.8 385 122 383.2 122 381 C 122 378.8 123.8 377 126 377 L 151 377 C 153.2 377 155 378.8 155 381 C 155 398 141 412 124 412 C 106 412 92 398 92 381 C 92 364 106 350 124 350 C 137 350 148 358 153 369 C 154 371 153 373.2 151 374.2 C 149 375 147 374.2 146 372.4 C 142 364 133.5 358 124 358 Z"></path>
-
-            <!-- A (1) -->
-            <path d="M 194.5 350.5 C 196.8 350.5 198.8 352 199.7 354.2 L 219.7 407.2 C 220.5 409.3 219.4 411.6 217.3 412.4 C 215.2 413.2 212.9 412.1 212.1 410 L 206.8 396 L 182.2 396 L 176.9 410 C 176.1 412.1 173.8 413.2 171.7 412.4 C 169.6 411.6 168.5 409.3 169.3 407.2 L 189.3 354.2 C 190.2 352 192.2 350.5 194.5 350.5 Z M 185.2 388 L 203.8 388 L 194.5 363.3 L 185.2 388 Z"></path>
-
-            <!-- M -->
-            <path d="M 237 351 C 239.2 351 241 352.8 241 355 L 241 407 C 241 409.2 239.2 411 237 411 C 234.8 411 233 409.2 233 407 L 233 364.5 L 252.8 393.5 C 253.9 395 255.6 395.9 257.5 395.9 C 259.4 395.9 261.1 395 262.2 393.5 L 282 364.5 L 282 407 C 282 409.2 280.2 411 278 411 C 275.8 411 274 409.2 274 407 L 274 355 C 274 352.8 275.8 351 278 351 C 279.8 351 281.5 351.9 282.4 353.4 L 257.5 389.8 L 232.6 353.4 C 233.5 351.9 235.2 351 237 351 Z"></path>
-
-            <!-- A (2) -->
-            <path d="M 320.5 350.5 C 322.8 350.5 324.8 352 325.7 354.2 L 345.7 407.2 C 346.5 409.3 345.4 411.6 343.3 412.4 C 341.2 413.2 338.9 412.1 338.1 410 L 332.8 396 L 308.2 396 L 302.9 410 C 302.1 412.1 299.8 413.2 297.7 412.4 C 295.6 411.6 294.5 409.3 295.3 407.2 L 315.3 354.2 C 316.2 352 318.2 350.5 320.5 350.5 Z M 311.2 388 L 329.8 388 L 320.5 363.3 L 311.2 388 Z"></path>
-
-            <!-- J -->
-            <path d="M 390 351 C 392.2 351 394 352.8 394 355 L 394 393 C 394 403.5 385.5 412 375 412 C 364.5 412 356 403.5 356 393 C 356 390.8 357.8 389 360 389 C 362.2 389 364 390.8 364 393 C 364 399.1 368.9 404 375 404 C 381.1 404 386 399.1 386 393 L 386 355 C 386 352.8 387.8 351 390 351 Z"></path>
-          </g>
-        </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Gamaj">
+  <!-- Gamaj mark: a squared-off G cut out of a solid app tile. -->
+  <defs>
+    <mask id="gamaj-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#FFFFFF"/>
+      <g fill="none" stroke="#000000" stroke-width="60" stroke-linecap="square">
+        <path d="M324.9 161.7 A112 112 0 1 0 368 250"/>
+        <path d="M368 250 H 288"/>
+      </g>
+    </mask>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="128" fill="#0B0B0F" mask="url(#gamaj-cut)"/>
+</svg>

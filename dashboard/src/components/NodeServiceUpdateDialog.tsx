@@ -18,7 +18,7 @@ import {
 	type BuildCatalog,
 } from "./BuildVersionSelect";
 
-export type NodeServiceUpdateChannel = "current" | "latest" | "dev";
+export type NodeServiceUpdateChannel = "current" | "latest";
 
 type NodeServiceUpdateDialogProps = {
 	isOpen: boolean;
@@ -26,7 +26,6 @@ type NodeServiceUpdateDialogProps = {
 	description?: string;
 	currentChannel?: string;
 	targetVersion?: string;
-	devVersion?: string;
 	latestVersion?: string;
 	catalog?: BuildCatalog;
 	isSubmitting?: boolean;
@@ -40,7 +39,6 @@ export const NodeServiceUpdateDialog = ({
 	description,
 	currentChannel,
 	targetVersion,
-	devVersion,
 	latestVersion,
 	catalog,
 	isSubmitting = false,
@@ -59,17 +57,11 @@ export const NodeServiceUpdateDialog = ({
 	}, [isOpen]);
 
 	const selectedVersion =
-		channel === "dev"
-			? devVersion
-			: channel === "latest"
-				? latestVersion
-				: targetVersion;
+		channel === "latest" ? latestVersion : targetVersion;
 	const currentChannelLabel =
-		currentChannel === "dev"
-			? t("dashboard.maintenance.updateChannelDev")
-			: currentChannel === "latest"
-				? t("dashboard.maintenance.updateChannelLatest")
-				: currentChannel;
+		currentChannel === "latest"
+			? t("dashboard.maintenance.updateChannelLatest")
+			: currentChannel;
 
 	return (
 		<AppDialog
@@ -123,13 +115,10 @@ export const NodeServiceUpdateDialog = ({
 						<option value="current">
 							{t("dashboard.maintenance.updateChannelCurrent")}
 						</option>
-						<option value="latest">
-							{t("dashboard.maintenance.updateChannelLatest")}
-						</option>
-						<option value="dev">
-							{t("dashboard.maintenance.updateChannelDev")}
-						</option>
-					</Select>
+					<option value="latest">
+						{t("dashboard.maintenance.updateChannelLatest")}
+					</option>
+				</Select>
 					<FormHelperText>
 						{selectedVersion
 							? t("dashboard.maintenance.updateTargetHint", {
@@ -143,10 +132,10 @@ export const NodeServiceUpdateDialog = ({
 						value={version}
 						onChange={(nextVersion) => {
 							setVersion(nextVersion);
-							const build = [...(catalog?.stable ?? []), ...(catalog?.dev ?? [])].find(
-								(item) => item.version === nextVersion,
-							);
-							if (build) setChannel(build.channel === "dev" ? "dev" : "latest");
+						const build = [...(catalog?.stable ?? [])].find(
+							(item) => item.version === nextVersion,
+						);
+						if (build) setChannel("latest");
 						}}
 					/>
 					{version && version !== targetVersion && (
@@ -154,16 +143,7 @@ export const NodeServiceUpdateDialog = ({
 							<AlertIcon />
 							<AlertDescription>
 								{t("dashboard.maintenance.versionSwitchWarning")}
-							</AlertDescription>
-						</Alert>
-					)}
-				{channel === "dev" && (
-					<Alert status="warning" borderRadius="xl" fontSize="sm">
-						<AlertIcon />
-						<AlertDescription>
-							{t("dashboard.maintenance.devChannelWarning")}
-						</AlertDescription>
-					</Alert>
+							</AlertDescription>				</Alert>
 				)}
 			</Stack>
 		</AppDialog>

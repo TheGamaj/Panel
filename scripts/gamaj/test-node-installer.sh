@@ -10,10 +10,10 @@ colorized_echo() { :; }
 SCRIPT="$ROOT/gamaj-node.sh"
 
 eval "$(sed -n '/^select_node_version() {$/,/^}$/p' "$SCRIPT")"
-select_node_version dev
-[ "$SELECTED_NODE_VERSION" = "dev" ]
 select_node_version latest
 [ "$SELECTED_NODE_VERSION" = "latest" ]
+select_node_version is.0.0.1
+[ "$SELECTED_NODE_VERSION" = "is.0.0.1" ]
 
 eval "$(sed -n '/^select_xray_core_version() {$/,/^}$/p' "$SCRIPT")"
 GAMAJ_XRAY_CORE_VERSION_DEFAULT=v26.5.9

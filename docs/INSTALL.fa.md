@@ -32,7 +32,6 @@ curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/g
 گزینه‌ها:
 
 ```bash
-... | sudo bash -s -- install --dev                  # کانال dev
 ... | sudo bash -s -- install --version is.0.0.1     # نسخه‌ی مشخص
 ... | sudo bash -s -- install --database sqlite      # یا mysql / mariadb
 ```
@@ -160,7 +159,6 @@ curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/g
 
 ```bash
 sudo gamaj update                 # آخرین نسخه‌ی منتشرشده
-sudo gamaj update --dev           # کانال dev
 sudo gamaj update --version is.0.0.1
 sudo gamaj uninstall
 ```

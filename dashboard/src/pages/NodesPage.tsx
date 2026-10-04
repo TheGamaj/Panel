@@ -103,9 +103,6 @@ import {
 const normalizeVersion = (value?: string | null) => {
 	if (!value) return "";
 	const trimmed = value.trim();
-	if (trimmed.toLowerCase().startsWith("dev-")) {
-		return trimmed.toLowerCase();
-	}
 	return trimmed.replace(/^v+/i, "").split(/[-_]/)[0].trim();
 };
 
@@ -157,14 +154,7 @@ const formatCellValue = (value?: string | number | null): string => {
 const getNodeServiceUpdateAvailable = (
 	currentVersion?: string | null,
 	latestVersion?: string | null,
-	channel?: string | null,
 ): boolean => {
-	if (
-		channel === "dev" &&
-		!/^dev-[0-9a-f]{7,40}$/i.test(currentVersion ?? "")
-	) {
-		return false;
-	}
 	const current = normalizeVersion(currentVersion);
 	const latest = normalizeVersion(latestVersion);
 	return Boolean(current && latest && current !== latest);
@@ -174,10 +164,10 @@ const getNodeUpdateChannel = (
 	node?: Pick<NodeType, "node_update_channel"> | null,
 	fallback?: string,
 ) =>
-	node?.node_update_channel === "dev"
-		? "dev"
-		: fallback === "dev"
-			? "dev"
+	node?.node_update_channel === "latest"
+		? "latest"
+		: fallback === "latest"
+			? "latest"
 			: "latest";
 
 const getNodeRuntimeVersion = (node: NodeType) =>
@@ -185,12 +175,6 @@ const getNodeRuntimeVersion = (node: NodeType) =>
 
 const getNodeRuntimeDisplayVersion = (node: NodeType) => {
 	const version = getNodeRuntimeVersion(node);
-	if (
-		node.node_update_channel === "dev" &&
-		!/^dev-[0-9a-f]{7,40}$/i.test(version)
-	) {
-		return version ? `dev (${version})` : "dev";
-	}
 	return version;
 };
 
@@ -198,9 +182,9 @@ const getLatestNodeVersionForChannel = (
 	maintenanceInfo: MaintenanceInfo | undefined,
 	channel: string,
 ) =>
-	channel === "dev"
-		? maintenanceInfo?.node_update?.latest_dev?.tag || ""
-		: maintenanceInfo?.node_update?.latest_release?.tag || "";
+	channel === "latest"
+		? maintenanceInfo?.node_update?.latest_release?.tag || ""
+		: "";
 
 const formatNodeBytes = (value?: number | null, precision = 2) =>
 	value !== null && value !== undefined ? formatBytes(value, precision) : "-";
@@ -580,7 +564,6 @@ type MaintenanceInfo = {
 	node_update?: {
 		channel?: string;
 		latest_release?: { tag?: string | null } | null;
-		latest_dev?: { tag?: string | null } | null;
 	} | null;
 };
 
@@ -730,7 +713,7 @@ export const NodesPage: FC = () => {
 		nodes?.find((nodeItem) => nodeItem.node_update_channel)
 			?.node_update_channel || maintenanceInfo?.node_update?.channel;
 	const nodeUpdateChannel =
-		detectedNodeUpdateChannel === "dev" ? "dev" : "latest";
+		detectedNodeUpdateChannel === "latest" ? "latest" : "latest";
 	const panelInstallMode =
 		maintenanceInfo?.panel?.mode ||
 		maintenanceInfo?.panel?.install_mode ||
@@ -2195,12 +2178,10 @@ export const NodesPage: FC = () => {
 					const nodeLatestVersion = getLatestNodeVersionForChannel(
 						maintenanceInfo,
 						nodeEffectiveUpdateChannel,
-					);
-					const nodeServiceUpdateAvailable = getNodeServiceUpdateAvailable(
-						nodeRuntimeVersion,
-						nodeLatestVersion,
-						nodeEffectiveUpdateChannel,
-					);
+					);						const nodeServiceUpdateAvailable = getNodeServiceUpdateAvailable(
+							nodeRuntimeVersion,
+							nodeLatestVersion,
+						);
 					const nodeInstallLabel =
 						[node.node_install_mode, node.node_update_channel]
 							.filter(Boolean)
@@ -3241,7 +3222,6 @@ export const NodesPage: FC = () => {
 					maintenanceInfo,
 					"latest",
 				)}
-				devVersion={getLatestNodeVersionForChannel(maintenanceInfo, "dev")}
 				catalog={buildCatalog}
 				isSubmitting={updatingServiceNodeId !== null || updatingBulkService}
 			/>

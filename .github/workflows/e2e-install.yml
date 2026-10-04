@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - Asli
-      - main
-      - dev
     tags:
       - "is.*"
 

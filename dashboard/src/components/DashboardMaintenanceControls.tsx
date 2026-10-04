@@ -56,7 +56,7 @@ import {
 } from "./BuildVersionSelect";
 import { PanelSelect as Select } from "./common/PanelSelect";
 
-type UpdateChannel = "current" | "latest" | "dev";
+type UpdateChannel = "current" | "latest";
 type MaintenanceAction = "update" | "restart" | "soft-reload";
 
 type MaintenanceOperation = {
@@ -78,15 +78,13 @@ type MaintenanceInfo = {
 		tag?: string | null;
 		mode?: string;
 		install_mode?: string;
-		channel?: string;
-		update?: {
-			current?: string | null;
-			available?: boolean;
-			target?: string | null;
-			latest_release?: { tag?: string | null } | null;
-			latest_dev?: { tag?: string | null } | null;
-			error?: string | null;
-		} | null;
+		channel?: string;			update?: {
+				current?: string | null;
+				available?: boolean;
+				target?: string | null;
+				latest_release?: { tag?: string | null } | null;
+				error?: string | null;
+			} | null;
 	} | null;
 };
 
@@ -110,10 +108,8 @@ const cleanTerminalOutput = (logs?: string[]) =>
 		.trimEnd();
 
 export const DashboardMaintenanceControls = ({
-	channel,
 	version,
 }: {
-	channel?: string;
 	version: string;
 }) => {
 	const { t } = useTranslation();
@@ -142,7 +138,6 @@ export const DashboardMaintenanceControls = ({
 	const logsContainerRef = useRef<HTMLDivElement | null>(null);
 	const panelReturnPollRef = useRef<number | null>(null);
 	const panelReturnSawOfflineRef = useRef(false);
-	const devUpdateTimerRef = useRef<number | null>(null);
 
 	const info = useQuery<MaintenanceInfo>(
 		["dashboard-maintenance-info"],
@@ -168,30 +163,28 @@ export const DashboardMaintenanceControls = ({
 			retry: false,
 		},
 	);
-	const fallbackVersion = channel?.toLowerCase() === "dev" ? "dev" : version;
+	const fallbackVersion = version;
 	const currentVersion =
 		panel?.tag || update?.current || fallbackVersion || "-";
 	const selectedTarget =
 		selectedVersion ||
-		(selectedChannel === "dev"
-			? update?.latest_dev?.tag
-			: selectedChannel === "latest"
-				? update?.latest_release?.tag
-				: update?.target);
+		(selectedChannel === "latest"
+			? update?.latest_release?.tag
+			: update?.target);
 
 	useEffect(() => {
-		if (panel?.channel === "dev" || panel?.channel === "latest") {
-			setSelectedChannel(panel.channel);
+		if (panel?.channel === "latest") {
+			setSelectedChannel("latest");
 		}
 	}, [panel?.channel]);
 
 	const selectBuildVersion = (value: string) => {
 		setSelectedVersion(value);
 		if (!value) return;
-		const build = [...(builds.data?.stable ?? []), ...(builds.data?.dev ?? [])].find(
+		const build = [...(builds.data?.stable ?? [])].find(
 			(item) => item.version === value,
 		);
-		if (build) setSelectedChannel(build.channel === "dev" ? "dev" : "latest");
+		if (build) setSelectedChannel("latest");
 	};
 
 	const clearPanelReturnPolling = useCallback(() => {
@@ -220,14 +213,6 @@ export const DashboardMaintenanceControls = ({
 	}, [clearPanelReturnPolling]);
 
 	useEffect(() => () => clearPanelReturnPolling(), [clearPanelReturnPolling]);
-	useEffect(
-		() => () => {
-			if (devUpdateTimerRef.current !== null) {
-				window.clearTimeout(devUpdateTimerRef.current);
-			}
-		},
-		[],
-	);
 
 	useEffect(() => {
 		if (!operation?.id || waitingForAPI) return;
@@ -492,9 +477,6 @@ export const DashboardMaintenanceControls = ({
 									<option value="latest">
 										{t("dashboard.maintenance.updateChannelLatest")}
 									</option>
-									<option value="dev">
-										{t("dashboard.maintenance.updateChannelDev")}
-									</option>
 								</Select>
 								<FormHelperText fontSize="11px" color="panel.textMuted">
 									{selectedTarget
@@ -512,14 +494,6 @@ export const DashboardMaintenanceControls = ({
 									onChange={selectBuildVersion}
 								/>
 							)}
-						{selectedChannel === "dev" && hostActionsAvailable && (
-							<Alert status="warning" borderRadius="xl" fontSize="12px">
-								<AlertIcon />
-								<Text fontSize="12px">
-									{t("dashboard.maintenance.devChannelWarning")}
-								</Text>
-							</Alert>
-						)}
 						<Flex gap={2} flexWrap="wrap" justify="flex-end" pt={2} borderTopWidth="1px" borderColor="panel.border">
 							<Button
 								size="xs"
@@ -960,11 +934,9 @@ export const DashboardMaintenanceControls = ({
 								? t("dashboard.maintenance.restartConfirmDescription")
 								: confirmAction === "soft-reload"
 									? t("dashboard.maintenance.softReloadConfirmDescription")
-									: selectedChannel === "dev"
-										? t("dashboard.maintenance.updateDevConfirmDescription")
-										: t("dashboard.maintenance.updateConfirmDescription", {
-												target: selectedTarget || update?.target || "-",
-											})}
+								: t("dashboard.maintenance.updateConfirmDescription", {
+										target: selectedTarget || update?.target || "-",
+									})}
 									</Text>
 									{confirmAction === "update" && selectedVersion && (
 										<Alert status="warning" borderRadius="xl" fontSize="12px">
@@ -985,7 +957,7 @@ export const DashboardMaintenanceControls = ({
 							{t("cancel")}
 						</Button>
 						<Button
-							colorScheme={confirmAction === "restart" ? "red" : selectedChannel === "dev" && confirmAction === "update" ? "orange" : "primary"}
+							colorScheme={confirmAction === "restart" ? "red" : "primary"}
 							size="sm"
 							borderRadius="full"
 							px={5}

@@ -44,9 +44,6 @@ The installer:
 Options:
 
 ```bash
-# dev channel (latest binary build from the dev branch)
-... | sudo bash -s -- install --dev
-
 # a specific release
 ... | sudo bash -s -- install --version is.0.0.1
 
@@ -207,7 +204,6 @@ node reports usage, online sessions, and executes host actions on request.
 
 ```bash
 sudo gamaj update               # latest published release
-sudo gamaj update --dev         # dev channel
 sudo gamaj update --version is.0.0.1
 ```
 

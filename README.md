@@ -5,6 +5,10 @@
  <a href="./docs/README-zh-cn.md">简体中文</a>
 </p>
 
+<p align="center">
+  <img src="./docs/assets/gamaj-logo.svg" alt="Gamaj" width="104" height="104">
+</p>
+
 <h1>GAMAJ</h1>
 
 ### Panel
@@ -59,10 +63,9 @@ Current version: **`is.0.0.1`** · Default port: **616**
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install
 ```
 
-Dev channel or a specific release:
+Install a specific release:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --dev
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --version is.0.0.1
 ```
 
@@ -111,7 +114,6 @@ sudo gamaj restart         # restart panel
 sudo gamaj logs            # follow logs
 sudo gamaj backup          # create a backup
 sudo gamaj update          # update to the latest release
-sudo gamaj update --dev    # update to the dev channel
 sudo gamaj core-update     # update Xray-core
 sudo gamaj edit-env        # edit /opt/gamaj/.env
 sudo gamaj ssl             # manage certificates

@@ -28,7 +28,6 @@ CERTS_BASE="$DATA_ROOT/$APP_NAME/certs"
 # Gamaj tag shapes. These mirror the Go versionparse package so the panel,
 # the node and every installer accept exactly the same versions.
 GAMAJ_RELEASE_TAG_PATTERN='^(v|is)?\.?[0-9]+(\.[0-9]+){1,3}([-+._A-Za-z0-9]*)?$'
-GAMAJ_DEV_TAG_PATTERN='^dev-[0-9a-fA-F]{7,40}$'
 GAMAJ_SUPPORTED_ARCHES="linux-386, linux-amd64, linux-arm64, linux-armv5, linux-armv6, linux-armv7, linux-s390x"
 GAMAJ_DEFAULT_PORT="616"
 
@@ -41,12 +40,7 @@ if [ -n "${GAMAJ_SCRIPT_BASE_URL+x}" ]; then
 fi
 GAMAJ_SCRIPT_BASE_URL="${GAMAJ_SCRIPT_BASE_URL:-${GAMAJ_RAW_BASE}/scripts/gamaj}"
 GAMAJ_RELEASE_REPO="${GAMAJ_RELEASE_REPO:-TheGamaj/Panel}"
-GAMAJ_BINARY_DEV_BRANCH="${GAMAJ_BINARY_DEV_BRANCH:-dev}"
 GAMAJ_BINARY_WORKFLOW_NAME="${GAMAJ_BINARY_WORKFLOW_NAME:-binary-build}"
-GAMAJ_BINARY_DEV_MANIFEST_BRANCH="${GAMAJ_BINARY_DEV_MANIFEST_BRANCH:-dev-build-manifest}"
-GAMAJ_BINARY_DEV_MANIFEST_PATH="${GAMAJ_BINARY_DEV_MANIFEST_PATH:-dev-builds.json}"
-GAMAJ_BINARY_DEV_MANIFEST_URL="${GAMAJ_BINARY_DEV_MANIFEST_URL:-}"
-GAMAJ_BINARY_DEV_RELEASE_TAG="${GAMAJ_BINARY_DEV_RELEASE_TAG:-dev-builds}"
 INSTALL_MODE_FILE="$APP_DIR/.install-mode"
 CHANNEL_FILE="$APP_DIR/.channel"
 BINARY_BIN_DIR="$APP_DIR/bin"
@@ -468,7 +462,7 @@ print_menu_status_summary() {
 }
 
 set_gamaj_source_ref() {
-    local ref="${1:-dev}"
+    local ref="${1:-Asli}"
     GAMAJ_REF="$ref"
     GAMAJ_RAW_BASE="https://raw.githubusercontent.com/${GAMAJ_REPO}/${GAMAJ_REF}"
     if [ "${GAMAJ_SCRIPT_BASE_URL_EXPLICIT:-0}" != "1" ]; then
@@ -478,12 +472,6 @@ set_gamaj_source_ref() {
 
 set_gamaj_source_for_version() {
     case "${1:-latest}" in
-        dev)
-            set_gamaj_source_ref "$GAMAJ_BINARY_DEV_BRANCH"
-            ;;
-        dev-*)
-            set_gamaj_source_ref "$GAMAJ_BINARY_DEV_BRANCH"
-            ;;
         *)
             if [[ "$1" =~ $GAMAJ_RELEASE_TAG_PATTERN ]]; then
                 set_gamaj_source_ref "$1"
@@ -683,9 +671,6 @@ select_gamaj_version() {
         ""|1|latest|Latest|stable|Stable)
             echo "latest"
             ;;
-        dev|Dev)
-            echo "dev"
-            ;;
         *[!0-9]*)
             echo "$gamaj_version_answer"
             ;;
@@ -721,10 +706,7 @@ get_installed_gamaj_channel() {
 
     if [ -f "$BINARY_METADATA_FILE" ]; then
         metadata_tag=$(sed -nE 's/.*"tag"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' "$BINARY_METADATA_FILE" | head -n 1)
-        if [[ "$metadata_tag" == dev-* ]]; then
-            echo "dev"
-            return
-        elif [ -n "$metadata_tag" ] && [ "$metadata_tag" != "latest" ]; then
+        if [ -n "$metadata_tag" ] && [ "$metadata_tag" != "latest" ]; then
             echo "$metadata_tag"
             return
         fi
@@ -2789,151 +2771,6 @@ get_binary_release_asset_metadata() {
     exit 1
 }
 
-get_binary_dev_manifest_url() {
-    if [ -n "$GAMAJ_BINARY_DEV_MANIFEST_URL" ]; then
-        printf '%s\n' "$GAMAJ_BINARY_DEV_MANIFEST_URL"
-        return
-    fi
-    printf 'https://raw.githubusercontent.com/%s/%s/%s\n' \
-        "$GAMAJ_RELEASE_REPO" \
-        "$GAMAJ_BINARY_DEV_MANIFEST_BRANCH" \
-        "$GAMAJ_BINARY_DEV_MANIFEST_PATH"
-}
-
-get_binary_dev_manifest_metadata() {
-    local binary_arch="$1"
-    local requested_version="${2:-dev}"
-    local manifest_url
-    local manifest_payload
-    local selected
-
-    manifest_url=$(get_binary_dev_manifest_url)
-    manifest_payload=$(curl -fsSL "$manifest_url") || return 1
-
-    selected=$(echo "$manifest_payload" | jq -r \
-        --arg arch "linux-${binary_arch}" \
-        --arg requested "$requested_version" \
-        --arg repo "$GAMAJ_RELEASE_REPO" \
-        --arg release_tag "$GAMAJ_BINARY_DEV_RELEASE_TAG" '
-        def legacy_build:
-            .latest? as $latest
-            | if ($latest | type) == "object" then
-                {
-                    tag: ($latest.build_tag // $latest.tag // ""),
-                    assets: (
-                        reduce ($latest.assets[]? | strings) as $name
-                          ({};
-                            if ($name | startswith("gamaj-" + $arch + "-")) then
-                              .[$arch] = {
-                                name: $name,
-                                url: ("https://github.com/" + $repo + "/releases/download/" + $release_tag + "/" + $name)
-                              }
-                            else
-                              .
-                            end)
-                    )
-                }
-              else
-                empty
-              end;
-        def builds:
-            ([.builds[]? | select(type == "object")] + [legacy_build]);
-        . as $root
-        | builds as $builds
-        | (if ($requested != "" and $requested != "dev") then
-              ($builds[]? | select(.tag == $requested))
-           else
-              (if ($root.latest | type) == "string" then $root.latest else "" end) as $latest_tag
-              | (($builds[]? | select(.tag == $latest_tag)) // $builds[0]?)
-           end) as $build
-        | ($build.assets[$arch] // empty) as $asset
-        | ($asset.name // "") as $asset_name
-        | ($asset.url // "") as $asset_url
-        | select(($build.tag // "") != "" and $asset_name != "" and $asset_url != "")
-        | [$build.tag, $asset_url, $asset_name] | @tsv
-    ' | head -n 1)
-
-    if [ -z "$selected" ]; then
-        return 1
-    fi
-
-    printf '%s\n' "$selected" | awk -F '\t' '{ printf "%s|%s|%s\n", $1, $2, $3 }'
-}
-
-get_binary_dev_artifact_metadata() {
-    local binary_arch="$1"
-    local requested_version="${2:-dev}"
-    local workflow_runs_api
-    local workflow_runs_payload
-    local latest_run_json
-    local run_id
-    local head_sha
-    local artifact_name
-    local artifacts_api
-    local artifacts_payload
-    local artifact_url
-    local nightly_workflow
-
-    if get_binary_dev_manifest_metadata "$binary_arch" "$requested_version"; then
-        return
-    fi
-
-    if [ "$requested_version" != "dev" ]; then
-        colorized_echo red "Dev binary build ${requested_version} was not found in $(get_binary_dev_manifest_url)." >&2
-        exit 1
-    fi
-
-    nightly_workflow="$GAMAJ_BINARY_WORKFLOW_NAME"
-    case "$nightly_workflow" in
-        *.yml|*.yaml) ;;
-        *) nightly_workflow="${nightly_workflow}.yml" ;;
-    esac
-    workflow_runs_api="https://api.github.com/repos/${GAMAJ_RELEASE_REPO}/actions/workflows/${nightly_workflow}/runs"
-    workflow_runs_payload=$(curl -fsSLG "$workflow_runs_api" \
-        --data-urlencode "branch=${GAMAJ_BINARY_DEV_BRANCH}" \
-        --data-urlencode "event=push" \
-        --data-urlencode "status=success" \
-        --data-urlencode "per_page=100") || {
-        colorized_echo red "Unable to read binary dev workflow metadata: $workflow_runs_api" >&2
-        exit 1
-    }
-
-    latest_run_json=$(echo "$workflow_runs_payload" | jq -c --arg branch "$GAMAJ_BINARY_DEV_BRANCH" '
-        .workflow_runs[]?
-        | select(.head_branch == $branch and .event == "push" and .conclusion == "success")
-    ' | head -n 1)
-
-    if [ -z "$latest_run_json" ]; then
-        colorized_echo red "No successful binary dev workflow run was found on branch ${GAMAJ_BINARY_DEV_BRANCH}." >&2
-        exit 1
-    fi
-
-    run_id=$(echo "$latest_run_json" | jq -r '.id // empty')
-    head_sha=$(echo "$latest_run_json" | jq -r '.head_sha // empty')
-    artifacts_api="https://api.github.com/repos/${GAMAJ_RELEASE_REPO}/actions/runs/${run_id}/artifacts"
-    artifacts_payload=$(curl -fsSL "$artifacts_api") || {
-        colorized_echo red "Unable to read binary dev workflow artifacts: $artifacts_api" >&2
-        exit 1
-    }
-
-    artifact_name=$(echo "$artifacts_payload" | jq -r --arg preferred "${GAMAJ_BINARY_ARTIFACT_PREFIX}-linux-${binary_arch}" --arg arch "linux-${binary_arch}" '
-        [
-            .artifacts[]?
-            | select((.expired | not) and (.name == $preferred or (.name | startswith("gamaj")) and (.name | contains($arch))))
-        ]
-        | sort_by(if .name == $preferred then 0 else 1 end, .created_at)
-        | .[0].name // empty
-    ')
-
-    if [ -z "$artifact_name" ]; then
-        colorized_echo red "No usable binary dev artifact was found for workflow run ${run_id}." >&2
-        exit 1
-    fi
-
-    artifact_url="https://nightly.link/${GAMAJ_RELEASE_REPO}/workflows/${nightly_workflow}/${GAMAJ_BINARY_DEV_BRANCH}/${artifact_name}.zip"
-    printf '%s|%s|%s.zip\n' "dev-${head_sha:0:7}" "$artifact_url" "$artifact_name"
-}
-
 install_binary_cli_launcher() {
     # The launcher may target a bin directory that does not exist yet (custom
     # prefixes, sandboxed installs); create it before writing the launcher.
@@ -3011,11 +2848,8 @@ install_binary_gamaj() {
     local resolved_version
     local server_asset_url
     local cli_asset_url
-    local artifact_url
-    local artifact_name
     local tmp_dir
     local package_path=""
-    local dev_package_path=""
 
     set_gamaj_source_for_version "$gamaj_version"
 
@@ -3039,26 +2873,6 @@ install_binary_gamaj() {
         ui_spinner_run "Installing Gamaj custom CLI binary" install -m 755 "$GAMAJ_BINARY_CLI_OVERRIDE" "$tmp_dir/gamaj-cli"
         resolved_version="${GAMAJ_BINARY_OVERRIDE_VERSION:-custom}"
         artifact_url="local-override"
-    elif [[ "$gamaj_version" = "dev" || "$gamaj_version" == dev-* ]]; then
-        IFS='|' read -r resolved_version artifact_url artifact_name < <(get_binary_dev_artifact_metadata "$binary_arch" "$gamaj_version")
-        artifact_name="${artifact_name:-gamaj-binaries.zip}"
-        package_path="$tmp_dir/$artifact_name"
-        ui_spinner_run "Downloading Gamaj dev binary artifact" curl -fL "$artifact_url" -o "$package_path"
-        if [[ "$package_path" == *.zip ]]; then
-            ui_spinner_run "Extracting Gamaj dev artifact" unzip -j -o "$package_path" -d "$tmp_dir"
-            dev_package_path="$tmp_dir/gamaj-linux-${binary_arch}.tar.gz"
-            if [ -f "$dev_package_path" ]; then
-                ui_spinner_run "Unpacking Gamaj binary package" tar -xzf "$dev_package_path" -C "$tmp_dir"
-            elif ls "$tmp_dir"/gamaj-*.tar.gz >/dev/null 2>&1; then
-                ui_spinner_run "Unpacking Gamaj binary package" tar -xzf "$(ls "$tmp_dir"/gamaj-*.tar.gz | head -n 1)" -C "$tmp_dir"
-            fi
-        elif [[ "$package_path" == *.tar.gz ]]; then
-            ui_spinner_run "Unpacking Gamaj binary package" tar -xzf "$package_path" -C "$tmp_dir"
-        else
-            colorized_echo red "Unsupported dev binary asset format: $artifact_name" >&2
-            rm -rf "$tmp_dir"
-            exit 1
-        fi
     else
         IFS='|' read -r binary_source_type resolved_version server_asset_url cli_asset_url < <(get_binary_release_asset_metadata "$gamaj_version" "$binary_arch")
         if [ "$binary_source_type" = "split" ]; then
@@ -3560,18 +3374,9 @@ install_command() {
                 database_type_set="true"
                 shift 2
             ;;
-            --dev)
-                if [[ "$gamaj_version_set" == "true" ]]; then
-                    colorized_echo red "Error: Cannot use --dev and --version options simultaneously."
-                    exit 1
-                fi
-                gamaj_version="dev"
-                gamaj_version_set="true"
-                shift
-            ;;
             --version)
                 if [[ "$gamaj_version_set" == "true" ]]; then
-                    colorized_echo red "Error: Cannot use --dev and --version options simultaneously."
+                    colorized_echo red "Error: Cannot use --version twice."
                     exit 1
                 fi
                 if [ -z "${2:-}" ]; then
@@ -3637,11 +3442,8 @@ install_command() {
     check_version_exists() {
         local version=$1
         repo_url="https://api.github.com/repos/${GAMAJ_RELEASE_REPO}/releases"
-        if [ "$version" == "latest" ] || [ "$version" == "dev" ]; then
+        if [ "$version" == "latest" ]; then
             return 0
-        fi
-        if [[ "$version" =~ ^dev-[0-9a-fA-F]{7,40}$ ]]; then
-            return
         fi
         
         # Fetch the release data from GitHub API
@@ -3655,7 +3457,7 @@ install_command() {
         fi
     }
     # Check if the version is valid and exists
-    if [[ "$gamaj_version" == "latest" || "$gamaj_version" == "dev" || "$gamaj_version" =~ $GAMAJ_DEV_TAG_PATTERN || "$gamaj_version" =~ $GAMAJ_RELEASE_TAG_PATTERN ]]; then
+    if [[ "$gamaj_version" == "latest" || "$gamaj_version" =~ $GAMAJ_RELEASE_TAG_PATTERN ]]; then
         if check_version_exists "$gamaj_version"; then
             install_binary_gamaj "$gamaj_version" "$database_type"
             prompt_dashboard_bind_settings
@@ -3950,18 +3752,9 @@ update_command() {
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --dev)
-                if [[ "$gamaj_version_set" == "true" ]]; then
-                    colorized_echo red "Error: Cannot use --dev and --version options simultaneously."
-                    exit 1
-                fi
-                gamaj_version="dev"
-                gamaj_version_set="true"
-                shift
-                ;;
             --version)
                 if [[ "$gamaj_version_set" == "true" ]]; then
-                    colorized_echo red "Error: Cannot use --dev and --version options simultaneously."
+                    colorized_echo red "Error: Cannot use --version twice."
                     exit 1
                 fi
                 if [ -z "${2:-}" ]; then
@@ -3973,7 +3766,7 @@ update_command() {
                 shift 2
                 ;;
             -h|--help)
-                colorized_echo red "Usage: gamaj update [--dev | --version vX.Y.Z|dev-abcdef0]"
+                colorized_echo red "Usage: gamaj update [--version vX.Y.Z]"
                 exit 0
                 ;;
             *)
@@ -4315,7 +4108,7 @@ usage() {
     colorized_echo yellow "  cli             - Gamaj CLI"
     colorized_echo yellow "  migrate         - Run database migrations"
     colorized_echo yellow "  install         - Install Gamaj"
-    colorized_echo yellow "  update          - Update to latest/dev or a specific release"
+    colorized_echo yellow "  update          - Update to latest or a specific release"
     colorized_echo yellow "  uninstall       - Uninstall Gamaj"
     colorized_echo yellow "  script-install  - Install Gamaj script"
     colorized_echo yellow "  script-update   - Update Gamaj CLI script"
@@ -4340,7 +4133,7 @@ usage() {
     echo
     colorized_echo cyan "Install options:"
     colorized_echo magenta "  --database sqlite|mysql|mariadb"
-    colorized_echo magenta "  --dev or --version vX.Y.Z (install/update)"
+    colorized_echo magenta "  --version vX.Y.Z (install/update)"
     echo
     current_version=$(get_current_xray_core_version)
     colorized_echo cyan "Current Xray-core version: $current_version"

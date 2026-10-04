@@ -5,6 +5,10 @@
  <a href="./README-zh-cn.md">简体中文</a>
 </p>
 
+<p align="center">
+  <img src="./assets/gamaj-logo.svg" alt="Gamaj" width="104" height="104">
+</p>
+
 <h1>GAMAJ</h1>
 
 ### Panel
@@ -50,10 +54,9 @@ API、命令行工具以及多节点分发。全部功能运行在一个原生�
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install
 ```
 
-开发通道或指定版本：
+指定版本：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --dev
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --version is.0.0.1
 ```
 
@@ -101,7 +104,6 @@ sudo gamaj restart         # 重启
 sudo gamaj logs            # 查看日志
 sudo gamaj backup          # 备份
 sudo gamaj update          # 更新
-sudo gamaj update --dev    # 更新到开发通道
 sudo gamaj core-update     # 更新 Xray-core
 sudo gamaj edit-env        # 编辑 /opt/gamaj/.env
 sudo gamaj ssl             # 管理证书

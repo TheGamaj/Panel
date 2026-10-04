@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const defaultSponsorManifestURL = "https://raw.githubusercontent.com/TheGamaj/Panel/dev/sponsors/gamaj/manifest.json"
+const defaultSponsorManifestURL = "https://raw.githubusercontent.com/TheGamaj/Panel/Asli/sponsors/gamaj/manifest.json"
 
 type Config struct {
 	Database                     string

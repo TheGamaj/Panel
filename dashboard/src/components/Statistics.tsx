@@ -67,15 +67,13 @@ type MaintenanceInfo = {
 		tag?: string | null;
 		mode?: string;
 		install_mode?: string;
-		channel?: string;
-		update?: {
-			current?: string | null;
-			available?: boolean;
-			target?: string | null;
-			latest_release?: { tag?: string | null } | null;
-			latest_dev?: { tag?: string | null } | null;
-			error?: string | null;
-		} | null;
+		channel?: string;			update?: {
+				current?: string | null;
+				available?: boolean;
+				target?: string | null;
+				latest_release?: { tag?: string | null } | null;
+				error?: string | null;
+			} | null;
 	} | null;
 };
 
@@ -1903,11 +1901,10 @@ export const Statistics: FC<BoxProps> = (props) => {
 	const myOnlineDownloadSpeed = myUsersList.reduce((sum, u) => sum + (Number(u.download_speed) || 0), 0);
 	const myActiveUsersUsedTraffic = myUsersList.reduce((sum, u) => sum + (Number(u.used_traffic) || 0), 0);
 
-	const panelInfo = maintenanceInfo?.panel;
-	const exactVersion =
+	const panelInfo = maintenanceInfo?.panel;	const exactVersion =
 		panelInfo?.tag ||
 		panelInfo?.update?.current ||
-		(systemData.channel?.toLowerCase() === "dev" ? "dev" : systemData.version) ||
+		systemData.version ||
 		"-";
 
 	return (
@@ -1985,7 +1982,7 @@ export const Statistics: FC<BoxProps> = (props) => {
 						)}
 					</Flex>
 				</Flex>
-				<DashboardMaintenanceControls channel={systemData.channel} version={systemData.version} />
+				<DashboardMaintenanceControls version={systemData.version} />
 			</Flex>
 
 			<SimpleGrid

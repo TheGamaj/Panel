@@ -4,14 +4,13 @@ import { useTranslation } from "react-i18next";
 
 export type BuildVersion = {
 	version: string;
-	channel: "stable" | "dev";
+	channel: "stable";
 	commit?: string;
 };
 
 export type BuildCatalog = {
 	floor: string;
 	stable: BuildVersion[];
-	dev: BuildVersion[];
 };
 
 type BuildVersionSelectProps = {
@@ -28,7 +27,7 @@ export const BuildVersionSelect = ({
 	portalled = false,
 }: BuildVersionSelectProps) => {
 	const { t } = useTranslation();
-	const builds = [...(catalog?.stable ?? []), ...(catalog?.dev ?? [])];
+	const builds = [...(catalog?.stable ?? [])];
 	if (builds.length === 0) return null;
 
 	return (
@@ -45,9 +44,7 @@ export const BuildVersionSelect = ({
 				<option value="">{t("dashboard.maintenance.buildVersionAutomatic")}</option>
 				{builds.map((build) => (
 					<option key={`${build.channel}-${build.version}`} value={build.version}>
-						{build.channel === "dev" && build.commit
-							? `${build.version} · ${build.commit.slice(0, 7)}`
-							: build.version}
+						{build.version}
 					</option>
 				))}
 			</Select>

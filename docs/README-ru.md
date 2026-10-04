@@ -5,6 +5,10 @@
  <a href="./README-zh-cn.md">简体中文</a>
 </p>
 
+<p align="center">
+  <img src="./assets/gamaj-logo.svg" alt="Gamaj" width="104" height="104">
+</p>
+
 <h1>GAMAJ</h1>
 
 ### Panel
@@ -50,10 +54,9 @@
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install
 ```
 
-Dev-канал или конкретный релиз:
+Конкретный релиз:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --dev
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --version is.0.0.1
 ```
 
@@ -102,7 +105,6 @@ sudo gamaj restart         # перезапуск
 sudo gamaj logs            # логи
 sudo gamaj backup          # резервная копия
 sudo gamaj update          # обновление
-sudo gamaj update --dev    # обновление до dev-канала
 sudo gamaj core-update     # обновление Xray-core
 sudo gamaj edit-env        # редактирование /opt/gamaj/.env
 sudo gamaj ssl             # управление сертификатами

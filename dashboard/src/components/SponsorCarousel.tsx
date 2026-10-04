@@ -119,8 +119,8 @@ export const SponsorCarousel: FC<SponsorCarouselProps> = ({
 								h={isBanner || isSidebarBanner ? "full" : 8}
 								border="none"
 								borderRadius="md"
-								// The GAMAJ panda mark is a monochrome SVG (black in light
-								// mode); invert it in dark mode so the brand stays visible.
+								// The GAMAJ mark is a monochrome SVG (black in light mode);
+								// invert it in dark mode so the brand stays visible.
 								filter={
 									item.isSponsor
 										? undefined

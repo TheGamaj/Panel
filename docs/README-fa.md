@@ -5,6 +5,10 @@
  <a href="./README-zh-cn.md">简体中文</a>
 </p>
 
+<p align="center">
+  <img src="./assets/gamaj-logo.svg" alt="Gamaj" width="104" height="104">
+</p>
+
 <h1>GAMAJ</h1>
 
 ### Panel
@@ -50,10 +54,9 @@
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install
 ```
 
-کانال dev یا نسخه‌ی مشخص:
+نسخه‌ی مشخص:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --dev
 curl -fsSL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj.sh | sudo bash -s -- install --version is.0.0.1
 ```
 
@@ -102,7 +105,6 @@ sudo gamaj restart         # ری‌استارت
 sudo gamaj logs            # لاگ زنده
 sudo gamaj backup          # بکاپ
 sudo gamaj update          # به‌روزرسانی
-sudo gamaj update --dev    # به‌روزرسانی کانال dev
 sudo gamaj core-update     # به‌روزرسانی Xray-core
 sudo gamaj edit-env        # ویرایش /opt/gamaj/.env
 sudo gamaj ssl             # مدیریت گواهی‌ها

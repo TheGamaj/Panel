@@ -37,7 +37,7 @@ Copy or download the complete **Node install bundle** immediately. It contains b
 Run the binary installer on the node host:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/TheGamaj/Panel/master/scripts/gamaj/gamaj-node-binary.sh | sudo bash -s -- install
+curl -sL https://raw.githubusercontent.com/TheGamaj/Panel/Asli/scripts/gamaj/gamaj-node.sh | sudo bash -s -- install
 ```
 
 1. When the installer asks for the **Node install bundle**, paste the full block copied from the panel. The installer separates the certificate and private key automatically.
