@@ -66,13 +66,13 @@ func TestGamajSubscriptionTemplatesRender(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%s: render: %v", name, err)
 		}
-		for _, marker := range []string{"buyer", "vless://example", "Coded for Gamaj by AsliCode.", "Coded for Gamaj"} {
+		for _, marker := range []string{"buyer", "vless://example", "Gamaj is.0.0.1", "GAMAJ"} {
 			if !contains(out, marker) {
 				t.Fatalf("%s: rendered output missing %q", name, marker)
 			}
 		}
-		if containsAny(out, "BaToHub", "bato_theme") {
-			t.Fatalf("%s: legacy identity leaked into rendered page", name)
+		if containsAny(out, "BaToHub", "bato_theme", "AsliCode", "squared-off G", "gamaj-cut") {
+			t.Fatalf("%s: retired identity leaked into rendered page", name)
 		}
 	}
 }
