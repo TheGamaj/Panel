@@ -68,7 +68,7 @@ export const CompactChips: React.FC<{ chips: string[]; color?: string }> = ({
 					{first}
 				</Tag>
 			) : (
-				<Text color="gray.400">-</Text>
+				<Text color="panel.textMuted">-</Text>
 			)}
 			{rest.length > 0 && (
 				<CompactPopover

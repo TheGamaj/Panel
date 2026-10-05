@@ -135,11 +135,11 @@ const UserActionDialog: FC<{ action: "reset" | "revoke" }> = ({ action }) => {
 			onClose={onClose}
 			size="sm"
 			title={
-				<Icon color="blue">
+				<Icon tone="accent">
 					<ResetIcon />
 				</Icon>
 			}
-			overlayProps={{ bg: "blackAlpha.300" }}
+			overlayProps={{ bg:"panel.scrim" }}
 			contentProps={{ mx: "3" }}
 			headerProps={{ pt: 6 }}
 			closeButtonProps={{ mt: 3 }}
@@ -168,8 +168,8 @@ const UserActionDialog: FC<{ action: "reset" | "revoke" }> = ({ action }) => {
 				<Text
 					mt={1}
 					fontSize="sm"
-					_dark={{ color: "gray.400" }}
-					color="gray.600"
+					_dark={{ color:"panel.textMuted" }}
+					color="panel.textSecondary"
 				>
 					<Trans components={{ b: <b /> }}>
 						{t(isRevoke ? "revokeUserSub.prompt" : "resetUserUsage.prompt", {
@@ -339,7 +339,7 @@ export const UsersPage: FC = () => {
 					py={10}
 					textAlign="center"
 				>
-					<DisabledIcon color="red.400" mb={5} />
+					<DisabledIcon color="panel.danger" mb={5} />
 					<Text fontSize="xl" fontWeight="bold" mb={2}>
 						{t("usersTable.adminDisabledTitle")}
 					</Text>

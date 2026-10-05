@@ -354,7 +354,7 @@ export const Filters: FC<FilterProps> = ({
 				<VStack spacing={2} align="stretch" w="full">
 					{isUserFilters && (
 						<HStack spacing={1} align="center">
-							<Text fontSize="xs" color="gray.500">
+							<Text fontSize="xs" color="panel.textMuted">
 								{t("users.searchHelpLabel")}
 							</Text>
 							<Tooltip label={t("users.searchHelp")} placement="top" hasArrow>

@@ -125,7 +125,7 @@ export const TetraminatorSettingsCard = () => {
 						<Heading size="sm">
 							{t("settings.sales.tetraminatorTitle")}
 						</Heading>
-						<Text fontSize="sm" color="gray.500" mt={1}>
+						<Text fontSize="sm" color="panel.textMuted" mt={1}>
 							{t("settings.sales.tetraminatorDescription")}
 						</Text>
 					</Box>
@@ -151,7 +151,7 @@ export const TetraminatorSettingsCard = () => {
 						<FormLabel fontSize="sm">
 							{t("settings.sales.apiKey")}
 							{settings?.tetraminator_masked_key ? (
-								<Text as="span" color="gray.500" ms={2}>
+								<Text as="span" color="panel.textMuted" ms={2}>
 									({settings.tetraminator_masked_key})
 								</Text>
 							) : null}

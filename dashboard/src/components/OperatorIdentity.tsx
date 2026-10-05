@@ -4,7 +4,6 @@ import {
 	Image,
 	Text,
 	Tooltip,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
@@ -38,38 +37,14 @@ const operatorBrands: OperatorBrand[] = [
 	},
 ];
 
-const fallbackPalettes = [
-	{
-		lightBg: "blue.100",
-		lightColor: "blue.700",
-		darkBg: "blue.800",
-		darkColor: "blue.100",
-	},
-	{
-		lightBg: "green.100",
-		lightColor: "green.700",
-		darkBg: "green.800",
-		darkColor: "green.100",
-	},
-	{
-		lightBg: "orange.100",
-		lightColor: "orange.700",
-		darkBg: "orange.800",
-		darkColor: "orange.100",
-	},
-	{
-		lightBg: "cyan.100",
-		lightColor: "cyan.700",
-		darkBg: "cyan.800",
-		darkColor: "cyan.100",
-	},
-	{
-		lightBg: "purple.100",
-		lightColor: "purple.700",
-		darkBg: "purple.800",
-		darkColor: "purple.100",
-	},
-] as const;
+// An operator with no brand of its own gets one identity for all of them: a
+// neutral inset chip with the standard text. The old code gave each unknown
+// operator a different hue, which is exactly the decoration the identity
+// forbids — there is one mark style here, not five.
+const operatorFallback = {
+	bg: "panel.inset",
+	color: "panel.text",
+} as const;
 
 const findOperatorBrand = (shortName?: string, owner?: string) => {
 	const identity = `${shortName || ""} ${owner || ""}`.toLowerCase();
@@ -82,14 +57,6 @@ const operatorInitials = (label: string) => {
 	const parts = label.trim().split(/\s+/).filter(Boolean);
 	if (parts.length > 1) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
 	return label.slice(0, 2).toUpperCase();
-};
-
-const fallbackPalette = (label: string) => {
-	const index = Array.from(label).reduce(
-		(total, character) => total + character.charCodeAt(0),
-		0,
-	);
-	return fallbackPalettes[index % fallbackPalettes.length];
 };
 
 export const OperatorIdentity = ({
@@ -106,12 +73,8 @@ export const OperatorIdentity = ({
 		shortName || owner || t("usersTable.operatorUnknown");
 	const brand = findOperatorBrand(shortName, owner);
 	const markSize = compact ? "24px" : "32px";
-	const palette = fallbackPalette(label);
-	const fallbackBg = useColorModeValue(palette.lightBg, palette.darkBg);
-	const fallbackColor = useColorModeValue(
-		palette.lightColor,
-		palette.darkColor,
-	);
+	const fallbackBg = operatorFallback.bg;
+	const fallbackColor = operatorFallback.color;
 	const identity = (
 		<HStack spacing={compact ? 1.5 : 2} minW={0} align="center">
 			<Box

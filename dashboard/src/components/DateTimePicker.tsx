@@ -20,7 +20,6 @@ import {
 	Portal,
 	Text,
 	useBreakpointValue,
-	useColorModeValue,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
@@ -60,18 +59,18 @@ export const DateTimePicker: FC<DateTimePickerProps> = ({
 		hour: value ? dayjs(value).hour() : 12,
 		minute: value ? dayjs(value).minute() : 0,
 	});
-	const popoverBg = useColorModeValue("white", "gray.900");
-	const popoverText = useColorModeValue("gray.900", "white");
-	const popoverBorderColor = useColorModeValue("gray.200", "gray.700");
-	const quickSelectBg = useColorModeValue("gray.50", "gray.800");
-	const quickSelectBorderColor = useColorModeValue("gray.100", "gray.700");
-	const quickSelectHoverBg = useColorModeValue("gray.100", "gray.700");
-	const dayNameColor = useColorModeValue("gray.500", "gray.400");
-	const disabledDayColor = useColorModeValue("gray.400", "gray.500");
-	const dayHoverBg = useColorModeValue("gray.100", "gray.700");
-	const timeDividerColor = useColorModeValue("gray.200", "gray.700");
-	const timeLabelColor = useColorModeValue("gray.600", "gray.400");
-	const todayBorderColor = useColorModeValue("primary.500", "primary.400");
+	const popoverBg = "panel.surface";
+	const popoverText = "panel.text";
+	const popoverBorderColor = "panel.border";
+	const quickSelectBg = "panel.elevated";
+	const quickSelectBorderColor = "panel.border";
+	const quickSelectHoverBg = "panel.border";
+	const dayNameColor = "panel.textMuted";
+	const disabledDayColor = "panel.textMuted";
+	const dayHoverBg = "panel.border";
+	const timeDividerColor = "panel.border";
+	const timeLabelColor = "panel.textSecondary";
+	const todayBorderColor = "panel.accent";
 
 	useEffect(() => {
 		if (value) {
@@ -181,16 +180,16 @@ export const DateTimePicker: FC<DateTimePickerProps> = ({
 						minW={{ base: "34px", md: "28px" }}
 						fontSize="xs"
 						fontWeight={isToday ? "bold" : "normal"}
-						bg={isSelected ? "primary.500" : "transparent"}
+						bg={isSelected ? "panel.accent" : "transparent"}
 						color={isSelected ? "white" : isPast ? disabledDayColor : "inherit"}
 						border={isToday ? "1px solid" : "none"}
 						borderColor={todayBorderColor}
 						_hover={{
 							bg: isPast
 								? "transparent"
-								: isSelected
-									? "primary.600"
-									: dayHoverBg,
+							: isSelected
+								? "panel.accentHover"
+								: dayHoverBg,
 						}}
 						onClick={() => !isPast && handleDateSelect(day)}
 						isDisabled={!!isPast}
@@ -224,7 +223,7 @@ export const DateTimePicker: FC<DateTimePickerProps> = ({
 			<Text
 				as="span"
 				noOfLines={1}
-				color={displayValue ? "inherit" : "gray.500"}
+				color={displayValue ? "inherit" : "panel.textMuted"}
 			>
 				{displayValue || inputPlaceholder}
 			</Text>

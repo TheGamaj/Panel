@@ -12,7 +12,6 @@ import {
 	SimpleGrid,
 	type SimpleGridProps,
 	Text,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import type { FC, ReactNode } from "react";
 
@@ -23,17 +22,17 @@ export const XrayModalContent: FC<ModalContentProps> = ({
 	sx,
 	...props
 }) => {
-	const bg = useColorModeValue("white", "surface.dark");
-	const bodyBg = useColorModeValue("gray.50", "blackAlpha.300");
-	const borderColor = useColorModeValue("gray.200", "whiteAlpha.300");
-	const sectionBg = useColorModeValue("white", "whiteAlpha.50");
-	const sectionHoverBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50");
-	const fieldBg = useColorModeValue("white", "whiteAlpha.50");
-	const labelColor = useColorModeValue("gray.700", "gray.200");
-	const mutedColor = useColorModeValue("gray.500", "gray.400");
+	const bg = "panel.surface";
+	const bodyBg = "panel.elevated";
+	const borderColor = "panel.border";
+	const sectionBg = "panel.surface";
+	const sectionHoverBg = "panel.inset";
+	const fieldBg = "panel.surface";
+	const labelColor = "panel.textSecondary";
+	const mutedColor = "panel.textMuted";
 	const tabActiveBg = "transparent";
-	const tabActiveColor = useColorModeValue("primary.600", "primary.300");
-	const tabActiveBorder = useColorModeValue("primary.500", "primary.300");
+	const tabActiveColor = "panel.accent";
+	const tabActiveBorder = "panel.borderStrong";
 
 	return (
 		<ModalContent
@@ -330,7 +329,7 @@ export const XrayModalHeader: FC<
 			{children}
 		</Text>
 		{subtitle && (
-			<Text mt={1} fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+			<Text mt={1} fontSize="xs" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 				{subtitle}
 			</Text>
 		)}
@@ -368,8 +367,8 @@ export const XrayDialogSection: FC<
 					<Text
 						mt={1}
 						fontSize="xs"
-						color="gray.500"
-						_dark={{ color: "gray.400" }}
+						color="panel.textMuted"
+						_dark={{ color:"panel.textMuted" }}
 					>
 						{description}
 					</Text>

@@ -1,4 +1,4 @@
-import { Box, Center, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Center, Text  } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHref, useSearchParams } from "react-router-dom";
@@ -9,8 +9,8 @@ export const TutorialsPage = () => {
 	const dashboardRoot = useHref("/");
 	const [searchParams] = useSearchParams();
 	const [isLoaded, setIsLoaded] = useState(false);
-	const borderColor = useColorModeValue("panel.border", "panel.border");
-	const frameBg = useColorModeValue("panel.surface", "panel.surface");
+	const borderColor = "panel.border";
+	const frameBg = "panel.surface";
 	const frameSrc = getTutorialsUrl(
 		dashboardRoot,
 		i18n.language,

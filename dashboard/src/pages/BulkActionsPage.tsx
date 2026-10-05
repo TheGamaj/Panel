@@ -171,7 +171,7 @@ const Results = ({ results }: { results: BatchResult[] }) => {
 						borderColor="panel.border"
 					>
 						<HStack minW={0}>
-							<Box color={result.ok ? "green.400" : "red.400"} flexShrink={0}>
+							<Box color={result.ok ? "panel.success" : "panel.danger"} flexShrink={0}>
 								{result.ok ? (
 									<CheckCircleIcon width={18} />
 								) : (
@@ -184,7 +184,7 @@ const Results = ({ results }: { results: BatchResult[] }) => {
 						</HStack>
 						<Text
 							fontSize="sm"
-							color={result.ok ? "panel.textSecondary" : "red.400"}
+							color={result.ok ? "panel.textSecondary" : "panel.danger"}
 							textAlign="end"
 						>
 							{result.detail}
@@ -570,7 +570,7 @@ const BulkCreatePanel = ({
 							)}
 						</HStack>
 						{invalidNames.length > 0 && (
-							<Text color="red.400" fontSize="sm" mt={2}>
+							<Text color="panel.danger" fontSize="sm" mt={2}>
 								{t("bulkActions.invalidUsernames", {
 									count: invalidNames.length,
 								})}
@@ -770,7 +770,7 @@ const BulkDeletePanel = () => {
 								</FormHelperText>
 							</FormControl>
 							{invalidNames.length > 0 && (
-								<Text color="red.400" fontSize="sm">
+								<Text color="panel.danger" fontSize="sm">
 									{t("bulkActions.invalidUsernames", {
 										count: invalidNames.length,
 									})}

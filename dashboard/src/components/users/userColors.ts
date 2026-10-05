@@ -11,8 +11,8 @@ export const getUsageTone = (
 };
 
 export const usageToneGradients: Record<UsageTone, string> = {
-	unlimited: "linear-gradient(90deg, #38bdf8, #818cf8)",
-	ok: "linear-gradient(90deg, #10b981, #34d399)",
-	warn: "linear-gradient(90deg, #f59e0b, #fbbf24)",
-	critical: "linear-gradient(90deg, #ef4444, #f43f5e)",
+	unlimited: "linear-gradient(90deg, var(--gm-panel-accent), var(--gm-panel-accent))",
+	ok: "linear-gradient(90deg, var(--gm-success), var(--gm-success))",
+	warn: "linear-gradient(90deg, var(--gm-warning), var(--gm-warning))",
+	critical: "linear-gradient(90deg, var(--gm-danger), var(--gm-danger))",
 };

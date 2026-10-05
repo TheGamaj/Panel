@@ -17,7 +17,6 @@ import {
 	Text,
 	VStack,
 	useColorMode,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import {
 	ArrowDownTrayIcon,
@@ -56,6 +55,12 @@ import { formatBytes, numberWithCommas } from "utils/formatByte";
 import { mergeLiveSystemStats } from "utils/systemMetrics";
 import { getAPIWebSocketURL } from "utils/websocket";
 import { DashboardMaintenanceControls } from "./DashboardMaintenanceControls";
+
+// The chart grid and its axis labels are panel roles, so they resolve
+// per mode through the CSS variables without the component re-rendering.
+const gridColor = "panel.rowHover";
+const mutedTextColor = "panel.textMuted";
+
 
 export const StatisticsQueryKey = "statistics-query-key";
 
@@ -354,8 +359,6 @@ const HistoryModal: FC<{
 	const [isSwitchingInterval, setIsSwitchingInterval] = useState(false);
 	const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
 	const [pillStyle, setPillStyle] = useState<{ left: number; width: number }>({ left: 4, width: 0 });
-	const gridColor = useColorModeValue("rgba(0,0,0,0.06)", "rgba(255,255,255,0.06)");
-	const mutedTextColor = useColorModeValue("#64748b", "#94a3b8");
 
 	const activeIntervalIndex = HISTORY_INTERVALS.findIndex((i) => i.seconds === intervalSeconds);
 
@@ -528,8 +531,8 @@ const HistoryModal: FC<{
 				sparkline: { enabled: false },
 			},
 			colors: isNetwork
-				? ["#3b82f6", "#10b981"]
-				: ["var(--gm-panel-accent)", "#8b5cf6", "#f59e0b", "#ec4899"],
+				? ["var(--gm-panel-accent)", "var(--gm-success)"]
+				: ["var(--gm-panel-accent)", "var(--gm-panel-accent)", "var(--gm-warning)", "var(--gm-panel-accent)"],
 			fill: {
 				type: "gradient",
 				gradient: {
@@ -630,10 +633,10 @@ const HistoryModal: FC<{
 							return `
 								<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px;">
 									<div style="display: flex; align-items: center; gap: 6px;">
-										<span style="width: 7px; height: 7px; border-radius: 50%; background: ${color}; box-shadow: 0 0 6px ${color}88; flex-shrink: 0;"></span>
-										<span style="color: var(--chakra-colors-panel-textSecondary, #94a3b8); font-size: 11px; font-weight: 500;">${name}</span>
+										<							span style="width: 7px; height: 7px; border-radius: 50%; background: ${color}; flex-shrink: 0;"></span>
+										<span style="color: var(--chakra-colors-panel-textSecondary, var(--gamaj-gray-400)); font-size: 11px; font-weight: 500;">${name}</span>
 									</div>
-									<span style="color: var(--chakra-colors-panel-text, #ffffff); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; direction: ltr;">${displayVal}</span>
+									<span style="color: var(--chakra-colors-panel-text, var(--gamaj-gray-50)); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; direction: ltr;">${displayVal}</span>
 								</div>
 							`;
 						})
@@ -641,19 +644,18 @@ const HistoryModal: FC<{
 
 					return `
 						<div style="
-							background: rgba(22, 23, 28, 0.92);
+							background: var(--gm-panel-elevated);
 							backdrop-filter: blur(16px);
 							-webkit-backdrop-filter: blur(16px);
-							border: 1px solid rgba(255, 255, 255, 0.12);
+							border: 1px solid var(--gm-panel-border-strong);
 							border-radius: 8px;
 							background-clip: padding-box;
 							padding: 8px 12px;
-							box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
 							direction: ${isRTL ? "rtl" : "ltr"};
 							font-family: inherit;
 							min-width: 140px;
 						">
-							<div style="color: var(--chakra-colors-panel-textMuted, #64748b); font-size: 10px; font-weight: 600; direction: ltr; text-align: ${isRTL ? "right" : "left"}; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 4px; margin-bottom: 4px;">
+							<div style="color: var(--chakra-colors-panel-textMuted, var(--gamaj-gray-500)); font-size: 10px; font-weight: 600; direction: ltr; text-align: ${isRTL ? "right" : "left"}; border-bottom: 1px solid var(--gm-panel-border); padding-bottom: 4px; margin-bottom: 4px;">
 								${dateStr}
 							</div>
 							${linesHtml}
@@ -664,8 +666,6 @@ const HistoryModal: FC<{
 		}),
 		[
 			colorMode,
-			gridColor,
-			mutedTextColor,
 			intervalSeconds,
 			isNetwork,
 			isRTL,
@@ -678,7 +678,7 @@ const HistoryModal: FC<{
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside" isCentered>
-			<ModalOverlay bg="blackAlpha.700" backdropFilter="blur(16px)" />
+			<ModalOverlay bg="panel.scrim" backdropFilter="blur(16px)" />
 			<ModalContent
 				bg="panel.surface"
 				borderWidth="1px"
@@ -887,7 +887,7 @@ const HistoryModal: FC<{
 											left: 0,
 											right: 0,
 											bottom: 0,
-											backgroundColor: "rgba(10, 12, 16, 0.7)",
+											backgroundColor: "var(--gm-panel-scrim)",
 											backdropFilter: "blur(6px)",
 											borderRadius: "8px",
 											zIndex: 10,
@@ -976,7 +976,7 @@ const ResourceCard: FC<{
 	const { colorMode } = useColorMode();
 	const safe = clampPercent(percent);
 	const accent = "var(--gm-panel-accent)";
-	const criticalColor = safe >= 90 ? "#ef4444" : safe >= 75 ? "#f59e0b" : accent;
+	const criticalColor = safe >= 90 ? "var(--gm-danger)" : safe >= 75 ? "var(--gm-warning)" : accent;
 
 	return (
 		<Box
@@ -992,13 +992,12 @@ const ResourceCard: FC<{
 			flexDirection="column"
 			justifyContent="space-between"
 			transition="border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease"
-			_hover={{
-				md: {
-					borderColor: "panel.borderStrong",
-					bg: "panel.elevated",
-					boxShadow: "inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px -4px rgba(0, 0, 0, 0.22)",
-				},
-			}}
+		_hover={{
+			md: {
+				borderColor: "panel.borderStrong",
+				bg: "panel.elevated",
+			},
+		}}
 		>
 			<Box>
 				<Flex justify="space-between" align="center" mb={3}>
@@ -1310,11 +1309,10 @@ const SectionCard: FC<{
 			noHover
 				? undefined
 				: {
-						md: {
-							borderColor: "panel.borderStrong",
-							bg: "panel.elevated",
-							boxShadow: "inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px -4px rgba(0, 0, 0, 0.22)",
-						},
+					md: {
+						borderColor: "panel.borderStrong",
+						bg: "panel.elevated",
+					},
 					}
 		}
 	>
@@ -1482,12 +1480,12 @@ export const Statistics: FC<BoxProps> = (props) => {
 		setHistoryPayload(payload);
 	};
 
-	const redErrorBg = useColorModeValue("red.50", "rgba(220,38,38,0.08)");
-	const redErrorBorder = useColorModeValue("red.200", "rgba(220,38,38,0.2)");
-	const redErrorColor = useColorModeValue("red.900", "red.200");
-	const orangeErrorBg = useColorModeValue("orange.50", "rgba(234,88,12,0.08)");
-	const orangeErrorBorder = useColorModeValue("orange.200", "rgba(234,88,12,0.2)");
-	const orangeErrorColor = useColorModeValue("orange.900", "orange.200");
+	const redErrorBg = "panel.dangerSubtle";
+	const redErrorBorder = "panel.danger";
+	const redErrorColor = "panel.danger";
+	const orangeErrorBg = "panel.dangerSubtle";
+	const orangeErrorBorder = "panel.border";
+	const orangeErrorColor = "panel.warning";
 
 	if (!systemData) {
 		return (
@@ -1940,7 +1938,7 @@ export const Statistics: FC<BoxProps> = (props) => {
 							w="7px"
 							h="7px"
 							borderRadius="full"
-							bg={systemData.xray_running ? "#22c55e" : "#ef4444"}
+							bg={systemData.xray_running ? "var(--gm-success)" : "var(--gm-danger)"}
 							sx={{
 								animation: systemData.xray_running ? "livePulse 3.5s ease-in-out infinite" : "none",
 								// The status dot reads as running or idle by colour and by the
@@ -2449,51 +2447,51 @@ export const Statistics: FC<BoxProps> = (props) => {
 				<AnimatedHeightWrapper activeKey={userTab}>
 					{canSeeGlobal && userTab === "all" ? (
 						<Stack spacing={0}>
-							<StatRow label={t("dashboard.users.total")} value={systemData.total_user} tagColor="#3b82f6" />
-							<StatRow label={t("dashboard.users.active")} value={systemData.users_active} tag={activePercent} tagColor="#22c55e" />
+							<StatRow label={t("dashboard.users.total")} value={systemData.total_user} tagColor="var(--gm-panel-accent)" />
+							<StatRow label={t("dashboard.users.active")} value={systemData.users_active} tag={activePercent} tagColor="var(--gm-success)" />
 							<StatRow
 								label={t("dashboard.users.online")}
 								value={systemData.online_users}
 								tag={onlinePercent}
-								tagColor="#06b6d4"
+								tagColor="var(--gm-panel-accent)"
 								helper={
 									systemData.online_users_upload_speed || systemData.online_users_download_speed
 										? `↑ ${formatBytes(systemData.online_users_upload_speed)}/s · ↓ ${formatBytes(systemData.online_users_download_speed)}/s`
 										: undefined
 								}
 							/>
-							<StatRow label={t("dashboard.users.onHold")} value={systemData.users_on_hold} tagColor="#a855f7" />
-							<StatRow label={t("dashboard.users.limited")} value={systemData.users_limited} tagColor="#f59e0b" />
-							<StatRow label={t("dashboard.users.expired")} value={systemData.users_expired} tagColor="#f97316" />
+							<StatRow label={t("dashboard.users.onHold")} value={systemData.users_on_hold} tagColor="var(--gm-panel-accent)" />
+							<StatRow label={t("dashboard.users.limited")} value={systemData.users_limited} tagColor="var(--gm-warning)" />
+							<StatRow label={t("dashboard.users.expired")} value={systemData.users_expired} tagColor="var(--gm-warning)" />
 						</Stack>
 					) : (
 						<Stack spacing={0}>
-							<StatRow label={t("dashboard.users.total")} value={myTotalUsers} tagColor="#3b82f6" />
-							<StatRow label={t("dashboard.users.active")} value={myActiveUsers} tag={myActivePercent} tagColor="#22c55e" />
+							<StatRow label={t("dashboard.users.total")} value={myTotalUsers} tagColor="var(--gm-panel-accent)" />
+							<StatRow label={t("dashboard.users.active")} value={myActiveUsers} tag={myActivePercent} tagColor="var(--gm-success)" />
 							<StatRow
 								label={t("dashboard.users.online")}
 								value={myOnlineUsers}
 								tag={myOnlinePercent}
-								tagColor="#06b6d4"
+								tagColor="var(--gm-panel-accent)"
 								helper={
 									myOnlineUploadSpeed || myOnlineDownloadSpeed
 										? `↑ ${formatBytes(myOnlineUploadSpeed)}/s · ↓ ${formatBytes(myOnlineDownloadSpeed)}/s`
 										: undefined
 								}
 							/>
-							<StatRow label={t("dashboard.users.onHold")} value={myOnHoldUsers} tagColor="#a855f7" />
-							<StatRow label={t("dashboard.users.limited")} value={myLimitedUsers} tagColor="#f59e0b" />
-							<StatRow label={t("dashboard.users.expired")} value={myExpiredUsers} tagColor="#f97316" />
+							<StatRow label={t("dashboard.users.onHold")} value={myOnHoldUsers} tagColor="var(--gm-panel-accent)" />
+							<StatRow label={t("dashboard.users.limited")} value={myLimitedUsers} tagColor="var(--gm-warning)" />
+							<StatRow label={t("dashboard.users.expired")} value={myExpiredUsers} tagColor="var(--gm-warning)" />
 							<StatRow
 								label={t("dashboard.users.currentUserUsage")}
 								value={formatBytes(myActiveUsersUsedTraffic, 1)}
-								tagColor="#3b82f6"
+								tagColor="var(--gm-panel-accent)"
 							/>
 							{systemData.personal_usage?.reset_bytes ? (
 								<StatRow
 									label={t("dashboard.users.resetData")}
 									value={formatBytes(systemData.personal_usage.reset_bytes, 1)}
-									tagColor="#f59e0b"
+									tagColor="var(--gm-warning)"
 								/>
 							) : null}
 						</Stack>
@@ -2513,10 +2511,10 @@ export const Statistics: FC<BoxProps> = (props) => {
 					}
 				>
 					<Stack spacing={0}>
-						<StatRow label={t("dashboard.admins.total")} value={systemData.admin_overview.total_admins} tagColor="#3b82f6" />
-						<StatRow label={t("dashboard.admins.fullAccess")} value={systemData.admin_overview.full_access_admins} tagColor="#f59e0b" />
-						<StatRow label={t("dashboard.admins.sudo")} value={systemData.admin_overview.sudo_admins} tagColor="#a855f7" />
-						<StatRow label={t("dashboard.admins.standard")} value={systemData.admin_overview.standard_admins} tagColor="#22c55e" />
+						<StatRow label={t("dashboard.admins.total")} value={systemData.admin_overview.total_admins} tagColor="var(--gm-panel-accent)" />
+						<StatRow label={t("dashboard.admins.fullAccess")} value={systemData.admin_overview.full_access_admins} tagColor="var(--gm-warning)" />
+						<StatRow label={t("dashboard.admins.sudo")} value={systemData.admin_overview.sudo_admins} tagColor="var(--gm-panel-accent)" />
+						<StatRow label={t("dashboard.admins.standard")} value={systemData.admin_overview.standard_admins} tagColor="var(--gm-success)" />
 						{systemData.admin_overview.top_admin_username && (
 							<StatRow
 								label={t("dashboard.admins.topAdmin")}

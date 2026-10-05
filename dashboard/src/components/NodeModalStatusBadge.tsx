@@ -63,9 +63,9 @@ export const NodeModalStatusBadge: FC<UserStatusProps> = ({
 					fontSize="xs"
 					fontWeight="medium"
 					ml="2"
-					color="gray.600"
+					color="panel.textSecondary"
 					_dark={{
-						color: "gray.400",
+						color:"panel.textMuted",
 					}}
 				>
 					{t(dateInfo.status, { time: dateInfo.time })}

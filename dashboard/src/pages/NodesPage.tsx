@@ -29,7 +29,6 @@ import {
 	Text,
 	Tooltip,
 	useClipboard,
-	useColorModeValue,
 	useDisclosure,
 	useToast,
 	VStack,
@@ -345,7 +344,7 @@ const NodeMetricDisplay = ({
 			{helper && helper !== "-" ? (
 				<Text
 					fontSize="xs"
-					color="gray.500"
+					color="panel.textMuted"
 					lineHeight="short"
 					noOfLines={1}
 					maxW="full"
@@ -361,8 +360,8 @@ const NodeMetricDisplay = ({
 					borderRadius="full"
 					w="46px"
 					mx="auto"
-					bg="blackAlpha.100"
-					_dark={{ bg: "whiteAlpha.200" }}
+					bg="panel.inset"
+					_dark={{ bg:"panel.inset" }}
 				/>
 			)}
 		</VStack>
@@ -610,8 +609,8 @@ export const NodesPage: FC = () => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
 	const refreshHosts = useHosts((state) => state.fetchHosts);
-	const nodePanelBg = useColorModeValue("panel.surface", "panel.surface");
-	const nodePanelBorder = useColorModeValue("panel.border", "panel.border");
+	const nodePanelBg = "panel.surface";
+	const nodePanelBorder = "panel.border";
 	const [editingNode, setEditingNode] = useState<NodeType | null>(null);
 	const [expandedNodeID, setExpandedNodeID] = useState<number | null>(null);
 	const [isAddNodeOpen, setAddNodeOpen] = useState(false);
@@ -885,14 +884,14 @@ export const NodesPage: FC = () => {
 			<VStack align="stretch" spacing={2}>
 				<Text>{baseMessage}</Text>
 				{cleanupNames.length > 0 && (
-					<Text color="blue.300">
+					<Text color="panel.accent">
 						{t("nodes.hostAddressCleanupNotice", {
 							hosts: formatNames(cleanupNames),
 						})}
 					</Text>
 				)}
 				{riskyNames.length > 0 && (
-					<Text color="orange.300" fontWeight="700">
+					<Text color="panel.warning" fontWeight="700">
 						{t("nodes.hostAddressRiskNotice", {
 							hosts: formatNames(riskyNames),
 						})}
@@ -2099,7 +2098,7 @@ export const NodesPage: FC = () => {
 						textAlign="start"
 						maxW="full"
 						noOfLines={1}
-						_hover={{ color: "primary.500", textDecoration: "underline" }}
+						_hover={{ color:"panel.text", textDecoration: "underline" }}
 						onClick={(event) => {
 							event.stopPropagation();
 							copyToClipboard(node.address, t("nodes.nodeAddress"));
@@ -2705,7 +2704,7 @@ export const NodesPage: FC = () => {
 					},
 				}}
 			>
-				<Text fontSize="sm" color="gray.500">
+				<Text fontSize="sm" color="panel.textMuted">
 					{t("nodes.paginationSummary", {
 						start: paginationStart,
 						end: paginationEnd,
@@ -2758,7 +2757,7 @@ export const NodesPage: FC = () => {
 				<Text as="h1" fontWeight="semibold" fontSize="2xl">
 					{t("nodes.title")}
 				</Text>
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("nodes.noPermission")}
 				</Text>
 			</VStack>
@@ -3314,7 +3313,7 @@ export const NodesPage: FC = () => {
 			/>
 			{newNodeCertificate && (
 				<Modal isOpen onClose={() => setNewNodeCertificate(null)} size="md">
-					<ModalOverlay bg="blackAlpha.500" />
+					<ModalOverlay bg="panel.scrim" />
 					<ModalContent
 						bg={nodePanelBg}
 						borderWidth="1px"
@@ -3334,9 +3333,9 @@ export const NodesPage: FC = () => {
 									w={10}
 									h={10}
 									borderRadius="full"
-									bg="primary.50"
-									color="primary.600"
-									_dark={{ bg: "primary.900", color: "primary.200" }}
+									bg="panel.elevated"
+									color="panel.text"
+									_dark={{ bg:"panel.borderStrong", color:"panel.textSecondary" }}
 								>
 									<CertificateIconStyled />
 								</Box>
@@ -3348,8 +3347,8 @@ export const NodesPage: FC = () => {
 							<VStack align="stretch" spacing={4}>
 								<Text
 									fontSize="sm"
-									color="gray.600"
-									_dark={{ color: "gray.300" }}
+									color="panel.textSecondary"
+									_dark={{ color:"panel.textSecondary" }}
 								>
 									{t("nodes.newNodePublicKeyDesc")}
 								</Text>
@@ -3359,8 +3358,8 @@ export const NodesPage: FC = () => {
 										align="center"
 										px={4}
 										py={3}
-										bg="gray.50"
-										_dark={{ bg: "gray.800" }}
+										bg="panel.elevated"
+										_dark={{ bg:"panel.elevated" }}
 									>
 										<VStack align="flex-start" spacing={0}>
 											<Text fontWeight="semibold">
@@ -3369,8 +3368,8 @@ export const NodesPage: FC = () => {
 											{newNodeCertificate.name && (
 												<Text
 													fontSize="xs"
-													color="gray.500"
-													_dark={{ color: "gray.400" }}
+													color="panel.textMuted"
+													_dark={{ color:"panel.textMuted" }}
 												>
 													{newNodeCertificate.name}
 												</Text>
@@ -3427,7 +3426,7 @@ export const NodesPage: FC = () => {
 										px={4}
 										py={3}
 										bg="white"
-										_dark={{ bg: "gray.900" }}
+										_dark={{ bg:"panel.surface" }}
 										fontFamily="mono"
 										fontSize="xs"
 										whiteSpace="pre-wrap"
@@ -3441,8 +3440,8 @@ export const NodesPage: FC = () => {
 							</VStack>
 						</ModalBody>
 						<ModalFooter
-							bg="blackAlpha.50"
-							_dark={{ bg: "whiteAlpha.50" }}
+							bg="panel.inset"
+							_dark={{ bg:"panel.inset" }}
 							borderTopWidth="1px"
 							borderColor={nodePanelBorder}
 							px={6}

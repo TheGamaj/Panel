@@ -104,7 +104,7 @@ export const FakeDnsModal: FC<FakeDnsModalProps> = ({
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} size="lg">
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent mx="3">
 				<XrayModalHeader>
 					{isEdit ? t("pages.xray.fakedns.edit") : t("pages.xray.fakedns.add")}

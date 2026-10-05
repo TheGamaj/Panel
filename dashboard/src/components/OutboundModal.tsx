@@ -18,7 +18,6 @@ import {
 	Tabs,
 	Text,
 	Textarea,
-	useColorModeValue,
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
@@ -549,7 +548,7 @@ export const OutboundModal: FC<OutboundModalProps> = ({
 }) => {
 	const { t } = useTranslation();
 	const toast = useToast();
-	const bgSubtle = useColorModeValue("gray.50", "whiteAlpha.100");
+	const bgSubtle = "panel.elevated";
 	const {
 		control,
 		register,
@@ -1284,7 +1283,7 @@ export const OutboundModal: FC<OutboundModalProps> = ({
 			onClose={handleClose}
 			scrollBehavior="inside"
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent as="form" onSubmit={onSubmit}>
 				<XrayModalHeader>
 					{mode === "edit"
@@ -2458,7 +2457,7 @@ export const OutboundModal: FC<OutboundModalProps> = ({
 										/>
 									</Box>
 									{jsonError && (
-										<Text fontSize="sm" color="red.500">
+										<Text fontSize="sm" color="panel.danger">
 											{jsonError}
 										</Text>
 									)}

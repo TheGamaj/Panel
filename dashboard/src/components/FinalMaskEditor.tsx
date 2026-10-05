@@ -298,7 +298,7 @@ const StringArrayField: FC<{
 					)
 				}
 			/>
-			<Text mt={1} fontSize="xs" color="gray.500">
+			<Text mt={1} fontSize="xs" color="panel.textMuted">
 				One value per line.
 			</Text>
 		</FormControl>
@@ -551,7 +551,7 @@ const PacketListEditor: FC<{
 					p={3}
 				>
 					<Flex align="center" justify="space-between">
-						<Text fontSize="xs" color="gray.500">
+						<Text fontSize="xs" color="panel.textMuted">
 							#{index + 1}
 						</Text>
 						<OrderButtons
@@ -612,7 +612,7 @@ const TcpHeaderVariants: FC<{
 					p={3}
 				>
 					<Flex align="center" justify="space-between">
-						<Text fontSize="xs" color="gray.500">
+						<Text fontSize="xs" color="panel.textMuted">
 							Variant #{index + 1}
 						</Text>
 						<OrderButtons
@@ -821,7 +821,7 @@ const CertificateList: FC<{
 						p={3}
 					>
 						<Flex align="center" justify="space-between">
-							<Text fontSize="xs" color="gray.500">
+							<Text fontSize="xs" color="panel.textMuted">
 								Certificate #{index + 1}
 							</Text>
 							<OrderButtons
@@ -1229,7 +1229,7 @@ const LayerCollection: FC<{
 					<Text fontWeight="semibold">
 						{direction === "tcp" ? "TCP connection masks" : "UDP packet masks"}
 					</Text>
-					<Text fontSize="xs" color="gray.500">
+					<Text fontSize="xs" color="panel.textMuted">
 						Add only what you need. Layer 1 runs closest to the original
 						traffic.
 					</Text>
@@ -1263,7 +1263,7 @@ const LayerCollection: FC<{
 					<Text fontSize="sm" fontWeight="medium">
 						No {direction.toUpperCase()} mask is active
 					</Text>
-					<Text mt={1} fontSize="xs" color="gray.500">
+					<Text mt={1} fontSize="xs" color="panel.textMuted">
 						Choose a mask type above and select Add. Safe starter values are
 						filled in automatically.
 					</Text>
@@ -1309,7 +1309,7 @@ const LayerCollection: FC<{
 						/>
 					</Flex>
 					<Divider />
-					<Text fontSize="xs" color="gray.500">
+					<Text fontSize="xs" color="panel.textMuted">
 						{typeDescription(layer.type)}
 					</Text>
 					<LayerSettings
@@ -1420,7 +1420,7 @@ const QuicParamsEditor: FC<{
 			<Flex align="center" justify="space-between" gap={2}>
 				<Box>
 					<Text fontWeight="semibold">QUIC parameters</Text>
-					<Text fontSize="xs" color="gray.500">
+					<Text fontSize="xs" color="panel.textMuted">
 						Used by Hysteria and XHTTP H3.
 					</Text>
 				</Box>
@@ -1577,7 +1577,7 @@ export const FinalMaskEditor: FC<FinalMaskEditorProps> = ({
 	return (
 		<Stack spacing={4}>
 			<Box borderWidth="1px" borderRadius="lg" p={3}>
-				<Text fontSize="xs" color="gray.500">
+				<Text fontSize="xs" color="panel.textMuted">
 					{t("hostsDialog.finalMaskHint")}
 				</Text>
 			</Box>

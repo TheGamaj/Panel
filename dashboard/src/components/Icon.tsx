@@ -1,14 +1,41 @@
 import { Box, Text } from "@chakra-ui/react";
 import type { FC, PropsWithChildren } from "react";
 
+/**
+ * The tones an icon mark may take.
+ *
+ * The old prop was a Chakra hue name, and the component interpolated it into
+ * token paths (`${color}.400`) to stack three translucent copies of itself
+ * into a coloured glow. That is decoration the identity does not allow, and it
+ * is why the prop cannot be a bare colour name any more: a name like "blue"
+ * says how it looks, not what it means.
+ *
+ * One mark, one flat fill, and the meaning comes from the tone.
+ */
+export type IconRole = "accent" | "danger" | "warning" | "success";
+
 export type IconType = {
-	color: string;
+	tone?: IconRole;
 	size?: number;
+};
+
+const MARK_BG: Record<IconRole, string> = {
+	accent: "panel.accent",
+	danger: "panel.danger",
+	warning: "panel.warning",
+	success: "panel.success",
+};
+
+const MARK_TEXT: Record<IconRole, string> = {
+	accent: "panel.bg",
+	danger: "panel.bg",
+	warning: "panel.bg",
+	success: "panel.bg",
 };
 
 export const Icon: FC<PropsWithChildren<IconType>> = ({
 	children,
-	color,
+	tone = "accent",
 	size = 36,
 }) => {
 	const baseSize = `${size}px`;
@@ -20,45 +47,21 @@ export const Icon: FC<PropsWithChildren<IconType>> = ({
 			display="flex"
 			justifyContent="center"
 			alignItems="center"
-			_before={{
-				content: '""',
-				display: "block",
-				position: "absolute",
-				top: "0",
-				left: "0",
-				width: "calc(100%)",
-				height: "calc(100%)",
-				bg: `${color}.400`,
-				opacity: ".5",
-				borderRadius: "4px",
-				zIndex: "1",
-				_dark: {
-					bg: `${color}.400`,
-				},
-			}}
-			_after={{
-				content: '""',
-				display: "block",
-				position: "absolute",
-				top: "0",
-				left: "0",
-				width: "calc(100% + 10px)",
-				height: "calc(100% + 10px)",
-				transform: "translate(-5px, -5px)",
-				bg: `${color}.400`,
-				opacity: ".4",
-				borderRadius: "8px",
-				zIndex: "1",
-				_dark: {
-					bg: `${color}.400`,
-				},
-			}}
+			flexShrink={0}
 		>
+			{/* The mark is a flat fill, not a glow: one surface, one border. */}
+			<Box
+				position="absolute"
+				inset={0}
+				bg={MARK_BG[tone]}
+				borderRadius="4px"
+				zIndex={1}
+			/>
 			<Text
-				color={`${color}.500`}
-				_dark={{ color: `${color}.900` }}
+				color={MARK_TEXT[tone]}
 				position="relative"
-				zIndex="2"
+				zIndex={2}
+				lineHeight="1"
 			>
 				{children}
 			</Text>

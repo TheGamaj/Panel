@@ -6,7 +6,6 @@ import {
 	Stack,
 	Text,
 	useColorMode,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import useGetUser from "hooks/useGetUser";
@@ -38,13 +37,10 @@ export const PhpMyAdminPage = () => {
 	const { userData } = useGetUser();
 	const isFullAccess = userData.role === AdminRole.FullAccess;
 	const [preparedTheme, setPreparedTheme] = useState<string | null>(null);
-	const panelBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const borderColor = useColorModeValue("panel.border", "panel.border");
-	const mutedColor = useColorModeValue(
-		"panel.textSecondary",
-		"panel.textSecondary",
-	);
-	const frameBg = useColorModeValue("white", "gray.950");
+	const panelBg = "panel.elevated";
+	const borderColor = "panel.border";
+	const mutedColor = "panel.textSecondary";
+	const frameBg = "panel.surface";
 
 	const statusQuery = useQuery("phpmyadmin-status", getPHPMyAdminStatus, {
 		refetchOnWindowFocus: false,

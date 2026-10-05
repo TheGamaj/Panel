@@ -12,7 +12,6 @@ import {
 	SimpleGrid,
 	Stack,
 	Text,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import {
 	CalendarDaysIcon,
@@ -102,9 +101,9 @@ export const HeaderCalendar: FC = () => {
 		? "fa-IR-u-ca-persian"
 		: `${i18n.language || "en"}-u-ca-gregory`;
 	const numberLocale = isPersian ? "fa-IR" : i18n.language || "en";
-	const badgeBg = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
-	const highlight = useColorModeValue("primary.600", "primary.200");
-	const border = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
+	const badgeBg = "panel.rowHover";
+	const highlight = "panel.accent";
+	const border = "panel.border";
 
 	useEffect(() => {
 		const timer = setInterval(() => setToday(new Date()), 60 * 1000);
@@ -219,8 +218,8 @@ export const HeaderCalendar: FC = () => {
 									key={label}
 									textAlign="center"
 									fontSize="xs"
-									color="gray.500"
-									_dark={{ color: "gray.400" }}
+									color="panel.textMuted"
+									_dark={{ color:"panel.textMuted" }}
 									fontWeight="semibold"
 								>
 									{label}
@@ -244,7 +243,7 @@ export const HeaderCalendar: FC = () => {
 										fontWeight={
 											day.isToday || isHoliday ? "semibold" : "normal"
 										}
-										color={isHoliday ? "red.500" : undefined}
+										color={isHoliday ? "panel.danger" : undefined}
 									>
 										<Text>{day.label}</Text>
 									</Box>

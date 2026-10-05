@@ -94,7 +94,7 @@ export const AdminDetailsDrawer = () => {
 			scrollBehavior="inside"
 			size="xl"
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent mx="3">
 				<XrayModalHeader
 					subtitle={
@@ -146,39 +146,39 @@ export const AdminDetailsDrawer = () => {
 									<StatCard
 										label={t("admins.details.activeLabel")}
 										value={String(activeUsers)}
-										valueColor="blue.600"
+										valueColor="panel.accent"
 									/>
 									<StatCard
 										label={t("admins.details.onlineLabel")}
 										value={String(onlineUsers)}
-										valueColor="green.600"
+										valueColor="panel.success"
 									/>
 									<StatCard
 										label={t("admins.details.limitedLabel")}
 										value={String(limitedUsers)}
-										valueColor="orange.600"
+										valueColor="panel.warning"
 									/>
 									<StatCard
 										label={t("status.expired")}
 										value={String(expiredUsers)}
-										valueColor="red.600"
+										valueColor="panel.danger"
 									/>
 									<StatCard
 										label={t("status.on_hold")}
 										value={String(onHoldUsers)}
-										valueColor="yellow.600"
+										valueColor="panel.warning"
 									/>
 									<StatCard
 										label={t("status.disabled")}
 										value={String(disabledUsers)}
-										valueColor="gray.600"
+										valueColor="panel.textSecondary"
 									/>
 								</SimpleGrid>
 								<SimpleGrid columns={{ base: 2, md: 2 }} spacing={4} mt={3}>
 									<StatCard
 										label={t("admins.details.totalUsers")}
 										value={String(admin.users_count ?? 0)}
-										valueColor="blue.600"
+										valueColor="panel.accent"
 									/>
 									<StatCard
 										label={t("admins.details.usersLimit")}
@@ -259,7 +259,7 @@ export const AdminDetailsDrawer = () => {
 						</Stack>
 					) : (
 						<Box className="xray-dialog-section" py={8}>
-							<Text color="gray.500">
+							<Text color="panel.textMuted">
 								{t("admins.details.empty")}
 							</Text>
 						</Box>
@@ -296,7 +296,7 @@ const StatCard = ({
 			flexDirection="column"
 			justifyContent="center"
 		>
-			<Text fontSize="xs" textTransform="uppercase" color="gray.500">
+			<Text fontSize="xs" textTransform="uppercase" color="panel.textMuted">
 				{label}
 			</Text>
 			<Text fontWeight="semibold" color={valueColor || undefined}>

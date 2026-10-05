@@ -103,7 +103,7 @@ export const RowActionsMenu: FC<RowActionsMenuProps> = ({
 										}}
 										isDisabled={action.isDisabled}
 										color={
-											action.color ?? (action.isDanger ? "red.400" : undefined)
+											action.color ?? (action.isDanger ? "panel.danger" : undefined)
 										}
 									>
 										{action.label}

@@ -84,7 +84,7 @@ const buildDailyUsageOptions = (
 	colorMode: string,
 	categories: string[],
 ): ApexOptions => {
-	const axisColor = colorMode === "dark" ? "#d8dee9" : "#1a202c";
+	const axisColor = colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)";
 	return {
 		chart: { type: "area", toolbar: { show: false }, zoom: { enabled: false } },
 		dataLabels: { enabled: false },
@@ -98,7 +98,7 @@ const buildDailyUsageOptions = (
 				stops: [0, 80, 100],
 			},
 		},
-		grid: { borderColor: colorMode === "dark" ? "#2D3748" : "#E2E8F0" },
+		grid: { borderColor: colorMode === "dark" ? "var(--gamaj-gray-700)" : "var(--gamaj-gray-200)" },
 		xaxis: {
 			categories,
 			labels: { style: { colors: categories.map(() => axisColor) } },
@@ -117,7 +117,7 @@ const buildDailyUsageOptions = (
 			fillSeriesColor: false,
 			y: { formatter: (value: number) => formatBytes(Number(value) || 0, 2) },
 		},
-		colors: [colorMode === "dark" ? "#63B3ED" : "#3182CE"],
+		colors: [colorMode === "dark" ? "var(--gm-panel-accent-hover)" : "var(--gm-panel-accent)"],
 	};
 };
 
@@ -816,8 +816,8 @@ const NodesUsageAnalytics: FC = () => {
 								{t("nodes.trafficOverview")}
 							</Text>
 							<InfoIcon
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 								aria-label="info"
 								cursor="help"
 							/>
@@ -834,7 +834,7 @@ const NodesUsageAnalytics: FC = () => {
 				}
 			>
 				<VStack align="start" spacing={1} mb={4}>
-					<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+					<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 						{t("usage.selectedRangeTotal")}:{" "}
 						<chakra.span fontWeight="medium">
 							{formatBytes(totalNodeUsage || 0, 2)}
@@ -844,7 +844,7 @@ const NodesUsageAnalytics: FC = () => {
 				{nodeUsageLoading ? (
 					<VStack spacing={3}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+						<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -858,8 +858,8 @@ const NodesUsageAnalytics: FC = () => {
 				) : (
 					<Text
 						textAlign="center"
-						color="gray.500"
-						_dark={{ color: "gray.400" }}
+						color="panel.textMuted"
+						_dark={{ color:"panel.textMuted" }}
 					>
 						{t("noData")}
 					</Text>
@@ -878,8 +878,8 @@ const NodesUsageAnalytics: FC = () => {
 								{t("nodes.perDayUsage")}
 							</Text>
 							<InfoIcon
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 								aria-label="info"
 								cursor="help"
 							/>
@@ -928,7 +928,7 @@ const NodesUsageAnalytics: FC = () => {
 				}
 			>
 				<VStack align="start" spacing={1} mb={4}>
-					<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+					<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 						{t("nodes.selectedNode")}:{" "}
 						<chakra.span fontWeight="medium">
 							{nodeDailyMeta?.nodeName ?? t("nodes.unknownNode")}
@@ -942,7 +942,7 @@ const NodesUsageAnalytics: FC = () => {
 				{nodeDailyLoading ? (
 					<VStack spacing={3}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+						<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -956,8 +956,8 @@ const NodesUsageAnalytics: FC = () => {
 				) : (
 					<Text
 						textAlign="center"
-						color="gray.500"
-						_dark={{ color: "gray.400" }}
+						color="panel.textMuted"
+						_dark={{ color:"panel.textMuted" }}
 					>
 						{t("noData")}
 					</Text>
@@ -976,8 +976,8 @@ const NodesUsageAnalytics: FC = () => {
 								{t("nodes.adminUsageChart")}
 							</Text>
 							<InfoIcon
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 								aria-label="info"
 								cursor="help"
 							/>
@@ -1040,7 +1040,7 @@ const NodesUsageAnalytics: FC = () => {
 				}
 			>
 				<VStack align="start" spacing={1} mb={4}>
-					<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+					<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 						{t("nodes.selectedAdmin")}:{" "}
 						<chakra.span fontWeight="medium">
 							{selectedAdminDaily ?? "-"}
@@ -1058,7 +1058,7 @@ const NodesUsageAnalytics: FC = () => {
 				{adminDailyLoading ? (
 					<VStack spacing={3}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+						<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -1072,8 +1072,8 @@ const NodesUsageAnalytics: FC = () => {
 				) : (
 					<Text
 						textAlign="center"
-						color="gray.500"
-						_dark={{ color: "gray.400" }}
+						color="panel.textMuted"
+						_dark={{ color:"panel.textMuted" }}
 					>
 						{t("noData")}
 					</Text>
@@ -1092,8 +1092,8 @@ const NodesUsageAnalytics: FC = () => {
 								{t("nodes.perAdminUsage")}
 							</Text>
 							<InfoIcon
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 								aria-label="info"
 								cursor="help"
 							/>
@@ -1134,7 +1134,7 @@ const NodesUsageAnalytics: FC = () => {
 				}
 			>
 				<VStack align="start" spacing={1} mb={4}>
-					<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+					<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 						{t("nodes.selectedAdmin")}:{" "}
 						<chakra.span fontWeight="medium">
 							{selectedAdminTotals ?? "-"}
@@ -1148,7 +1148,7 @@ const NodesUsageAnalytics: FC = () => {
 				{adminDonutLoading ? (
 					<VStack spacing={3}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+						<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -1162,8 +1162,8 @@ const NodesUsageAnalytics: FC = () => {
 				) : (
 					<Text
 						textAlign="center"
-						color="gray.500"
-						_dark={{ color: "gray.400" }}
+						color="panel.textMuted"
+						_dark={{ color:"panel.textMuted" }}
 					>
 						{t("noData")}
 					</Text>

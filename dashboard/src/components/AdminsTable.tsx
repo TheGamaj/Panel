@@ -19,7 +19,6 @@ import {
 	type TableProps,
 	Text,
 	Textarea,
-	useColorModeValue,
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
@@ -105,7 +104,7 @@ const AdminStatusBadge: FC<{ status: AdminStatus }> = ({ status }) => {
 		<Text
 			fontSize="sm"
 			fontWeight="semibold"
-			color={status === AdminStatus.Active ? "green.400" : "red.400"}
+			color={status === AdminStatus.Active ? "panel.success" : "panel.danger"}
 			textTransform="capitalize"
 		>
 			{status === AdminStatus.Active
@@ -119,23 +118,23 @@ const AdminRoleBadge: FC<{ role: AdminRole }> = ({ role }) => {
 	const { t } = useTranslation();
 	const roleStyles = {
 		[AdminRole.FullAccess]: {
-			color: "yellow.800",
-			darkColor: "yellow.200",
+			color:"panel.warning",
+			darkColor: "panel.warning",
 			label: t("admins.roles.fullAccess"),
 		},
 		[AdminRole.Sudo]: {
-			color: "purple.800",
-			darkColor: "purple.200",
+			color:"panel.accent",
+			darkColor:"panel.accent",
 			label: t("admins.roles.sudo"),
 		},
 		[AdminRole.Reseller]: {
-			color: "blue.800",
-			darkColor: "blue.200",
+			color:"panel.accent",
+			darkColor:"panel.accent",
 			label: t("admins.roles.reseller"),
 		},
 		[AdminRole.Standard]: {
-			color: "gray.800",
-			darkColor: "gray.200",
+			color:"panel.text",
+			darkColor:"panel.textSecondary",
 			label: t("admins.roles.standard"),
 		},
 	}[role];
@@ -189,9 +188,9 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 	const locale = i18n.language || "en";
 	const toast = useToast();
 	const { userData } = useGetUser();
-	const dialogBg = useColorModeValue("surface.light", "surface.dark");
-	const dialogBorderColor = useColorModeValue("light-border", "gray.700");
-	const inlineMenuBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50");
+	const dialogBg = "panel.surface";
+	const dialogBorderColor = "panel.border";
+	const inlineMenuBg = "panel.inset";
 	const adminOptions = useAdminsStore((state) => state.adminOptions);
 	const admins = useAdminsStore((state) => state.admins);
 	const loading = useAdminsStore((state) => state.loading);
@@ -884,8 +883,8 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 				cell: (admin) => (
 					<Text
 						fontSize="sm"
-						color="green.600"
-						_dark={{ color: "green.400" }}
+						color="panel.success"
+						_dark={{ color:"panel.success" }}
 						fontWeight="semibold"
 					>
 						{formatCount(admin.online_users ?? 0, locale)}
@@ -1190,7 +1189,7 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 			/>
 
 			<Modal isOpen={isQuickPassOpen} onClose={handleCloseQuickPass} isCentered>
-				<ModalOverlay bg="blackAlpha.500" />
+				<ModalOverlay bg="panel.scrim" />
 				<ModalContent
 					bg={dialogBg}
 					borderWidth="1px"
@@ -1210,9 +1209,9 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 								w={10}
 								h={10}
 								borderRadius="full"
-								bg="primary.50"
-								color="primary.600"
-								_dark={{ bg: "primary.900", color: "primary.200" }}
+								bg="panel.elevated"
+								color="panel.text"
+								_dark={{ bg:"panel.borderStrong", color:"panel.textSecondary" }}
 							>
 								<QuickPassIcon />
 							</Box>
@@ -1223,13 +1222,13 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 					<ModalBody px={6} pb={2}>
 						<Stack spacing={3}>
 							<Box>
-								<Text fontSize="sm" color="gray.500">
+								<Text fontSize="sm" color="panel.textMuted">
 									{t("username")}
 								</Text>
 								<Input value={quickPassInfo?.username ?? ""} isReadOnly />
 							</Box>
 							<Box>
-								<Text fontSize="sm" color="gray.500">
+								<Text fontSize="sm" color="panel.textMuted">
 									{t("admins.quickPasswordModal.password")}
 								</Text>
 								<InputGroup>
@@ -1258,14 +1257,14 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 									</InputRightElement>
 								</InputGroup>
 							</Box>
-							<Text fontSize="xs" color="orange.400">
+							<Text fontSize="xs" color="panel.warning">
 								{t("admins.quickPasswordModal.notice")}
 							</Text>
 						</Stack>
 					</ModalBody>
 					<ModalFooter
-						bg="blackAlpha.50"
-						_dark={{ bg: "whiteAlpha.50" }}
+						bg="panel.inset"
+						_dark={{ bg:"panel.inset" }}
 						borderTopWidth="1px"
 						borderColor={dialogBorderColor}
 						px={6}
@@ -1284,7 +1283,7 @@ export const AdminsTable: FC<AdminsTableProps> = ({
 				title={t("admins.disableAdminTitle")}
 				description={
 					<Stack spacing={3}>
-						<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.300" }}>
+						<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textSecondary" }}>
 							{t("admins.disableAdminMessage", {
 								username: adminToDisable?.username ?? "",
 							})}

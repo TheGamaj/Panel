@@ -320,7 +320,7 @@ export const OutboundSubscriptionsModal: FC<Props> = ({
 			size="4xl"
 			scrollBehavior="inside"
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent mx="3">
 				<XrayModalHeader>
 					{t("pages.xray.outboundSub.title")}
@@ -436,7 +436,7 @@ export const OutboundSubscriptionsModal: FC<Props> = ({
 									<Text fontWeight="semibold">
 										{t("pages.xray.outboundSub.active")}
 									</Text>
-									<Text color="gray.500" fontSize="xs">
+									<Text color="panel.textMuted" fontSize="xs">
 										{t("pages.xray.outboundSub.restartHint")}
 									</Text>
 								</Box>
@@ -456,7 +456,7 @@ export const OutboundSubscriptionsModal: FC<Props> = ({
 									<Spinner size="sm" />
 								</HStack>
 							) : items.length === 0 ? (
-								<Text color="gray.500" fontSize="sm">
+								<Text color="panel.textMuted" fontSize="sm">
 									{t("pages.xray.outboundSub.empty")}
 								</Text>
 							) : (
@@ -500,7 +500,7 @@ export const OutboundSubscriptionsModal: FC<Props> = ({
 															{item.remark || item.url || ""}
 														</AppleEmojiText>
 													</Text>
-													<Text color="gray.500" fontSize="xs" noOfLines={1}>
+													<Text color="panel.textMuted" fontSize="xs" noOfLines={1}>
 														{item.tagPrefix || "sub-"} · {item.url}
 													</Text>
 												</Td>

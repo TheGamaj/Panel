@@ -17,7 +17,6 @@ import {
 	Stack,
 	Text,
 	Tooltip,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import { PanelSelect as Select } from "components/common/PanelSelect";
 import { AppDialog } from "components/dialogs/AppDialog";
@@ -135,7 +134,7 @@ export const GeoUpdateDialog = ({
 		}
 	}, [templates]);
 
-	const manualBg = useColorModeValue("gray.50", "whiteAlpha.50");
+	const manualBg = "panel.elevated";
 
 	const addManualFile = () => {
 		setManualFiles((prev) => [...prev, createGeoFile("", "")]);
@@ -388,8 +387,8 @@ export const GeoUpdateDialog = ({
 								</Checkbox>
 								<Text
 									fontSize="xs"
-									color="gray.500"
-									_dark={{ color: "gray.400" }}
+									color="panel.textMuted"
+									_dark={{ color:"panel.textMuted" }}
 								>
 									{t("nodes.geoDialog.applyToNodesHint")}
 								</Text>

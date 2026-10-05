@@ -222,7 +222,7 @@ export const UsersFilterBar: FC = () => {
 				borderColor="panel.border"
 				bg="panel.elevated"
 				_focusVisible={{
-					borderColor: "primary.400",
+					borderColor:"panel.borderStrong",
 					bg: "panel.surface",
 				}}
 				rightElement={

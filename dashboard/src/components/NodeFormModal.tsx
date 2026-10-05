@@ -377,7 +377,7 @@ export const NodeFormModal: FC<NodeFormModalProps> = ({
 			size="2xl"
 			scrollBehavior="inside"
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent
 				mx="3"
 				as="form"
@@ -482,8 +482,8 @@ export const NodeFormModal: FC<NodeFormModalProps> = ({
 										fontSize="xs"
 										maxH="220px"
 										overflow="auto"
-										bg="gray.50"
-										_dark={{ bg: "whiteAlpha.100" }}
+										bg="panel.elevated"
+										_dark={{ bg:"panel.inset" }}
 									>
 										{nodeCertificateValue}
 									</Box>
@@ -584,7 +584,7 @@ export const NodeFormModal: FC<NodeFormModalProps> = ({
 										})}
 										error={getInputError(form.formState?.errors?.data_limit)}
 									/>
-									<Text fontSize="xs" color="gray.500" mt={1}>
+									<Text fontSize="xs" color="panel.textMuted" mt={1}>
 										{t("nodes.dataLimitHint")}
 									</Text>
 								</FormControl>
@@ -693,7 +693,7 @@ export const NodeFormModal: FC<NodeFormModalProps> = ({
 											)}
 										/>
 									</SimpleGrid>
-									<Text fontSize="xs" color="gray.500">
+									<Text fontSize="xs" color="panel.textMuted">
 										{t("nodes.proxyHint")}
 									</Text>
 								</Stack>

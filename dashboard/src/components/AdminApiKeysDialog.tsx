@@ -165,9 +165,9 @@ export const AdminApiKeysDialog = ({ admin, isOpen, onClose }: Props) => {
 					{generatedKey && (
 						<Box
 							borderWidth="1px"
-							borderColor="orange.300"
-							bg="orange.50"
-							_dark={{ bg: "orange.900", borderColor: "orange.700" }}
+							borderColor="panel.warning"
+							bg="panel.dangerSubtle"
+							_dark={{ bg:"panel.inset", borderColor:"panel.warning" }}
 							borderRadius="md"
 							p={3}
 						>
@@ -193,8 +193,8 @@ export const AdminApiKeysDialog = ({ admin, isOpen, onClose }: Props) => {
 								/>
 							</HStack>
 							<Text
-								color="orange.700"
-								_dark={{ color: "orange.200" }}
+								color="panel.warning"
+								_dark={{ color: "panel.warning" }}
 								fontSize="xs"
 								mt={2}
 							>

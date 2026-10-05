@@ -13,7 +13,6 @@ import {
 	Text,
 	Tooltip,
 	useColorMode,
-	useColorModeValue,
 	useDisclosure,
 	VStack,
 } from "@chakra-ui/react";
@@ -89,14 +88,14 @@ const ACCENT_OPTIONS: AccentOption[] = [
 	{
 		key: "mono",
 		label: "Mono / GAMAJ",
-		color: "#ffffff",
-		hover: "#e5e5e5",
+		color: "var(--gamaj-gray-50)",
+		hover: "var(--gamaj-gray-200)",
 	},
-	{ key: "crimson", label: "Red / Crimson", color: "#e0003c", hover: "#f01446" },
-	{ key: "blue", label: "Blue", color: "#2563eb", hover: "#3b82f6" },
-	{ key: "green", label: "Green", color: "#16a34a", hover: "#22c55e" },
-	{ key: "purple", label: "Purple", color: "#7c3aed", hover: "#8b5cf6" },
-	{ key: "orange", label: "Orange", color: "#ea580c", hover: "#f97316" },
+	{ key: "crimson", label: "Red / Crimson", color: "var(--gm-danger)", hover: "var(--gm-danger)" },
+	{ key: "blue", label: "Blue", color: "var(--gm-panel-accent)", hover: "var(--gm-panel-accent)" },
+	{ key: "green", label: "Green", color: "var(--gm-success)", hover: "var(--gm-success)" },
+	{ key: "purple", label: "Purple", color: "var(--gm-panel-accent)", hover: "var(--gm-panel-accent)" },
+	{ key: "orange", label: "Orange", color: "var(--gm-warning)", hover: "var(--gm-warning)" },
 ];
 
 const THEME_OPTIONS: Array<{
@@ -282,14 +281,11 @@ export const ThemeSelector: FC<ThemeSelectorProps> = ({
 	const themeMenu = useDisclosure();
 	const activeTheme = normalizeTheme(colorMode);
 	const [activeAccent, setActiveAccent] = useState(getStoredAccent);
-	const menuBg = useColorModeValue("panel.surface", "panel.surface");
-	const menuBorder = useColorModeValue("panel.border", "panel.border");
-	const menuHover = useColorModeValue("panel.elevated", "panel.elevated");
-	const textColor = useColorModeValue("panel.text", "panel.text");
-	const secondaryText = useColorModeValue(
-		"panel.textSecondary",
-		"panel.textSecondary",
-	);
+	const menuBg = "panel.surface";
+	const menuBorder = "panel.border";
+	const menuHover = "panel.elevated";
+	const textColor = "panel.text";
+	const secondaryText = "panel.textSecondary";
 
 	const popperModifiers = useMemo(
 		() => [

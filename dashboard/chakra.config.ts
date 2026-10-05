@@ -13,6 +13,46 @@ import { mode, type StyleFunctionProps } from "@chakra-ui/theme-tools";
  * Dark is the default mode. Light mode is the same system with the ramp
  * inverted, so the two read as one identity rather than two themes.
  */
+/**
+ * Build a 50-950 scale out of one brand colour.
+ *
+ * Chakra recipes reach for `${hue}.500` and its neighbours, so a hue has to
+ * answer every step. The steps are derived by mixing the hue with white in
+ * the light half of the scale and with the panel background in the dark half,
+ * which keeps the same hue at every step instead of inventing tints.
+ */
+const gamajHue = (hue: string) => {
+	const scale: Record<number, string> = {};
+	const steps: Array<[number, number]> = [
+		[50, 92],
+		[100, 84],
+		[200, 68],
+		[300, 52],
+		[400, 34],
+		[500, 0],
+		[600, 12],
+		[700, 26],
+		[800, 42],
+		[900, 58],
+		[950, 70],
+	];
+	for (const [step, mix] of steps) {
+		// `mix` is the percentage of white (below 500) or of the near-black
+		// canvas (above it) blended into the hue.
+		const towards =
+			mix === 0
+				? null
+				: step < 500
+					? "255, 255, 255"
+					: "10, 10, 10";
+		const amount = mix === 0 ? 0 : mix / 100;
+		scale[step] = towards
+			? `color-mix(in srgb, ${hue} ${Math.round((1 - amount) * 100)}%, rgb(${towards}))`
+			: hue;
+	}
+	return scale;
+};
+
 const sharedThemeConfig = {
 	config: {
 		initialColorMode: "dark",
@@ -107,7 +147,10 @@ const sharedThemeConfig = {
 			accentHover: "var(--gm-panel-accent-hover)",
 			rowHover: "var(--gm-panel-row-hover)",
 			rowSelected: "var(--gm-panel-row-selected)",
+			inset: "var(--gm-panel-inset)",
+			scrim: "var(--gm-panel-scrim)",
 			danger: "var(--gm-danger)",
+			dangerSubtle: "var(--gm-danger-subtle)",
 			warning: "var(--gm-warning)",
 			success: "var(--gm-success)",
 		},
@@ -128,6 +171,25 @@ const sharedThemeConfig = {
 			900: "var(--gamaj-gray-900)",
 			950: "var(--gamaj-gray-950)",
 		},
+		// Chakra's chromatic scales are redefined here rather than left alone.
+		//
+		// Two hundred call sites pass colorScheme="red" / "green" / "blue" to
+		// Badge, Tag, Alert and Button, and those recipes resolve the name
+		// against this palette. Pointing the scales at the Gamaj roles means
+		// every one of those sites lands on the identity without touching the
+		// call sites, and a chromatic hex can no longer reach the screen by
+		// accident. The status hues keep their meaning; the purely decorative
+		// ones collapse onto the accent and the neutral ramp.
+		red: gamajHue("--gm-danger"),
+		orange: gamajHue("--gm-warning"),
+		yellow: gamajHue("--gm-warning"),
+		green: gamajHue("--gm-success"),
+		blue: gamajHue("--gm-panel-accent"),
+		cyan: gamajHue("--gm-panel-accent"),
+		teal: gamajHue("--gm-panel-accent"),
+		purple: gamajHue("--gm-panel-accent"),
+		pink: gamajHue("--gm-panel-accent"),
+		gray: gamajHue("var(--gamaj-gray-500)"),
 		bg: {
 			light: "var(--bg-light)",
 			dark: "var(--bg-dark)",
@@ -156,7 +218,7 @@ const sharedThemeConfig = {
 		global: {
 			// Flat overlay: the identity uses no blur or tint behind dialogs.
 			".chakra-modal__overlay": {
-				bg: "blackAlpha.600 !important",
+				bg: "panel.scrim !important",
 				backdropFilter: "none !important",
 				WebkitBackdropFilter: "none !important",
 			},

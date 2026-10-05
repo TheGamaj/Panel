@@ -117,13 +117,13 @@ export function createUsageConfig(
 				style: {
 					fontWeight: "var(--chakra-fontWeights-medium)",
 					color:
-						colorMode === "dark" ? "var(--chakra-colors-gray-300)" : undefined,
+						colorMode === "dark" ? "var(--gm-panel-text-secondary)" : undefined,
 				},
 			},
 			legend: {
 				position: "bottom",
 				labels: {
-					colors: colorMode === "dark" ? "#CBD5E0" : undefined,
+					colors: colorMode === "dark" ? "var(--gamaj-gray-300)" : undefined,
 					useSeriesColors: false,
 				},
 			},

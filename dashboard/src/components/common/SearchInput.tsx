@@ -64,8 +64,8 @@ export const SearchInput: FC<SearchInputProps> = ({
 							type="button"
 							size="xs"
 							variant="ghost"
-							color={matchOptions.matchCase ? "primary.400" : "panel.textMuted"}
-							bg={matchOptions.matchCase ? "panel.hover" : "transparent"}
+							color={matchOptions.matchCase ? "panel.accent" : "panel.textMuted"}
+							bg={matchOptions.matchCase ? "panel.rowHover" : "transparent"}
 						/>
 					</Tooltip>
 					<Tooltip label={t("search.matchWholeWord")} hasArrow>
@@ -82,9 +82,9 @@ export const SearchInput: FC<SearchInputProps> = ({
 							size="xs"
 							variant="ghost"
 							color={
-								matchOptions.matchWholeWord ? "primary.400" : "panel.textMuted"
+								matchOptions.matchWholeWord ? "panel.accent" : "panel.textMuted"
 							}
-							bg={matchOptions.matchWholeWord ? "panel.hover" : "transparent"}
+							bg={matchOptions.matchWholeWord ? "panel.rowHover" : "transparent"}
 						/>
 					</Tooltip>
 					{rightElement}

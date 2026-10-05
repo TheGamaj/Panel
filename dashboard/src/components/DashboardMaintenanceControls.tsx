@@ -26,7 +26,6 @@ import {
 	Stack,
 	Text,
 	Tooltip,
-	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
 import {
@@ -125,8 +124,8 @@ export const DashboardMaintenanceControls = ({
 		(userData.role === AdminRole.FullAccess ||
 			(userData.role === AdminRole.Sudo &&
 				Boolean(userData.permissions?.sudo.backups)));
-	const outputBg = useColorModeValue("gray.50", "blackAlpha.400");
-	const outputBorder = useColorModeValue("gray.200", "whiteAlpha.200");
+	const outputBg = "panel.elevated";
+	const outputBorder = "panel.border";
 	const [selectedChannel, setSelectedChannel] =
 		useState<UpdateChannel>("current");
 	const [selectedVersion, setSelectedVersion] = useState("");
@@ -566,8 +565,8 @@ export const DashboardMaintenanceControls = ({
 						colorScheme="red"
 						variant="outline"
 						borderColor="panel.border"
-						color="red.400"
-						_hover={{ bg: "rgba(239, 68, 68, 0.1)", borderColor: "red.400" }}
+						color="panel.danger"
+						_hover={{ bg: "var(--gm-danger-wash)", borderColor:"panel.danger" }}
 						borderRadius="full"
 						onClick={() => setConfirmAction("restart")}
 						isLoading={restartMutation.isLoading}
@@ -605,8 +604,8 @@ export const DashboardMaintenanceControls = ({
 							colorScheme="red"
 							variant="outline"
 							borderColor="panel.border"
-							color="red.400"
-							_hover={{ bg: "rgba(239, 68, 68, 0.1)", borderColor: "red.400" }}
+							color="panel.danger"
+							_hover={{ bg: "var(--gm-danger-wash)", borderColor:"panel.danger" }}
 							borderRadius="full"
 							onClick={() => setConfirmAction("restart")}
 							isLoading={restartMutation.isLoading}
@@ -660,7 +659,7 @@ export const DashboardMaintenanceControls = ({
 				isCentered
 				size="xl"
 			>
-				<ModalOverlay bg="blackAlpha.700" backdropFilter="blur(16px)" />
+				<ModalOverlay bg="panel.scrim" backdropFilter="blur(16px)" />
 				<ModalContent
 					borderRadius="8px"
 					overflow="hidden"
@@ -750,21 +749,14 @@ export const DashboardMaintenanceControls = ({
 											w="8px"
 											h="8px"
 											borderRadius="full"
-											bg={
-												operation?.error
-													? "red.500"
-													: operation?.phase === "completed"
-														? "green.500"
-														: "var(--gm-panel-accent)"
-											}
-											boxShadow={
-												operation?.error
-													? "0 0 10px rgba(239, 68, 68, 0.6)"
-													: operation?.phase === "completed"
-														? "0 0 10px rgba(34, 197, 94, 0.6)"
-														: "0 0 10px var(--gm-panel-accent)"
-											}
-										/>
+									bg={
+										operation?.error
+											? "panel.danger"
+											: operation?.phase === "completed"
+												? "panel.success"
+												: "panel.accent"
+									}
+									/>
 										<Text fontSize="13px" fontWeight="700" color="panel.text">
 											{operation?.phase
 												? t(`dashboard.maintenance.phase.${operation.phase}`, operation.phase)
@@ -801,9 +793,9 @@ export const DashboardMaintenanceControls = ({
 									sx={{
 										"& > div": {
 											background: operation?.error
-												? "var(--chakra-colors-red-500)"
+												? "var(--gm-danger)"
 												: operation?.phase === "completed"
-													? "var(--chakra-colors-green-500)"
+													? "var(--gm-success)"
 													: "var(--gm-panel-accent)",
 											transition: "width 0.4s ease",
 										},
@@ -856,7 +848,7 @@ export const DashboardMaintenanceControls = ({
 											w="22px"
 											minW="22px"
 											borderRadius="4px"
-											color={logsCopied ? "green.500" : "panel.textMuted"}
+											color={logsCopied ? "panel.success" : "panel.textMuted"}
 											_hover={{ color: "panel.text" }}
 											onClick={() => {
 												const logs = cleanTerminalOutput(operation?.logs);
@@ -888,10 +880,10 @@ export const DashboardMaintenanceControls = ({
 										"&::-webkit-scrollbar": {
 											width: "6px",
 										},
-										"&::-webkit-scrollbar-thumb": {
-											background: "rgba(255, 255, 255, 0.12)",
-											borderRadius: "3px",
-										},
+									"&::-webkit-scrollbar-thumb": {
+										background: "var(--gm-panel-border-strong)",
+										borderRadius: "3px",
+									},
 									}}
 								>
 									{cleanTerminalOutput(operation?.logs) || t("dashboard.maintenance.waitingForOutput")}
@@ -908,7 +900,7 @@ export const DashboardMaintenanceControls = ({
 				isCentered
 				size="md"
 			>
-				<ModalOverlay bg="blackAlpha.600" backdropFilter="blur(6px)" />
+				<ModalOverlay bg="panel.scrim" backdropFilter="blur(6px)" />
 				<ModalContent
 					bg="panel.surface"
 					borderColor="panel.border"

@@ -95,6 +95,22 @@
   --gm-panel-accent-hover: var(--gamaj-gray-200);
   --gm-panel-row-hover: var(--gamaj-gray-900);
   --gm-panel-row-selected: var(--gamaj-gray-800);
+  /* A surface one step above `surface`: inputs, code blocks, inset wells. */
+  --gm-panel-inset: var(--gamaj-gray-800);
+  /* The flat scrim behind a dialog. One value in both modes, because a
+     dialog dims what is behind it rather than tinting it. */
+  --gm-panel-scrim: rgba(0, 0, 0, 0.72);
+  /* A quiet wash of the danger hue, for the row or field that failed. */
+  --gm-danger-subtle: rgba(198, 40, 40, 0.12);
+  /* The same wash for the other two status hues, and the neutral one that
+     marks a control that is present but carries no status. Mixing the role
+     rather than writing a raw rgba is what keeps a hue from drifting away
+     from the ramp when the hue itself changes. */
+  --gm-danger-wash: color-mix(in srgb, var(--gm-danger) 20%, transparent);
+  --gm-warning-wash: color-mix(in srgb, var(--gm-warning) 20%, transparent);
+  --gm-success-wash: color-mix(in srgb, var(--gm-success) 20%, transparent);
+  --gm-accent-wash: color-mix(in srgb, var(--gm-panel-accent) 18%, transparent);
+  --gm-neutral-wash: color-mix(in srgb, var(--gm-panel-text) 12%, transparent);
   --gm-sidebar-offset: 0px;
   --primary-50: var(--gamaj-gray-100);
   --primary-100: var(--gamaj-gray-100);
@@ -128,6 +144,7 @@
   --gm-panel-accent-hover: var(--gamaj-gray-200);
   --gm-panel-row-hover: var(--gamaj-gray-900);
   --gm-panel-row-selected: var(--gamaj-gray-800);
+  --gm-panel-inset: var(--gamaj-gray-800);
 }
 
 .gm-theme-light,
@@ -146,6 +163,7 @@
   --gm-panel-accent-hover: var(--gamaj-gray-800);
   --gm-panel-row-hover: var(--gamaj-gray-100);
   --gm-panel-row-selected: var(--gamaj-gray-50);
+  --gm-panel-inset: var(--gamaj-gray-100);
 }
 
 @supports (height: 100svh) {
@@ -1189,15 +1207,15 @@ table thead {
 }
 
 .react-datepicker {
-  background-color: var(--chakra-colors-white) !important;
-  border: 1px solid var(--chakra-colors-gray-200);
+  background-color: var(--gm-panel-bg) !important;
+  border: 1px solid var(--gm-panel-accent-hover);
   border-radius: var(--chakra-radii-md) !important;
   position: relative;
 }
 
 .chakra-ui-dark .react-datepicker {
-  background-color: var(--chakra-colors-gray-700) !important;
-  border: 1px solid var(--chakra-colors-gray-600);
+  background-color: var(--gm-panel-border-strong) !important;
+  border: 1px solid var(--gm-panel-border-strong);
   border-radius: var(--chakra-radii-md) !important;
   position: relative;
 }
@@ -1206,12 +1224,12 @@ table thead {
   text-align: center;
   background-color: unset;
   position: relative;
-  border-bottom: 1px solid var(--chakra-colors-gray-200);
+  border-bottom: 1px solid var(--gm-panel-accent-hover);
   padding: 8px 32px;
 }
 
 .chakra-ui-dark .react-datepicker__header {
-  border-bottom: 1px solid var(--chakra-colors-gray-600);
+  border-bottom: 1px solid var(--gm-panel-border-strong);
   padding: 8px 32px;
 }
 
@@ -1230,22 +1248,22 @@ table thead {
 
 .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::after {
   border-top: none;
-  border-bottom-color: var(--chakra-colors-white);
+  border-bottom-color: var(--gm-panel-bg);
 }
 
 .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before {
   top: -1px;
-  border-bottom-color: var(--chakra-colors-gray-200);
+  border-bottom-color: var(--gm-panel-accent-hover);
 }
 
 .chakra-ui-dark .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::after {
   border-top: none;
-  border-bottom-color: var(--chakra-colors-gray-700);
+  border-bottom-color: var(--gm-panel-border-strong);
 }
 
 .chakra-ui-dark .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before {
   top: -1px;
-  border-bottom-color: var(--chakra-colors-gray-600);
+  border-bottom-color: var(--gm-panel-border-strong);
 }
 
 .react-datepicker__current-month,
@@ -1257,37 +1275,37 @@ table thead {
 .chakra-ui-dark .react-datepicker__current-month,
 .chakra-ui-dark .react-datepicker__day-name,
 .chakra-ui-dark .react-datepicker__day {
-  color: var(--chakra-colors-gray-300) !important;
+  color: var(--gm-panel-text-secondary) !important;
 }
 
 .react-datepicker__day:hover {
   border-radius: var(--gm-radius-md);
-  background-color: var(--chakra-colors-primary-300) !important;
-  color: var(--chakra-colors-white) !important;
+  background-color: var(--gm-panel-text-muted) !important;
+  color: var(--gm-panel-bg) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day:hover {
   border-radius: var(--gm-radius-md);
-  background-color: var(--chakra-colors-primary-500) !important;
-  color: var(--chakra-colors-gray-800) !important;
+  background-color: var(--gm-panel-accent) !important;
+  color: var(--gm-panel-elevated) !important;
 }
 
 .react-datepicker__day--disabled {
-  color: var(--chakra-colors-gray-400) !important;
+  color: var(--gm-panel-text-muted) !important;
 }
 
 .react-datepicker__day--disabled:hover {
   background-color: transparent !important;
-  color: var(--chakra-colors-gray-400) !important;
+  color: var(--gm-panel-text-muted) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day--disabled {
-  color: var(--chakra-colors-gray-500) !important;
+  color: var(--gm-panel-text-muted) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day--disabled:hover {
   background-color: transparent !important;
-  color: var(--chakra-colors-gray-500) !important;
+  color: var(--gm-panel-text-muted) !important;
 }
 
 .react-datepicker__day--keyboard-selected,
@@ -1295,8 +1313,8 @@ table thead {
 .react-datepicker__day--in-selecting-range,
 .react-datepicker__day--in-range {
   border-radius: 4px;
-  background-color: var(--chakra-colors-primary-500) !important;
-  color: var(--chakra-colors-white) !important;
+  background-color: var(--gm-panel-accent) !important;
+  color: var(--gm-panel-bg) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day--keyboard-selected,
@@ -1304,18 +1322,18 @@ table thead {
 .chakra-ui-dark .react-datepicker__day--in-selecting-range,
 .chakra-ui-dark .react-datepicker__day--in-range {
   border-radius: 4px;
-  background-color: var(--chakra-colors-primary-200) !important;
-  color: var(--chakra-colors-gray-800) !important;
+  background-color: var(--gm-panel-accent-hover) !important;
+  color: var(--gm-panel-elevated) !important;
 }
 
 .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
   border-radius: 4px;
-  background-color: var(--chakra-colors-primary-400) !important;
+  background-color: var(--gm-panel-text-secondary) !important;
 }
 
 .chakra-ui-dark .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
   border-radius: 4px;
-  background-color: var(--chakra-colors-primary-400) !important;
+  background-color: var(--gm-panel-text-secondary) !important;
 }
 
 .react-datepicker__day--outside-month {
@@ -1430,11 +1448,11 @@ table thead {
 }
 
 .datepicker-with-quickselect .react-datepicker__navigation:hover {
-  background-color: rgba(226, 232, 240, 0.8);
+  background-color: var(--gm-panel-elevated);
 }
 
 .chakra-ui-dark .datepicker-with-quickselect .react-datepicker__navigation:hover {
-  background-color: rgba(74, 85, 104, 0.8);
+  background-color: var(--gm-panel-elevated);
 }
 
 .datepicker-with-quickselect .react-datepicker__day-names {
@@ -1471,31 +1489,31 @@ table thead {
 }
 
 .datepicker-with-quickselect .react-datepicker__day:hover {
-  background-color: var(--chakra-colors-primary-100) !important;
-  color: var(--chakra-colors-primary-700) !important;
+  background-color: var(--gm-panel-inset) !important;
+  color: var(--gm-panel-text-secondary) !important;
 }
 
 .chakra-ui-dark .datepicker-with-quickselect .react-datepicker__day:hover {
-  background-color: var(--chakra-colors-primary-700) !important;
-  color: var(--chakra-colors-white) !important;
+  background-color: var(--gm-panel-text-secondary) !important;
+  color: var(--gm-panel-bg) !important;
 }
 
 .datepicker-with-quickselect .react-datepicker__day--selected,
 .datepicker-with-quickselect .react-datepicker__day--keyboard-selected {
-  background-color: var(--chakra-colors-primary-500) !important;
-  color: var(--chakra-colors-white) !important;
+  background-color: var(--gm-panel-accent) !important;
+  color: var(--gm-panel-bg) !important;
   font-weight: 600;
 }
 
 .chakra-ui-dark .datepicker-with-quickselect .react-datepicker__day--selected,
 .chakra-ui-dark .datepicker-with-quickselect .react-datepicker__day--keyboard-selected {
-  background-color: var(--chakra-colors-primary-400) !important;
-  color: var(--chakra-colors-gray-900) !important;
+  background-color: var(--gm-panel-text-secondary) !important;
+  color: var(--gm-panel-bg) !important;
 }
 
 .datepicker-with-quickselect .react-datepicker__day--today {
   font-weight: 600;
-  border: 2px solid var(--chakra-colors-primary-500);
+  border: 2px solid var(--gm-panel-accent);
 }
 
 .datepicker-with-quickselect .react-datepicker__day--disabled {
@@ -1513,8 +1531,8 @@ table thead {
   height: 40px;
   padding: 0 12px;
   background-color: transparent;
-  border: 1.5px solid var(--chakra-colors-gray-300);
-  color: var(--chakra-colors-gray-700);
+  border: 1.5px solid var(--gm-panel-text-secondary);
+  color: var(--gm-panel-border-strong);
   transition:
     background-color var(--gm-duration-ui) var(--gm-ease-out),
     border-color var(--gm-duration-ui) var(--gm-ease-out),
@@ -1527,20 +1545,20 @@ table thead {
 }
 
 .chakra-ui-dark .datepicker-quickselect-panel button {
-  border-color: var(--chakra-colors-gray-600);
-  color: var(--chakra-colors-gray-300);
+  border-color: var(--gm-panel-border-strong);
+  color: var(--gm-panel-text-secondary);
 }
 
 .datepicker-quickselect-panel button:hover {
-  background-color: var(--chakra-colors-primary-50);
-  border-color: var(--chakra-colors-primary-300);
-  color: var(--chakra-colors-primary-700);
+  background-color: var(--gm-panel-bg);
+  border-color: var(--gm-panel-text-muted);
+  color: var(--gm-panel-text-secondary);
 }
 
 .chakra-ui-dark .datepicker-quickselect-panel button:hover {
-  background-color: var(--chakra-colors-primary-900);
-  border-color: var(--chakra-colors-primary-600);
-  color: var(--chakra-colors-primary-200);
+  background-color: var(--gm-panel-bg);
+  border-color: var(--gm-panel-text-secondary);
+  color: var(--gm-panel-accent-hover);
 }
 
 /* Footer time input styling */
@@ -1549,11 +1567,11 @@ table thead {
   align-items: center;
   gap: 8px;
   padding: 12px 8px 0;
-  border-top: 1px solid var(--chakra-colors-gray-200);
+  border-top: 1px solid var(--gm-panel-accent-hover);
 }
 
 .chakra-ui-dark .datepicker-footer {
-  border-top-color: var(--chakra-colors-gray-600);
+  border-top-color: var(--gm-panel-border-strong);
 }
 
 .datepicker-footer .chakra-numberinput {
@@ -1636,14 +1654,14 @@ table thead {
 .datepicker-calendar-wrapper
   .usage-range-datepicker
   .react-datepicker__navigation:hover {
-  background-color: rgba(148, 163, 184, 0.2);
+  background-color: var(--gm-neutral-wash);
 }
 
 .chakra-ui-dark
   .datepicker-calendar-wrapper
   .usage-range-datepicker
   .react-datepicker__navigation:hover {
-  background-color: rgba(148, 163, 184, 0.25);
+  background-color: var(--gm-neutral-wash);
 }
 
 .datepicker-calendar-wrapper
@@ -1656,7 +1674,7 @@ table thead {
   .datepicker-calendar-wrapper
   .usage-range-datepicker
   .react-datepicker__navigation-icon::before {
-  border-color: rgba(226, 232, 240, 0.8);
+  border-color: var(--gm-panel-border-strong);
 }
 
 .datepicker-calendar-wrapper .react-datepicker__triangle {
@@ -1669,11 +1687,11 @@ table thead {
   justify-content: space-between;
   gap: 12px;
   padding-top: 8px;
-  border-top: 1px solid rgba(148, 163, 184, 0.22);
+  border-top: 1px solid var(--gm-panel-border);
 }
 
 .chakra-ui-dark .datepicker-footer {
-  border-top-color: rgba(148, 163, 184, 0.12);
+  border-top-color: var(--gm-panel-border);
 }
 
 .datepicker-footer .chakra-numberinput,
@@ -1697,14 +1715,14 @@ table thead {
   .datepicker-quickselect-panel {
     width: 100% !important;
     border-right-width: 0 !important;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    border-bottom: 1px solid var(--gm-panel-border-strong);
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
     padding-bottom: 12px;
   }
 
   .chakra-ui-dark .datepicker-quickselect-panel {
-    border-bottom-color: rgba(74, 85, 104, 0.9);
+    border-bottom-color: var(--gm-panel-border-strong);
   }
 
   .datepicker-calendar-wrapper {
@@ -1811,7 +1829,7 @@ img.apple-emoji {
   width: fit-content;
   padding: 3px 8px;
   border-radius: 4px;
-  background: rgba(148, 163, 184, 0.14);
+  background: var(--gm-neutral-wash);
   color: var(--gm-panel-text-muted);
   font-size: 0.72rem;
   font-weight: 500;
@@ -1820,8 +1838,8 @@ img.apple-emoji {
 }
 
 .gm-user-online-tag[data-online="true"] {
-  background: rgba(34, 197, 94, 0.14);
-  color: #22c55e;
+  background: var(--gm-success-wash);
+  color: var(--gm-success);
 }
 
 .gm-user-status-dot {
@@ -1841,11 +1859,11 @@ img.apple-emoji {
   min-width: 7px;
   border-radius: 50%;
   flex: 0 0 auto;
-  background: #94a3b8;
+  background: var(--gamaj-gray-400);
 }
 
 .gm-user-mobile-online-dot[data-online="true"] {
-  background: #22c55e;
+  background: var(--gm-success);
 }
 
 .gm-users-section .gm-resource-card-main .gm-user-mobile-online-dot {
@@ -1917,11 +1935,11 @@ img.apple-emoji {
 }
 
 .gm-user-usage[data-tone="warn"] .gm-user-usage-percent {
-  color: #f59e0b;
+  color: var(--gm-warning);
 }
 
 .gm-user-usage[data-tone="critical"] .gm-user-usage-percent {
-  color: #ef4444;
+  color: var(--gm-danger);
 }
 
 /* --- shared-piece overrides, scoped to the Users page ---------------- */

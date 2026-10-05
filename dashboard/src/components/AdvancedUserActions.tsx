@@ -532,7 +532,7 @@ const AdvancedUserActions = ({
 								<Text fontWeight="semibold">
 									{t("filters.advancedActions.serviceChange.title")}
 								</Text>
-								<Text fontSize="sm" color="gray.500">
+								<Text fontSize="sm" color="panel.textMuted">
 									{t("filters.advancedActions.serviceChange.helper")}
 								</Text>
 								<Select
@@ -570,7 +570,7 @@ const AdvancedUserActions = ({
 						<Text fontWeight="semibold">
 							{t("filters.advancedActions.conditions.title")}
 						</Text>
-						<Text fontSize="sm" color="gray.500">
+						<Text fontSize="sm" color="panel.textMuted">
 							{t("filters.advancedActions.conditions.help")}
 						</Text>
 					</Box>
@@ -635,7 +635,7 @@ const AdvancedUserActions = ({
 					<Text fontWeight="semibold">
 						{t("filters.advancedActions.scopeStatuses.title")}
 					</Text>
-					<Text fontSize="sm" color="gray.500">
+					<Text fontSize="sm" color="panel.textMuted">
 						{t("filters.advancedActions.scopeStatuses.helper")}
 					</Text>
 					<HStack spacing={3} flexWrap="wrap">
@@ -661,7 +661,7 @@ const AdvancedUserActions = ({
 						<Text fontWeight="semibold">
 							{t("filters.advancedActions.expireSection.title")}
 						</Text>
-						<Text fontSize="sm" color="gray.500">
+						<Text fontSize="sm" color="panel.textMuted">
 							{t("filters.advancedActions.expireSection.description")}
 						</Text>
 						<FormControl>
@@ -708,7 +708,7 @@ const AdvancedUserActions = ({
 						<Text fontWeight="semibold">
 							{t("filters.advancedActions.trafficSection.title")}
 						</Text>
-						<Text fontSize="sm" color="gray.500">
+						<Text fontSize="sm" color="panel.textMuted">
 							{t("filters.advancedActions.trafficSection.description")}
 						</Text>
 						<FormControl>
@@ -752,7 +752,7 @@ const AdvancedUserActions = ({
 						<Text fontWeight="semibold">
 							{t("filters.advancedActions.cleanupSection.title")}
 						</Text>
-						<Text fontSize="sm" color="gray.500">
+						<Text fontSize="sm" color="panel.textMuted">
 							{t("filters.advancedActions.cleanupSection.description")}
 						</Text>
 						<FormControl>

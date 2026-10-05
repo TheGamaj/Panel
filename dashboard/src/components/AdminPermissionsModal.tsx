@@ -121,7 +121,7 @@ export const AdminPermissionsModal = ({
 			}
 		>
 					{isFullAccess && (
-						<Text color="gray.500" mb={3}>
+						<Text color="panel.textMuted" mb={3}>
 							{t("admins.permissions.fullAccessLocked")}
 						</Text>
 					)}

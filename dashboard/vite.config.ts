@@ -9,6 +9,12 @@ import {
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+// Loaded dynamically: the mock must never end up in a production bundle.
+const loadMockApi = async () => {
+	const module = await import("./tools/vite-plugin-mock-api.mjs");
+	return module.mockApiMiddleware;
+};
+
 const tutorialDirectoryIndex = {
 	name: "tutorial-directory-index",
 	configureServer(server) {
@@ -24,6 +30,35 @@ const tutorialDirectoryIndex = {
 		});
 	},
 } satisfies Plugin;
+
+/**
+ * Serves fixture data for the panel API so authenticated routes can be opened
+ * in a browser without a backend. Dev-server only, and only when
+ * GAMAJ_MOCK_API is set, so it cannot affect a build.
+ */
+const mockApi = (enabled: boolean): Plugin => ({
+	name: "gamaj-mock-api",
+	apply: "serve",
+	configureServer(server) {
+		if (!enabled) return;
+		let middleware;
+		let pending;
+		// The fixture module is ESM and the config is loaded before the server
+		// exists, so it is imported here rather than at module scope.
+		pending = loadMockApi().then((handler) => {
+			middleware = handler;
+		});
+		server.middlewares.use((request, response, next) => {
+			if (!middleware) {
+				// A request that arrives before the import resolves is held
+				// rather than passed through to the real (absent) API.
+				pending.then(() => middleware(request, response, next));
+				return;
+			}
+			middleware(request, response, next);
+		});
+	},
+});
 
 const getApiProxyConfig = (baseAPI?: string) => {
 	if (!baseAPI || !/^https?:\/\//i.test(baseAPI)) {
@@ -71,6 +106,7 @@ export default defineConfig(({ mode }) => {
 			svgr(),
 			...(env.ANALYZE === "true" ? [visualizer()] : []),
 			splitVendorChunkPlugin(),
+			mockApi(env.GAMAJ_MOCK_API === "1" || env.GAMAJ_MOCK_API === "true"),
 		],
 		server: apiProxy
 			? {

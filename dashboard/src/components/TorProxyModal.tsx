@@ -14,7 +14,6 @@ import {
 	ModalOverlay,
 	Switch,
 	Text,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
@@ -74,7 +73,7 @@ export const TorProxyModal: FC<TorProxyModalProps> = ({
 	onSubmit,
 }) => {
 	const { t, i18n } = useTranslation();
-	const borderColor = useColorModeValue("gray.200", "whiteAlpha.200");
+	const borderColor = "panel.border";
 	const form = useForm<TorProxyFormValues>({ defaultValues: defaults });
 	const locationsValue = useWatch({ control: form.control, name: "locations" });
 	const startPort = useWatch({ control: form.control, name: "startPort" });

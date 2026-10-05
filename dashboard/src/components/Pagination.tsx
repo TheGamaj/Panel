@@ -235,13 +235,13 @@ export const Pagination: FC<PaginationProps> = ({
 											onClick={() => handlePageSizeSelect(option)}
 											fontSize="sm"
 											fontWeight={isSelected ? "700" : "500"}
-											bg={isSelected ? "primary.500" : "transparent"}
+											bg={isSelected ? "panel.accent" : "transparent"}
 											color={isSelected ? "white" : "inherit"}
 											_hover={{
-												bg: isSelected ? "primary.600" : "panel.hover",
+												bg: isSelected ? "panel.accentHover" : "panel.rowHover",
 											}}
 											_focus={{
-												bg: isSelected ? "primary.600" : "panel.hover",
+												bg: isSelected ? "panel.accentHover" : "panel.rowHover",
 											}}
 										>
 											{option}

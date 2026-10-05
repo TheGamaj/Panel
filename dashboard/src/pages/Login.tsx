@@ -21,7 +21,6 @@ import {
 	Portal,
 	Text,
 	useColorMode,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import {
@@ -124,19 +123,10 @@ const LoginField: FC<LoginFieldProps> = ({
 	type = "text",
 }) => {
 	const isInvalid = Boolean(errorMessage);
-	const fieldBg = useColorModeValue("white", "var(--gm-panel-main)");
-	const borderColor = useColorModeValue(
-		"var(--gm-panel-border)",
-		"var(--gm-panel-border)",
-	);
-	const textColor = useColorModeValue(
-		"var(--gm-panel-text)",
-		"var(--gm-panel-text)",
-	);
-	const mutedColor = useColorModeValue(
-		"var(--gm-panel-text-muted)",
-		"var(--gm-panel-text-muted)",
-	);
+	const fieldBg = "panel.surface";
+	const borderColor = "var(--gm-panel-border)";
+	const textColor = "var(--gm-panel-text)";
+	const mutedColor = "var(--gm-panel-text-muted)";
 
 	return (
 		<FormControl isInvalid={isInvalid}>
@@ -150,14 +140,14 @@ const LoginField: FC<LoginFieldProps> = ({
 				{label}
 			</FormLabel>
 			<InputGroup dir={dir}>
-				<InputLeftElement color={isInvalid ? "red.400" : mutedColor} h="44px">
+				<InputLeftElement color={isInvalid ? "panel.danger" : mutedColor} h="44px">
 					{icon}
 				</InputLeftElement>
 				<CInput
 					{...registration}
 					autoComplete={autoComplete}
 					bg={fieldBg}
-					borderColor={isInvalid ? "red.400" : borderColor}
+					borderColor={isInvalid ? "panel.danger" : borderColor}
 					borderRadius="8px"
 					color={textColor}
 					fontSize="sm"
@@ -169,13 +159,13 @@ const LoginField: FC<LoginFieldProps> = ({
 					_placeholder={{ color: mutedColor }}
 					_hover={{
 						borderColor: isInvalid
-							? "red.400"
+							? "panel.danger"
 							: "var(--gm-panel-border-strong)",
 					}}
 					_focusVisible={{
-						borderColor: isInvalid ? "red.400" : "var(--gm-panel-accent)",
+						borderColor: isInvalid ? "panel.danger" : "panel.accent",
 						boxShadow: isInvalid
-							? "0 0 0 1px rgba(248, 113, 113, 0.6)"
+							? "0 0 0 1px var(--gm-danger)"
 							: "0 0 0 1px var(--gm-panel-accent)",
 					}}
 				/>
@@ -218,10 +208,10 @@ const LoginThemeMenu: FC = () => {
 	const { t } = useTranslation();
 	const { colorMode, setColorMode } = useColorMode();
 	const activeTheme = colorMode === "light" ? "light" : "dark";
-	const menuBg = useColorModeValue("panel.surface", "panel.surface");
-	const menuBorder = useColorModeValue("panel.border", "panel.border");
-	const hoverBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const textColor = useColorModeValue("panel.text", "panel.text");
+	const menuBg = "panel.surface";
+	const menuBorder = "panel.border";
+	const hoverBg = "panel.elevated";
+	const textColor = "panel.text";
 
 	const selectTheme = (theme: LoginThemeMode) => {
 		applyLoginThemeMode(theme);
@@ -285,30 +275,12 @@ export const Login: FC = () => {
 	const navigate = useNavigate();
 	const { t, i18n } = useTranslation();
 	const dir = i18n.language === "fa" ? "rtl" : "ltr";
-	const pageBg = useColorModeValue(
-		"var(--gm-panel-main)",
-		"var(--gm-panel-main)",
-	);
-	const surfaceBg = useColorModeValue(
-		"var(--gm-panel-surface)",
-		"var(--gm-panel-surface)",
-	);
-	const elevatedBg = useColorModeValue(
-		"var(--gm-panel-elevated)",
-		"var(--gm-panel-elevated)",
-	);
-	const borderColor = useColorModeValue(
-		"var(--gm-panel-border)",
-		"var(--gm-panel-border)",
-	);
-	const textColor = useColorModeValue(
-		"var(--gm-panel-text)",
-		"var(--gm-panel-text)",
-	);
-	const mutedColor = useColorModeValue(
-		"var(--gm-panel-text-muted)",
-		"var(--gm-panel-text-muted)",
-	);
+	const pageBg = "var(--gm-panel-main)";
+	const surfaceBg = "var(--gm-panel-surface)";
+	const elevatedBg = "var(--gm-panel-elevated)";
+	const borderColor = "var(--gm-panel-border)";
+	const textColor = "var(--gm-panel-text)";
+	const mutedColor = "var(--gm-panel-text-muted)";
 	const markColor = "var(--gm-panel-text)";
 	const accentColor = "var(--gm-panel-accent)";
 	// The accent flips with the colour mode (white in dark, black in light),

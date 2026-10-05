@@ -15,7 +15,6 @@ import {
 	ModalOverlay,
 	Text,
 	Textarea,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import { type FC, useEffect, useMemo, useState } from "react";
@@ -71,7 +70,7 @@ export const PsiphonProxyModal: FC<Props> = ({
 }) => {
 	const { t, i18n } = useTranslation();
 	const form = useForm<PsiphonProxyFormValues>({ defaultValues: defaults });
-	const borderColor = useColorModeValue("gray.200", "whiteAlpha.200");
+	const borderColor = "panel.border";
 	const [isLoadingLocations, setIsLoadingLocations] = useState(false);
 	const [availableLocations, setAvailableLocations] = useState<string[]>([]);
 	const [loadedConfig, setLoadedConfig] = useState("");

@@ -8,7 +8,6 @@ import {
 	MenuList,
 	Portal,
 	Text,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import { CheckIcon, LanguageIcon } from "@heroicons/react/24/outline";
 import type { FC, MutableRefObject, ReactNode } from "react";
@@ -41,10 +40,10 @@ export const Language: FC<HeaderProps> = ({
 	triggerVariant = "outline",
 }) => {
 	const { i18n } = useTranslation();
-	const menuBg = useColorModeValue("surface.light", "surface.dark");
-	const hoverBg = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const textColor = useColorModeValue("gray.800", "gray.100");
+	const menuBg = "panel.surface";
+	const hoverBg = "panel.rowHover";
+	const borderColor = "panel.border";
+	const textColor = "panel.text";
 
 	const changeLanguage = (lang: string) => {
 		i18n.changeLanguage(lang);

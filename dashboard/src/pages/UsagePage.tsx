@@ -93,7 +93,7 @@ export const UsagePage: FC = () => {
 				<Text as="h1" fontWeight="semibold" fontSize="2xl">
 					{t("usage.title")}
 				</Text>
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("usage.noPermission")}
 				</Text>
 			</VStack>
@@ -110,7 +110,7 @@ export const UsagePage: FC = () => {
 				<Text as="h1" fontWeight="semibold" fontSize="2xl">
 					{t("usage.title")}
 				</Text>
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("usage.recordingDisabled")}
 				</Text>
 			</VStack>

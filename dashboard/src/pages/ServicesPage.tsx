@@ -21,7 +21,6 @@ import {
 	Stack,
 	Text,
 	Tooltip,
-	useColorModeValue,
 	useDisclosure,
 	useToast,
 	VStack,
@@ -86,6 +85,9 @@ import {
 	DEFAULT_SEARCH_MATCH_OPTIONS,
 	matchesAnySearch,
 } from "utils/searchMatch";
+
+const labelColor = "panel.textMuted";
+
 
 type HostOption = {
 	id: number;
@@ -181,10 +183,9 @@ const ServiceDialog: FC<ServiceDialogProps> = ({
 	refreshHosts,
 }) => {
 	const { t } = useTranslation();
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const subtleBg = useColorModeValue("gray.50", "whiteAlpha.50");
-	const selectedBg = useColorModeValue("primary.50", "whiteAlpha.100");
-	const labelColor = useColorModeValue("gray.500", "gray.400");
+	const borderColor = "panel.border";
+	const subtleBg = "panel.elevated";
+	const selectedBg = "panel.elevated";
 	const [name, setName] = useState(initialService?.name ?? "");
 	const [description, setDescription] = useState(
 		initialService?.description ?? "",
@@ -397,7 +398,7 @@ const ServiceDialog: FC<ServiceDialogProps> = ({
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} size="5xl" scrollBehavior="inside">
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent
 				mx="3"
 				sx={{
@@ -511,10 +512,10 @@ const ServiceDialog: FC<ServiceDialogProps> = ({
 													borderRadius="md"
 													px={2.5}
 													py={2}
-													borderColor={isSelected ? "primary.400" : borderColor}
+													borderColor={isSelected ? "panel.borderStrong" : borderColor}
 													bg={isSelected ? selectedBg : "transparent"}
 													_hover={{
-														borderColor: "primary.300",
+														borderColor:"panel.border",
 														cursor: "pointer",
 													}}
 													transition="background-color 0.1s ease-in-out, border-color 0.1s ease-in-out"
@@ -650,11 +651,11 @@ const ServiceDialog: FC<ServiceDialogProps> = ({
 													py={2}
 													borderColor={
 														hoveredHost === host.id
-															? "primary.400"
+															? "panel.accent"
 															: borderColor
 													}
 													_hover={{
-														borderColor: "primary.300",
+														borderColor:"panel.border",
 														cursor: "pointer",
 													}}
 													onMouseEnter={() => setHoveredHost(host.id)}
@@ -783,7 +784,7 @@ const ServiceDialog: FC<ServiceDialogProps> = ({
 
 const ServicesPage: FC = () => {
 	const { t } = useTranslation();
-	const labelColor = useColorModeValue("gray.500", "gray.400");
+	const labelColor = "panel.textMuted";
 	const toast = useToast();
 	const { userData, getUserIsSuccess } = useGetUser();
 	const canManageServices =
@@ -1270,7 +1271,7 @@ const ServicesPage: FC = () => {
 				),
 			},
 		],
-		[labelColor, t],
+		[t],
 	);
 
 	const serviceRowActions = (
@@ -1955,7 +1956,7 @@ const ServicesPage: FC = () => {
 						? ` - ${editingServiceAdminLimit.username}`
 						: ""
 				}`}
-				overlayProps={{ bg: "blackAlpha.300" }}
+				overlayProps={{ bg:"panel.scrim" }}
 				footerProps={{ gap: 3 }}
 				footer={
 					<>
@@ -2105,7 +2106,7 @@ const ServicesPage: FC = () => {
 				title={`${t("services.deleteDialogTitle")}${
 					servicePendingDelete ? ` – ${servicePendingDelete.name}` : ""
 				}`}
-				overlayProps={{ bg: "blackAlpha.300" }}
+				overlayProps={{ bg:"panel.scrim" }}
 				footerProps={{ gap: 3 }}
 				footer={
 					<>
@@ -2143,7 +2144,7 @@ const ServicesPage: FC = () => {
 								{t("services.unlinkAdminsOption")}
 							</Checkbox>
 						) : (
-							<Text fontSize="sm" color="gray.500">
+							<Text fontSize="sm" color="panel.textMuted">
 								{t("services.noAdminsLinked")}
 							</Text>
 						)}

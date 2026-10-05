@@ -1068,7 +1068,7 @@ export const AdminDialog: FC = () => {
 							{errors.password?.message as string}
 						</FormErrorMessage>
 						{mode === "edit" && (
-							<Text fontSize="xs" color="gray.500" mt={1}>
+							<Text fontSize="xs" color="panel.textMuted" mt={1}>
 								{t("admins.passwordOptionalHint")}
 							</Text>
 						)}
@@ -1115,7 +1115,7 @@ export const AdminDialog: FC = () => {
 								<Radio value={AdminRole.Reseller} isDisabled>
 									<Text fontWeight="medium">
 										{t("admins.roles.reseller")}
-										<Box as="span" ml={2} fontSize="xs" color="orange.500">
+										<Box as="span" ml={2} fontSize="xs" color="panel.warning">
 											{t("common.comingSoon")}
 										</Box>
 									</Text>
@@ -1181,7 +1181,7 @@ export const AdminDialog: FC = () => {
 							<FormErrorMessage>
 								{errors.data_limit?.message as string}
 							</FormErrorMessage>
-							<Text fontSize="xs" color="gray.500" mt={1}>
+							<Text fontSize="xs" color="panel.textMuted" mt={1}>
 								{t("admins.dataLimitHint")}
 							</Text>
 						</FormControl>
@@ -1202,7 +1202,7 @@ export const AdminDialog: FC = () => {
 							<FormErrorMessage>
 								{errors.users_limit?.message as string}
 							</FormErrorMessage>
-							<Text fontSize="xs" color="gray.500" mt={1}>
+							<Text fontSize="xs" color="panel.textMuted" mt={1}>
 								{t("admins.usersLimitHint")}
 							</Text>
 						</FormControl>
@@ -1292,7 +1292,7 @@ export const AdminDialog: FC = () => {
 										>
 											{t("admins.permissions.resetUsage")}
 										</Checkbox>
-										<Text fontSize="xs" color="gray.500">
+										<Text fontSize="xs" color="panel.textMuted">
 											{t("admins.createdTrafficModeHint")}
 										</Text>
 									</Stack>
@@ -1367,11 +1367,11 @@ export const AdminDialog: FC = () => {
 								p={2}
 							>
 								{serviceOptions.length === 0 ? (
-									<Text fontSize="sm" color="gray.500">
+									<Text fontSize="sm" color="panel.textMuted">
 										{t("services.noServicesAvailable")}
 									</Text>
 								) : filteredServices.length === 0 ? (
-									<Text fontSize="sm" color="gray.500">
+									<Text fontSize="sm" color="panel.textMuted">
 										{t("admins.noServicesMatching")}
 									</Text>
 								) : (
@@ -1384,15 +1384,15 @@ export const AdminDialog: FC = () => {
 												borderRadius="md"
 												px={2.5}
 												py={2}
-												borderColor={isSelected ? "primary.400" : "gray.200"}
-												bg={isSelected ? "primary.50" : "transparent"}
+												borderColor={isSelected ? "panel.borderStrong" : "panel.border"}
+												bg={isSelected ? "panel.rowSelected" : "transparent"}
 												_hover={{
-													borderColor: "primary.300",
+													borderColor:"panel.border",
 													cursor: "pointer",
 												}}
 												_dark={{
-													borderColor: isSelected ? "primary.300" : "gray.600",
-													bg: isSelected ? "gray.700" : "transparent",
+													borderColor:isSelected ? "panel.border" : "panel.borderStrong",
+													bg: isSelected ? "panel.border" : "transparent",
 												}}
 												transition="background-color 140ms var(--gm-ease-out), border-color 140ms var(--gm-ease-out), box-shadow 140ms var(--gm-ease-out), transform 120ms var(--gm-ease-out)"
 												_active={{ transform: "scale(0.99)" }}
@@ -1415,7 +1415,7 @@ export const AdminDialog: FC = () => {
 														<Text fontWeight="medium" noOfLines={1}>
 															{service.name}
 														</Text>
-														<Text fontSize="xs" color="gray.500">
+														<Text fontSize="xs" color="panel.textMuted">
 															{t("admins.serviceStats", {
 																users: service.user_count ?? 0,
 																hosts: service.host_count ?? 0,
@@ -1492,7 +1492,7 @@ export const AdminDialog: FC = () => {
 																<Text fontWeight="medium" noOfLines={1}>
 																	{service?.name ?? `#${serviceId}`}
 																</Text>
-																<Text color="gray.400" fontSize="xs">
+																<Text color="panel.textMuted" fontSize="xs">
 																	{t("admins.deletedUserUsage")}:{" "}
 																	{formatBytes(
 																		Number(item.deleted_users_usage ?? 0),
@@ -1501,7 +1501,7 @@ export const AdminDialog: FC = () => {
 																</Text>
 															</Box>
 															<Text
-																color="primary.200"
+																color="panel.textSecondary"
 																fontSize="xs"
 																fontWeight="medium"
 																whiteSpace="nowrap"
@@ -1517,7 +1517,7 @@ export const AdminDialog: FC = () => {
 																	as="span"
 																	display="block"
 																	mt={0.5}
-																	color="gray.400"
+																	color="panel.textMuted"
 																>
 																	{t("myaccount.remainingData")}:{" "}
 																	{remainingBytes === null
@@ -1672,7 +1672,7 @@ export const AdminDialog: FC = () => {
 				size="3xl"
 				scrollBehavior="inside"
 			>
-				<ModalOverlay bg="blackAlpha.400" />
+				<ModalOverlay bg="panel.scrim" />
 				<XrayModalContent
 					mx="3"
 					sx={{

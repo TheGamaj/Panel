@@ -144,10 +144,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					rounded="md"
 					_focusWithin={{
 						outline: "2px solid",
-						outlineColor: "primary.200",
+						outlineColor:"panel.border",
 					}}
-					bg={disabled ? "gray.100" : "transparent"}
-					_dark={{ bg: disabled ? "gray.600" : "transparent" }}
+					bg={disabled ? "panel.inset" : "transparent"}
 				>
 					{startAdornment && <InputLeftAddon>{startAdornment}</InputLeftAddon>}
 					<Wrapper {...wrapperProps}>

@@ -90,10 +90,10 @@ const EmptySectionIcon = chakra(AddFileIcon);
 
 const USER_STATUS_TEXT_COLORS: Partial<Record<UserListItem["status"], string>> =
 	{
-		active: "green.400",
-		on_hold: "purple.400",
-		expired: "yellow.400",
-		limited: "red.400",
+		active: "panel.accent",
+		on_hold: "panel.accent",
+		expired: "panel.danger",
+		limited: "panel.danger",
 	};
 
 const UserSpeed: FC<{ user: UserListItem }> = ({ user }) => {
@@ -1403,7 +1403,7 @@ export const UsersTable: FC<UsersTableProps> = ({
 					>
 						<MenuItem
 							icon={<DeleteIcon />}
-							color="red.400"
+							color="panel.danger"
 							onClick={(event) => event.stopPropagation()}
 						>
 							{t("deleteUser.title")}
@@ -1758,15 +1758,14 @@ export const UsersTable: FC<UsersTableProps> = ({
 						textAlign="center"
 						px={6}
 						py={8}
-						bg="rgba(255, 255, 255, 0.85)"
-						_dark={{ bg: "rgba(15, 23, 42, 0.9)" }}
+					bg="var(--gm-panel-scrim)"
 						zIndex="overlay"
 					>
-						<LockOverlayIcon color="red.400" mb={6} />
+						<LockOverlayIcon color="panel.danger" mb={6} />
 						<Text fontSize="xl" fontWeight="bold" mb={3}>
 							{t("usersTable.adminDisabledTitle")}
 						</Text>
-						<Text maxW="480px" color="gray.600" _dark={{ color: "gray.200" }}>
+						<Text maxW="480px" color="panel.textSecondary" _dark={{ color:"panel.textSecondary" }}>
 							{disabledReason || t("usersTable.adminDisabledDescription")}
 						</Text>
 					</Flex>
@@ -1838,11 +1837,11 @@ export const UsersTable: FC<UsersTableProps> = ({
 						<Box
 							role="alert"
 							borderWidth="1px"
-							borderColor="red.400"
+							borderColor="panel.danger"
 							borderRadius="md"
-							bg="red.50"
-							color="red.700"
-							_dark={{ bg: "rgba(127, 29, 29, 0.22)", color: "red.200" }}
+							bg="panel.dangerSubtle"
+							color="panel.danger"
+							_dark={{ color: "panel.danger" }}
 							px={3}
 							py={2.5}
 							fontSize="sm"
@@ -2149,8 +2148,8 @@ const ActionButtons: FC<ActionButtonsProps> = ({
 						size="sm"
 						minW="30px"
 						h="30px"
-						color="red.400"
-						_hover={{ color: "red.300", bg: "whiteAlpha.100" }}
+						color="panel.danger"
+						_hover={{ color:"panel.danger", bg:"panel.inset" }}
 					/>
 				</DeleteConfirmDialog>
 			)}
@@ -2191,32 +2190,32 @@ const EmptySection: FC<EmptySectionProps> = ({
 			borderColor="light-border"
 			borderRadius="lg"
 			bg="surface.light"
-			_dark={{ bg: "surface.dark", borderColor: "whiteAlpha.200" }}
+			_dark={{ bg: "surface.dark", borderColor:"panel.border" }}
 		>
 			<EmptySectionIcon
 				maxHeight="200px"
 				maxWidth="200px"
 				_dark={{
 					'path[fill="#fff"]': {
-						fill: "gray.800",
+						fill:"panel.text",
 					},
-					'path[fill="#f2f2f2"], path[fill="#e6e6e6"], path[fill="#ccc"]': {
-						fill: "gray.700",
+					'path[fill="var(--gamaj-gray-100)"], path[fill="var(--gamaj-gray-300)"], path[fill="#ccc"]': {
+						fill:"panel.textSecondary",
 					},
-					'circle[fill="#3182CE"]': {
-						fill: "primary.300",
+					'circle[fill="var(--gm-panel-accent)"]': {
+						fill:"panel.textSecondary",
 					},
 				}}
 				_light={{
-					'path[fill="#f2f2f2"], path[fill="#e6e6e6"], path[fill="#ccc"]': {
-						fill: "gray.300",
+					'path[fill="var(--gamaj-gray-100)"], path[fill="var(--gamaj-gray-300)"], path[fill="#ccc"]': {
+						fill:"panel.textSecondary",
 					},
-					'circle[fill="#3182CE"]': {
-						fill: "primary.500",
+					'circle[fill="var(--gm-panel-accent)"]': {
+						fill:"panel.text",
 					},
 				}}
 			/>
-			<Text fontWeight="medium" color="gray.600" _dark={{ color: "gray.400" }}>
+			<Text fontWeight="medium" color="panel.textSecondary" _dark={{ color:"panel.textMuted" }}>
 				{isFiltered ? t("usersTable.noUserMatched") : t("usersTable.noUser")}
 			</Text>
 			{!isFiltered && !isCreateDisabled && (

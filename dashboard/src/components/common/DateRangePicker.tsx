@@ -17,7 +17,6 @@ import {
 	Text,
 	type UseRadioProps,
 	useBreakpointValue,
-	useColorModeValue,
 	useDisclosure,
 	useOutsideClick,
 	useRadio,
@@ -75,9 +74,9 @@ const FilterItem: FC<
 				borderRadius="md"
 				bg={bg}
 				_checked={{
-					bg: "primary.500",
+					bg:"panel.borderStrong",
 					color: "white",
-					borderColor: "primary.500",
+					borderColor:"panel.borderStrong",
 				}}
 				_focus={{
 					boxShadow: "outline",
@@ -108,10 +107,10 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 	const radioGroupName = useId();
 	const customRef = useRef(null);
 	useOutsideClick({ ref: customRef, handler: onClose });
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const panelBg = useColorModeValue("white", "gray.900");
-	const controlBg = useColorModeValue("white", "whiteAlpha.50");
-	const mutedBg = useColorModeValue("gray.50", "whiteAlpha.100");
+	const borderColor = "panel.border";
+	const panelBg = "panel.surface";
+	const controlBg = "panel.surface";
+	const mutedBg = "panel.elevated";
 
 	const filterOptionTypes = {
 		h: "hour",
@@ -308,7 +307,7 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 									borderRadius="md"
 									px={3}
 									py={1.5}
-									_selected={{ bg: "primary.500", color: "white" }}
+									_selected={{ bg:"panel.borderStrong", color: "white" }}
 								>
 									{t("userDialog.relative")}
 								</Tab>
@@ -317,7 +316,7 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 									borderRadius="md"
 									px={3}
 									py={1.5}
-									_selected={{ bg: "primary.500", color: "white" }}
+									_selected={{ bg:"panel.borderStrong", color: "white" }}
 								>
 									{t("userDialog.absolute")}
 								</Tab>
@@ -331,7 +330,7 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 													fontSize={fontSize}
 													fontWeight="medium"
 													minW="60px"
-													color="gray.500"
+													color="panel.textMuted"
 												>
 													{t(`userDialog.${row.title}`, row.title)}
 												</Text>

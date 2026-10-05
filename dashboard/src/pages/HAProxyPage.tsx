@@ -586,7 +586,7 @@ function HAProxyDialog({
 				isCentered
 				scrollBehavior="inside"
 			>
-				<ModalOverlay bg="blackAlpha.600" />
+				<ModalOverlay bg="panel.scrim" />
 				<ModalContent
 					bg="panel.surface"
 					borderWidth="1px"
@@ -865,7 +865,7 @@ function HAProxyDialog({
 				size="lg"
 				isCentered
 			>
-				<ModalOverlay bg="blackAlpha.600" />
+				<ModalOverlay bg="panel.scrim" />
 				<ModalContent
 					bg="panel.surface"
 					borderWidth="1px"
@@ -1191,7 +1191,7 @@ function ListenerEditor({
 	};
 	return (
 		<Box
-			bg="panel.surfaceMuted"
+			bg="panel.elevated"
 			borderWidth="1px"
 			borderColor="panel.border"
 			borderRadius="xl"
@@ -1720,7 +1720,7 @@ function SiteEditor({
 						</FormControl>
 					)}
 					{previewURL && (
-						<Link href={previewURL} isExternal color="blue.300" fontSize="sm">
+						<Link href={previewURL} isExternal color="panel.accent" fontSize="sm">
 							<HStack>
 								<ArrowTopRightOnSquareIcon width={15} />
 								<Text>{t("haproxy.previewTemplate")}</Text>

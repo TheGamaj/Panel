@@ -3,7 +3,6 @@ import {
 	HStack,
 	Icon,
 	Text,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import { ArrowUpTrayIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
@@ -52,12 +51,12 @@ export const FileDropzone = ({
 }: FileDropzoneProps) => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isDragging, setIsDragging] = useState(false);
-	const borderColor = useColorModeValue("blackAlpha.300", "whiteAlpha.300");
-	const activeBorderColor = useColorModeValue("primary.500", "primary.300");
-	const bg = useColorModeValue("blackAlpha.50", "whiteAlpha.50");
-	const activeBg = useColorModeValue("primary.50", "whiteAlpha.100");
-	const iconBg = useColorModeValue("white", "whiteAlpha.100");
-	const mutedColor = useColorModeValue("gray.500", "gray.400");
+	const borderColor = "panel.border";
+	const activeBorderColor = "panel.borderStrong";
+	const bg = "panel.inset";
+	const activeBg = "panel.elevated";
+	const iconBg = "panel.inset";
+	const mutedColor = "panel.textMuted";
 
 	useEffect(() => {
 		if (!selectedFile && inputRef.current) {
@@ -157,7 +156,7 @@ export const FileDropzone = ({
 					<Icon
 						as={selectedFile ? DocumentTextIcon : ArrowUpTrayIcon}
 						boxSize={5}
-						color={selectedFile ? "primary.400" : mutedColor}
+						color={selectedFile ? "panel.text" : mutedColor}
 					/>
 				</Box>
 				<VStack align="stretch" spacing={1} minW={0} flex="1">
@@ -173,7 +172,7 @@ export const FileDropzone = ({
 				<Text
 					fontSize="xs"
 					fontWeight="semibold"
-					color={isDisabled ? mutedColor : "primary.300"}
+					color={isDisabled ? mutedColor : "panel.textSecondary"}
 					whiteSpace="nowrap"
 				>
 					{emptyText}

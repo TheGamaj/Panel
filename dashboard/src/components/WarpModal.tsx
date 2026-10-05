@@ -18,7 +18,6 @@ import {
 	Stack,
 	Text,
 	Textarea,
-	useColorModeValue,
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
@@ -287,7 +286,7 @@ const formatBytes = (value?: number): string => {
 };
 
 const InfoItem: FC<{ label: string; value: string }> = ({ label, value }) => {
-	const muted = useColorModeValue("gray.500", "gray.400");
+	const muted = "panel.textMuted";
 	return (
 		<Box>
 			<Text
@@ -379,8 +378,8 @@ export const WarpModal: FC<WarpModalProps> = ({
 		setForm((prev) => ({ ...prev, [key]: value }));
 	};
 
-	const helperColor = useColorModeValue("gray.600", "gray.300");
-	const cardBorder = useColorModeValue("gray.200", "whiteAlpha.200");
+	const helperColor = "panel.textSecondary";
+	const cardBorder = "panel.border";
 
 	const handleGenerateKeys = () => {
 		const keys = generateWireguardKeypair();
@@ -613,7 +612,7 @@ export const WarpModal: FC<WarpModalProps> = ({
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
-			<ModalOverlay bg="blackAlpha.300" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent>
 				<XrayModalHeader>
 					{t("pages.xray.warp.manage")}

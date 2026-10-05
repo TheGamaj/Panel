@@ -38,7 +38,6 @@ import {
 	Tag,
 	Text,
 	Tooltip,
-	useColorModeValue,
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
@@ -340,7 +339,7 @@ export const InboundFormModal: FC<Props> = ({
 					<Box
 						as={InformationCircleIcon}
 						boxSize={4}
-						color="gray.500"
+						color="panel.textMuted"
 						cursor="help"
 						aria-label={t("myaccount.info")}
 					/>
@@ -539,8 +538,8 @@ export const InboundFormModal: FC<Props> = ({
 		currentProtocol !== "ssh" &&
 		currentProtocol !== "mtproto" &&
 		currentProtocol !== "web";
-	const warningBg = useColorModeValue("yellow.50", "yellow.900");
-	const warningBorder = useColorModeValue("yellow.400", "yellow.500");
+	const warningBg = "panel.inset";
+	const warningBorder = "panel.warning";
 	const defaultVlessAuthLabels = useMemo(
 		() => ["X25519, not Post-Quantum", "ML-KEM-768, Post-Quantum"],
 		[],
@@ -1049,7 +1048,7 @@ export const InboundFormModal: FC<Props> = ({
 	const supportsFallback =
 		currentProtocol === "vless" || currentProtocol === "trojan";
 
-	const sectionBorder = useColorModeValue("gray.200", "gray.700");
+	const sectionBorder = "panel.border";
 
 	const submitForm = async (values: InboundFormValues) => {
 		const errors = validateInboundFormValues(values);
@@ -1499,7 +1498,7 @@ export const InboundFormModal: FC<Props> = ({
 			scrollBehavior="inside"
 			isCentered
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent
 				maxW={{ base: "95vw", md: "4xl" }}
 				className="inbound-form-modal"
@@ -1544,7 +1543,7 @@ export const InboundFormModal: FC<Props> = ({
 													isDisabled={isEditMode}
 												/>
 												{(tagError || fieldValidationErrors.tag) && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{tagError || fieldValidationErrors.tag}
 													</Text>
 												)}
@@ -1573,7 +1572,7 @@ export const InboundFormModal: FC<Props> = ({
 														/>
 													)}
 												/>
-												<Text fontSize="xs" color="gray.500" mt={1}>
+												<Text fontSize="xs" color="panel.textMuted" mt={1}>
 													{t("inbounds.usageCoefficientHelp")}
 												</Text>
 												{Number(formValues.usageCoefficient) !== 1 && (
@@ -1585,7 +1584,7 @@ export const InboundFormModal: FC<Props> = ({
 													</Alert>
 												)}
 												{fieldValidationErrors.usageCoefficient && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{fieldValidationErrors.usageCoefficient}
 													</Text>
 												)}
@@ -1637,12 +1636,12 @@ export const InboundFormModal: FC<Props> = ({
 													</Button>
 												</HStack>
 												{portWarning && (
-													<Text fontSize="xs" color="yellow.600" mt={1}>
+													<Text fontSize="xs" color="panel.warning" mt={1}>
 														{portWarning}
 													</Text>
 												)}
 												{(portError || fieldValidationErrors.port) && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{portError || fieldValidationErrors.port}
 													</Text>
 												)}
@@ -2029,7 +2028,7 @@ export const InboundFormModal: FC<Props> = ({
 														</Box>
 													))}
 													{!httpAccountFields.length && (
-														<Text fontSize="sm" color="gray.500">
+														<Text fontSize="sm" color="panel.textMuted">
 															{t("inbounds.http.noAccountsHint")}
 														</Text>
 													)}
@@ -2144,7 +2143,7 @@ export const InboundFormModal: FC<Props> = ({
 															</Box>
 														))}
 														{!socksAccountFields.length && (
-															<Text fontSize="sm" color="gray.500">
+															<Text fontSize="sm" color="panel.textMuted">
 																{t("inbounds.socks.noAccountsHint")}
 															</Text>
 														)}
@@ -2472,7 +2471,7 @@ export const InboundFormModal: FC<Props> = ({
 															{...register("webSiteUpstream")}
 															placeholder="http://127.0.0.1:3000"
 														/>
-														<Text fontSize="xs" color="gray.500" mt={1}>
+														<Text fontSize="xs" color="panel.textMuted" mt={1}>
 															{t("inbounds.web.siteUpstreamHelp")}
 														</Text>
 														<FormErrorMessage>
@@ -2535,7 +2534,7 @@ export const InboundFormModal: FC<Props> = ({
 															isDisabled={!ovTproxyEnabled}
 														/>
 														{fieldValidationErrors.ovTunnelPort && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.ovTunnelPort}
 															</Text>
 														)}
@@ -2559,7 +2558,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="10.66.0.0/16"
 														/>
 														{fieldValidationErrors.ovIPv4Pool && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.ovIPv4Pool}
 															</Text>
 														)}
@@ -2593,7 +2592,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="AES-256-GCM"
 														/>
 														{fieldValidationErrors.ovCipher && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.ovCipher}
 															</Text>
 														)}
@@ -2731,7 +2730,7 @@ export const InboundFormModal: FC<Props> = ({
 														placeholder="7505"
 													/>
 													{fieldValidationErrors.ovManagementPort && (
-														<Text fontSize="xs" color="red.500" mt={1}>
+														<Text fontSize="xs" color="panel.danger" mt={1}>
 															{fieldValidationErrors.ovManagementPort}
 														</Text>
 													)}
@@ -2758,7 +2757,7 @@ export const InboundFormModal: FC<Props> = ({
 													)}
 													<Textarea rows={4} {...register("ovCA")} />
 													{fieldValidationErrors.ovCA && (
-														<Text fontSize="xs" color="red.500" mt={1}>
+														<Text fontSize="xs" color="panel.danger" mt={1}>
 															{fieldValidationErrors.ovCA}
 														</Text>
 													)}
@@ -2781,7 +2780,7 @@ export const InboundFormModal: FC<Props> = ({
 															{...register("ovServerCertificate")}
 														/>
 														{fieldValidationErrors.ovServerCertificate && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.ovServerCertificate}
 															</Text>
 														)}
@@ -2800,7 +2799,7 @@ export const InboundFormModal: FC<Props> = ({
 														)}
 														<Textarea rows={4} {...register("ovServerKey")} />
 														{fieldValidationErrors.ovServerKey && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.ovServerKey}
 															</Text>
 														)}
@@ -2871,7 +2870,7 @@ export const InboundFormModal: FC<Props> = ({
 															isDisabled={!wgTproxyEnabled}
 														/>
 														{fieldValidationErrors.wgTunnelPort && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.wgTunnelPort}
 															</Text>
 														)}
@@ -2893,7 +2892,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="10.69.0.0/16"
 														/>
 														{fieldValidationErrors.wgIPv4Pool && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.wgIPv4Pool}
 															</Text>
 														)}
@@ -2917,7 +2916,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="10.69.0.1/16"
 														/>
 														{fieldValidationErrors.wgServerAddress && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.wgServerAddress}
 															</Text>
 														)}
@@ -2933,7 +2932,7 @@ export const InboundFormModal: FC<Props> = ({
 														)}
 														<Input {...register("wgMTU")} placeholder="1420" />
 														{fieldValidationErrors.wgMTU && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.wgMTU}
 															</Text>
 														)}
@@ -2955,7 +2954,7 @@ export const InboundFormModal: FC<Props> = ({
 														placeholder="25"
 													/>
 													{fieldValidationErrors.wgPersistentKeepalive && (
-														<Text fontSize="xs" color="red.500" mt={1}>
+														<Text fontSize="xs" color="panel.danger" mt={1}>
 															{fieldValidationErrors.wgPersistentKeepalive}
 														</Text>
 													)}
@@ -2996,7 +2995,7 @@ export const InboundFormModal: FC<Props> = ({
 																	</FormLabel>
 																	<Input {...register(name)} />
 																	{fieldValidationErrors[name] && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors[name]}
 																		</Text>
 																	)}
@@ -3051,7 +3050,7 @@ export const InboundFormModal: FC<Props> = ({
 													)}
 													<Textarea rows={2} {...register("wgPrivateKey")} />
 													{fieldValidationErrors.wgPrivateKey && (
-														<Text fontSize="xs" color="red.500" mt={1}>
+														<Text fontSize="xs" color="panel.danger" mt={1}>
 															{fieldValidationErrors.wgPrivateKey}
 														</Text>
 													)}
@@ -3322,7 +3321,7 @@ export const InboundFormModal: FC<Props> = ({
 															}
 														/>
 														{fieldValidationErrors.raIPv4Pool && (
-															<Text fontSize="xs" color="red.500">
+															<Text fontSize="xs" color="panel.danger">
 																{fieldValidationErrors.raIPv4Pool}
 															</Text>
 														)}
@@ -3345,7 +3344,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="41943"
 														/>
 														{fieldValidationErrors.raTunnelPort && (
-															<Text fontSize="xs" color="red.500">
+															<Text fontSize="xs" color="panel.danger">
 																{fieldValidationErrors.raTunnelPort}
 															</Text>
 														)}
@@ -3427,7 +3426,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder={"vpn.example.com\n203.0.113.10"}
 															/>
 															{errors.raCertificateNames?.message && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{String(errors.raCertificateNames.message)}
 																</Text>
 															)}
@@ -3459,7 +3458,7 @@ export const InboundFormModal: FC<Props> = ({
 													)}
 													<Textarea rows={4} {...register("raCA")} />
 													{fieldValidationErrors.raCA && (
-														<Text fontSize="xs" color="red.500">
+														<Text fontSize="xs" color="panel.danger">
 															{fieldValidationErrors.raCA}
 														</Text>
 													)}
@@ -3481,7 +3480,7 @@ export const InboundFormModal: FC<Props> = ({
 														{...register("raServerCertificate")}
 													/>
 													{fieldValidationErrors.raServerCertificate && (
-														<Text fontSize="xs" color="red.500">
+														<Text fontSize="xs" color="panel.danger">
 															{fieldValidationErrors.raServerCertificate}
 														</Text>
 													)}
@@ -3498,7 +3497,7 @@ export const InboundFormModal: FC<Props> = ({
 													)}
 													<Textarea rows={4} {...register("raServerKey")} />
 													{fieldValidationErrors.raServerKey && (
-														<Text fontSize="xs" color="red.500">
+														<Text fontSize="xs" color="panel.danger">
 															{fieldValidationErrors.raServerKey}
 														</Text>
 													)}
@@ -3522,7 +3521,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder="vpn.example.com"
 															/>
 															{fieldValidationErrors.raServerIdentity && (
-																<Text fontSize="xs" color="red.500">
+																<Text fontSize="xs" color="panel.danger">
 																	{fieldValidationErrors.raServerIdentity}
 																</Text>
 															)}
@@ -3559,7 +3558,7 @@ export const InboundFormModal: FC<Props> = ({
 															)}
 															<Textarea rows={2} {...register("ikeRoutes")} />
 															{fieldValidationErrors.ikeRoutes && (
-																<Text fontSize="xs" color="red.500">
+																<Text fontSize="xs" color="panel.danger">
 																	{fieldValidationErrors.ikeRoutes}
 																</Text>
 															)}
@@ -3741,7 +3740,7 @@ export const InboundFormModal: FC<Props> = ({
 																	isDisabled={!watch("acUDPEnabled")}
 																/>
 																{fieldValidationErrors.acUDPPort && (
-																	<Text fontSize="xs" color="red.500" mt={1}>
+																	<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{fieldValidationErrors.acUDPPort}
 																	</Text>
 																)}
@@ -3849,7 +3848,7 @@ export const InboundFormModal: FC<Props> = ({
 																	)}
 																	<Input {...register(name)} />
 																	{fieldValidationErrors[name] && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors[name]}
 																		</Text>
 																	)}
@@ -3918,7 +3917,7 @@ export const InboundFormModal: FC<Props> = ({
 																	)}
 																	<Input {...register(name)} />
 																	{fieldValidationErrors[name] && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors[name]}
 																		</Text>
 																	)}
@@ -3994,7 +3993,7 @@ export const InboundFormModal: FC<Props> = ({
 																)}
 																<Textarea rows={2} {...register("acNBNS")} />
 																{fieldValidationErrors.acNBNS && (
-																	<Text fontSize="xs" color="red.500" mt={1}>
+																	<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{fieldValidationErrors.acNBNS}
 																	</Text>
 																)}
@@ -4015,7 +4014,7 @@ export const InboundFormModal: FC<Props> = ({
 																	{...register("acSplitDNS")}
 																/>
 																{fieldValidationErrors.acSplitDNS && (
-																	<Text fontSize="xs" color="red.500" mt={1}>
+																	<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{fieldValidationErrors.acSplitDNS}
 																	</Text>
 																)}
@@ -4037,7 +4036,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder="tcp(80,443), udp(53)"
 															/>
 															{fieldValidationErrors.acRestrictToPorts && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{fieldValidationErrors.acRestrictToPorts}
 																</Text>
 															)}
@@ -4089,7 +4088,7 @@ export const InboundFormModal: FC<Props> = ({
 																	)}
 																	<Input {...register(name)} />
 																	{fieldValidationErrors[name] && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors[name]}
 																		</Text>
 																	)}
@@ -4144,7 +4143,7 @@ export const InboundFormModal: FC<Props> = ({
 																)}
 																<Input {...register("acCertUserOID")} />
 																{fieldValidationErrors.acCertUserOID && (
-																	<Text fontSize="xs" color="red.500" mt={1}>
+																	<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{fieldValidationErrors.acCertUserOID}
 																	</Text>
 																)}
@@ -4163,7 +4162,7 @@ export const InboundFormModal: FC<Props> = ({
 															)}
 															<Input {...register("acTLSPriorities")} />
 															{fieldValidationErrors.acTLSPriorities && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{fieldValidationErrors.acTLSPriorities}
 																</Text>
 															)}
@@ -4300,7 +4299,7 @@ export const InboundFormModal: FC<Props> = ({
 															}
 														/>
 														{fieldValidationErrors.l2tpTunnelPort && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpTunnelPort}
 															</Text>
 														)}
@@ -4322,7 +4321,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="10.67.0.0/16"
 														/>
 														{fieldValidationErrors.l2tpIPv4Pool && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpIPv4Pool}
 															</Text>
 														)}
@@ -4346,7 +4345,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="change-this-secret"
 														/>
 														{fieldValidationErrors.l2tpIPSecPSK && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpIPSecPSK}
 															</Text>
 														)}
@@ -4380,7 +4379,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="1410"
 														/>
 														{fieldValidationErrors.l2tpMTU && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpMTU}
 															</Text>
 														)}
@@ -4399,7 +4398,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="1410"
 														/>
 														{fieldValidationErrors.l2tpMRU && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpMRU}
 															</Text>
 														)}
@@ -4420,7 +4419,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="30"
 														/>
 														{fieldValidationErrors.l2tpLcpEchoInterval && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpLcpEchoInterval}
 															</Text>
 														)}
@@ -4441,7 +4440,7 @@ export const InboundFormModal: FC<Props> = ({
 															placeholder="4"
 														/>
 														{fieldValidationErrors.l2tpLcpEchoFailure && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.l2tpLcpEchoFailure}
 															</Text>
 														)}
@@ -4586,7 +4585,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder="/ws"
 															/>
 															{fieldValidationErrors.wsPath && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{fieldValidationErrors.wsPath}
 																</Text>
 															)}
@@ -4895,7 +4894,7 @@ export const InboundFormModal: FC<Props> = ({
 														</FormLabel>
 														<Input {...register("httpupgradePath")} />
 														{fieldValidationErrors.httpupgradePath && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.httpupgradePath}
 															</Text>
 														)}
@@ -4972,7 +4971,7 @@ export const InboundFormModal: FC<Props> = ({
 														</FormLabel>
 														<Input {...register("splithttpPath")} />
 														{fieldValidationErrors.splithttpPath && (
-															<Text fontSize="xs" color="red.500" mt={1}>
+															<Text fontSize="xs" color="panel.danger" mt={1}>
 																{fieldValidationErrors.splithttpPath}
 															</Text>
 														)}
@@ -5005,7 +5004,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder="/"
 															/>
 															{fieldValidationErrors.xhttpPath && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{fieldValidationErrors.xhttpPath}
 																</Text>
 															)}
@@ -5098,7 +5097,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder="100-1000"
 															/>
 															{fieldValidationErrors.xhttpPaddingBytes && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{fieldValidationErrors.xhttpPaddingBytes}
 																</Text>
 															)}
@@ -5271,7 +5270,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="_dc"
 																	/>
 																	{fieldValidationErrors.xhttpPaddingKey && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpPaddingKey}
 																		</Text>
 																	)}
@@ -5290,7 +5289,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="Referer"
 																	/>
 																	{fieldValidationErrors.xhttpPaddingHeader && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpPaddingHeader}
 																		</Text>
 																	)}
@@ -5336,7 +5335,7 @@ export const InboundFormModal: FC<Props> = ({
 																		)}
 																	/>
 																	{fieldValidationErrors.xhttpPaddingPlacement && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{
 																			fieldValidationErrors.xhttpPaddingPlacement
 																		}
@@ -5384,7 +5383,7 @@ export const InboundFormModal: FC<Props> = ({
 																		)}
 																	/>
 																	{fieldValidationErrors.xhttpPaddingMethod && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpPaddingMethod}
 																		</Text>
 																	)}
@@ -5403,7 +5402,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="POST"
 																	/>
 																	{fieldValidationErrors.xhttpUplinkHTTPMethod && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{
 																			fieldValidationErrors.xhttpUplinkHTTPMethod
 																		}
@@ -5451,7 +5450,7 @@ export const InboundFormModal: FC<Props> = ({
 																		)}
 																	/>
 																	{fieldValidationErrors.xhttpSessionPlacement && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{
 																			fieldValidationErrors.xhttpSessionPlacement
 																		}
@@ -5469,7 +5468,7 @@ export const InboundFormModal: FC<Props> = ({
 																	</FormLabel>
 																	<Input {...register("xhttpSessionKey")} />
 																	{fieldValidationErrors.xhttpSessionKey && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpSessionKey}
 																		</Text>
 																	)}
@@ -5515,7 +5514,7 @@ export const InboundFormModal: FC<Props> = ({
 																		)}
 																	/>
 																	{fieldValidationErrors.xhttpSeqPlacement && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpSeqPlacement}
 																		</Text>
 																	)}
@@ -5529,7 +5528,7 @@ export const InboundFormModal: FC<Props> = ({
 																	</FormLabel>
 																	<Input {...register("xhttpSeqKey")} />
 																	{fieldValidationErrors.xhttpSeqKey && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpSeqKey}
 																		</Text>
 																	)}
@@ -5575,7 +5574,7 @@ export const InboundFormModal: FC<Props> = ({
 																		)}
 																	/>
 																	{fieldValidationErrors.xhttpUplinkDataPlacement && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{
 																			fieldValidationErrors.xhttpUplinkDataPlacement
 																		}
@@ -5596,7 +5595,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="X-Data"
 																	/>
 																	{fieldValidationErrors.xhttpUplinkDataKey && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpUplinkDataKey}
 																		</Text>
 																	)}
@@ -5615,7 +5614,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="3000-4000"
 																	/>
 																	{fieldValidationErrors.xhttpUplinkChunkSize && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{fieldValidationErrors.xhttpUplinkChunkSize}
 																		</Text>
 																	)}
@@ -5634,7 +5633,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="0"
 																	/>
 																	{fieldValidationErrors.xhttpServerMaxHeaderBytes && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																		{
 																			fieldValidationErrors.xhttpServerMaxHeaderBytes
 																		}
@@ -5672,7 +5671,7 @@ export const InboundFormModal: FC<Props> = ({
 																placeholder="60"
 															/>
 															{fieldValidationErrors.hysteriaUdpIdleTimeout && (
-																<Text fontSize="xs" color="red.500" mt={1}>
+																<Text fontSize="xs" color="panel.danger" mt={1}>
 																	{fieldValidationErrors.hysteriaUdpIdleTimeout}
 																</Text>
 															)}
@@ -5743,7 +5742,7 @@ export const InboundFormModal: FC<Props> = ({
 																		}
 																	/>
 																	{fieldValidationErrors.hysteriaMasqueradeType && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{
 																				fieldValidationErrors.hysteriaMasqueradeType
 																			}
@@ -5782,7 +5781,7 @@ export const InboundFormModal: FC<Props> = ({
 																		{fieldValidationErrors.hysteriaMasqueradeUrl && (
 																			<Text
 																				fontSize="xs"
-																				color="red.500"
+																				color="panel.danger"
 																				mt={1}
 																			>
 																				{
@@ -5838,7 +5837,7 @@ export const InboundFormModal: FC<Props> = ({
 																		placeholder="/var/www/html"
 																	/>
 																	{fieldValidationErrors.hysteriaMasqueradeDir && (
-																		<Text fontSize="xs" color="red.500" mt={1}>
+																		<Text fontSize="xs" color="panel.danger" mt={1}>
 																			{
 																				fieldValidationErrors.hysteriaMasqueradeDir
 																			}
@@ -5930,7 +5929,7 @@ export const InboundFormModal: FC<Props> = ({
 																<Text fontSize="sm" fontWeight="semibold">
 																	{t("inbounds.hysteria.udpMasks")}
 																</Text>
-																<Text fontSize="xs" color="gray.500">
+																<Text fontSize="xs" color="panel.textMuted">
 																	{t("inbounds.hysteria.udpMasksHint")}
 																</Text>
 															</Box>
@@ -5949,12 +5948,12 @@ export const InboundFormModal: FC<Props> = ({
 															</Button>
 														</Flex>
 														{fieldValidationErrors.hysteriaUdpMasks && (
-															<Text fontSize="xs" color="red.500">
+															<Text fontSize="xs" color="panel.danger">
 																{fieldValidationErrors.hysteriaUdpMasks}
 															</Text>
 														)}
 														{hysteriaUdpMaskFields.length === 0 && (
-															<Text fontSize="xs" color="gray.500">
+															<Text fontSize="xs" color="panel.textMuted">
 																{t("inbounds.hysteria.noUdpMasks")}
 															</Text>
 														)}
@@ -5967,7 +5966,7 @@ export const InboundFormModal: FC<Props> = ({
 																	key={field.id}
 																	spacing={3}
 																	borderWidth="1px"
-																	borderColor="whiteAlpha.200"
+																	borderColor="panel.border"
 																	borderRadius="md"
 																	p={3}
 																>
@@ -6044,7 +6043,7 @@ export const InboundFormModal: FC<Props> = ({
 																			/>
 																			<Text
 																				fontSize="xs"
-																				color="gray.500"
+																				color="panel.textMuted"
 																				mt={1}
 																			>
 																				{maskMode === "gecko"
@@ -6101,7 +6100,7 @@ export const InboundFormModal: FC<Props> = ({
 																				/>
 																				<Text
 																					fontSize="xs"
-																					color="gray.500"
+																					color="panel.textMuted"
 																					mt={1}
 																				>
 																					{t(
@@ -6382,7 +6381,7 @@ export const InboundFormModal: FC<Props> = ({
 															rows={2}
 															placeholder="X-Forwarded-For"
 														/>
-														<Text fontSize="xs" color="gray.500" mt={1}>
+														<Text fontSize="xs" color="panel.textMuted" mt={1}>
 															One header name per line.
 														</Text>
 													</FormControl>
@@ -6666,7 +6665,7 @@ export const InboundFormModal: FC<Props> = ({
 													rows={2}
 													placeholder="X25519MLKEM768&#10;X25519"
 												/>
-												<Text fontSize="xs" color="gray.500" mt={1}>
+												<Text fontSize="xs" color="panel.textMuted" mt={1}>
 													One curve per line, in preference order.
 												</Text>
 											</FormControl>
@@ -6969,7 +6968,7 @@ export const InboundFormModal: FC<Props> = ({
 												/>
 												{(errors.realityTarget ||
 													fieldValidationErrors.realityTarget) && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{fieldValidationErrors.realityTarget ||
 															t("validation.required")}
 													</Text>
@@ -7002,12 +7001,12 @@ export const InboundFormModal: FC<Props> = ({
 													})}
 													placeholder="domain.com"
 												/>
-												<Box fontSize="sm" color="gray.500">
+												<Box fontSize="sm" color="panel.textMuted">
 													{t("inbounds.serverNamesHint")}
 												</Box>
 												{(errors.realityServerNames ||
 													fieldValidationErrors.realityServerNames) && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{fieldValidationErrors.realityServerNames ||
 															t("validation.required")}
 													</Text>
@@ -7080,12 +7079,12 @@ export const InboundFormModal: FC<Props> = ({
 												>
 													{t("inbounds.reality.generateShortId")}
 												</Button>
-												<Box fontSize="sm" color="gray.500">
+												<Box fontSize="sm" color="panel.textMuted">
 													{t("inbounds.shortIdsHint")}
 												</Box>
 												{(errors.realityShortIds ||
 													fieldValidationErrors.realityShortIds) && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{fieldValidationErrors.realityShortIds ||
 															t("validation.required")}
 													</Text>
@@ -7114,7 +7113,7 @@ export const InboundFormModal: FC<Props> = ({
 												/>
 												{(errors.realityPrivateKey ||
 													fieldValidationErrors.realityPrivateKey) && (
-													<Text fontSize="xs" color="red.500" mt={1}>
+													<Text fontSize="xs" color="panel.danger" mt={1}>
 														{fieldValidationErrors.realityPrivateKey ||
 															t("validation.required")}
 													</Text>
@@ -7225,7 +7224,7 @@ export const InboundFormModal: FC<Props> = ({
 												</Button>
 											</Flex>
 											{fallbackFields.length === 0 ? (
-												<Text fontSize="sm" color="gray.500">
+												<Text fontSize="sm" color="panel.textMuted">
 													{t("inbounds.fallbacks.empty")}
 												</Text>
 											) : (
@@ -7447,7 +7446,7 @@ export const InboundFormModal: FC<Props> = ({
 												))}
 											</SimpleGrid>
 											{errors.targetIds && (
-												<Text fontSize="xs" color="red.500" mt={2}>
+												<Text fontSize="xs" color="panel.danger" mt={2}>
 													{String(errors.targetIds.message)}
 												</Text>
 											)}

@@ -28,7 +28,6 @@ import {
 	Text,
 	Tooltip,
 	useBreakpointValue,
-	useColorModeValue,
 	useDisclosure,
 	useToast,
 	VStack,
@@ -250,7 +249,7 @@ const ManagedOutboundBadge: FC<{ outbound: any }> = ({ outbound }) => {
 				px={1.5}
 				py={0.5}
 				borderRadius="sm"
-				bg="whiteAlpha.100"
+				bg="panel.inset"
 				flexShrink={0}
 			>
 				{icon}
@@ -641,9 +640,9 @@ const SettingsSection: FC<{
 	children: ReactNode;
 	defaultOpen?: boolean;
 }> = ({ title, children, defaultOpen = false }) => {
-	const headerBg = useColorModeValue("gray.50", "whiteAlpha.100");
-	const panelBg = useColorModeValue("white", "surface.dark");
-	const borderColor = useColorModeValue("gray.200", "whiteAlpha.300");
+	const headerBg = "panel.elevated";
+	const panelBg = "panel.surface";
+	const borderColor = "panel.border";
 	return (
 		<Accordion
 			allowToggle
@@ -683,9 +682,9 @@ const SettingRow: FC<{
 	controlId: string;
 	children: (controlId: string) => ReactNode;
 }> = ({ label, description, controlId, children }) => {
-	const labelColor = useColorModeValue("gray.700", "whiteAlpha.800");
-	const descriptionColor = useColorModeValue("gray.500", "whiteAlpha.600");
-	const dividerColor = useColorModeValue("gray.100", "whiteAlpha.200");
+	const labelColor = "panel.textSecondary";
+	const descriptionColor = "panel.textMuted";
+	const dividerColor = "panel.border";
 	return (
 		<Box
 			display="grid"
@@ -976,9 +975,9 @@ export const CoreSettingsPage: FC = () => {
 		return () => window.removeEventListener("hashchange", syncFromHash);
 	}, [readHashTab, tabKeys]);
 
-	const pageShellBg = useColorModeValue("white", "surface.dark");
-	const pageShellBorder = useColorModeValue("gray.200", "whiteAlpha.300");
-	const pageHintColor = useColorModeValue("gray.600", "gray.300");
+	const pageShellBg = "panel.surface";
+	const pageShellBorder = "panel.border";
+	const pageHintColor = "panel.textSecondary";
 
 	const buildOutboundRows = useCallback(
 		(outbounds: OutboundJson[]) =>
@@ -2684,10 +2683,10 @@ export const CoreSettingsPage: FC = () => {
 			fontSize="xs"
 			sx={{ fontVariantNumeric: "tabular-nums" }}
 		>
-			<Text color="teal.400">
+			<Text color="panel.accent">
 				↑ {SizeFormatter.sizeFormat(Number(traffic?.up) || 0)}
 			</Text>
-			<Text color="blue.400">
+			<Text color="panel.accent">
 				↓ {SizeFormatter.sizeFormat(Number(traffic?.down) || 0)}
 			</Text>
 		</HStack>
@@ -3126,7 +3125,7 @@ export const CoreSettingsPage: FC = () => {
 		[warpDomains],
 	);
 
-	const warpDomainHelper = useColorModeValue("gray.600", "gray.300");
+	const warpDomainHelper = "panel.textSecondary";
 
 	const handleWarpSave = (outbound: OutboundJson) => {
 		const outbounds = getOutbounds();
@@ -3354,7 +3353,7 @@ export const CoreSettingsPage: FC = () => {
 	const renderChipList = (value: unknown, colorScheme: string = "blue") => {
 		const chips = toChipList(value);
 		if (!chips.length) {
-			return <Text color="gray.400">-</Text>;
+			return <Text color="panel.textMuted">-</Text>;
 		}
 		// use compact chips that show first item and a +N trigger on small screens
 		return <CompactChips chips={chips} color={colorScheme} />;
@@ -3367,7 +3366,7 @@ export const CoreSettingsPage: FC = () => {
 			value === "" ||
 			(typeof value === "string" && !value.trim())
 		) {
-			return <Text color="gray.400">-</Text>;
+			return <Text color="panel.textMuted">-</Text>;
 		}
 		const str = typeof value === "string" ? value : String(value);
 		if (str.length > 30) {
@@ -3378,14 +3377,14 @@ export const CoreSettingsPage: FC = () => {
 
 	const renderAttrsCell = (attrsValue: string | undefined) => {
 		if (!attrsValue) {
-			return <Text color="gray.400">-</Text>;
+			return <Text color="panel.textMuted">-</Text>;
 		}
 		try {
 			const parsed = JSON.parse(attrsValue);
 			if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
 				const entries = Object.entries(parsed as Record<string, unknown>);
 				if (!entries.length) {
-					return <Text color="gray.400">-</Text>;
+					return <Text color="panel.textMuted">-</Text>;
 				}
 				return (
 					<Box display="flex" flexWrap="wrap" gap="1">
@@ -3443,7 +3442,7 @@ export const CoreSettingsPage: FC = () => {
 
 	const renderAddressList = (addresses: string[]) =>
 		addresses.length === 0 ? (
-			<Text color="gray.400">-</Text>
+			<Text color="panel.textMuted">-</Text>
 		) : (
 			<VStack align="start" spacing={1}>
 				{addresses.map((addr) => (
@@ -3456,7 +3455,7 @@ export const CoreSettingsPage: FC = () => {
 		if (state?.testing) return <Spinner size="xs" />;
 		if (!state?.result)
 			return (
-				<Text fontSize="xs" color="gray.500">
+				<Text fontSize="xs" color="panel.textMuted">
 					-
 				</Text>
 			);
@@ -4120,7 +4119,7 @@ export const CoreSettingsPage: FC = () => {
 				<Text as="h1" fontWeight="semibold" fontSize="2xl">
 					{t("header.xraySettings")}
 				</Text>
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("xraySettings.noPermission")}
 				</Text>
 			</VStack>

@@ -607,10 +607,10 @@ export const InboundsManager: FC = () => {
 								unicodeBidi: "isolate",
 							}}
 						>
-							<Text color="teal.400">
+							<Text color="panel.accent">
 								↑ {SizeFormatter.sizeFormat(traffic.upload)}
 							</Text>
-							<Text color="blue.400">
+							<Text color="panel.accent">
 								↓ {SizeFormatter.sizeFormat(traffic.download)}
 							</Text>
 						</HStack>
@@ -723,7 +723,7 @@ export const InboundsManager: FC = () => {
 				>
 					<MenuItem
 						icon={<TrashIcon width={16} />}
-						color="red.400"
+						color="panel.danger"
 						isDisabled={isMutating}
 						onClick={(event) => event.stopPropagation()}
 					>

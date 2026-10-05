@@ -35,7 +35,7 @@ const NextIcon = chakra(ChevronRightIcon, {
 	baseStyle: {
 		w: 6,
 		h: 6,
-		color: "gray.600",
+		color:"panel.textSecondary",
 		_dark: {
 			color: "white",
 		},
@@ -45,7 +45,7 @@ const PrevIcon = chakra(ChevronLeftIcon, {
 	baseStyle: {
 		w: 6,
 		h: 6,
-		color: "gray.600",
+		color:"panel.textSecondary",
 		_dark: {
 			color: "white",
 		},
@@ -161,7 +161,7 @@ export const QRCodeDialog: FC = () => {
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
-			<ModalOverlay bg="blackAlpha.300" />
+			<ModalOverlay bg="panel.scrim" />
 			<ModalContent
 				mx={{ base: 3, md: 4 }}
 				w="full"
@@ -171,12 +171,12 @@ export const QRCodeDialog: FC = () => {
 			>
 				<ModalHeader pt={6}>
 					<HStack spacing={3} align="center">
-						<Icon color="primary">
+						<Icon tone="accent">
 							<QRIcon color="white" />
 						</Icon>
 						{qrCodeUsername && (
 							<Box minW={0}>
-								<Text fontSize="xs" color="gray.500">
+								<Text fontSize="xs" color="panel.textMuted">
 									{t("username")}
 								</Text>
 								<Text
@@ -212,7 +212,7 @@ export const QRCodeDialog: FC = () => {
 								</Text>
 								{copiedSub && (
 									<Box
-										bg="green.500"
+										bg="panel.success"
 										color="white"
 										fontSize="xs"
 										px={2}
@@ -252,7 +252,7 @@ export const QRCodeDialog: FC = () => {
 										bg="white"
 									/>
 								</Box>
-								<Text fontSize="xs" color="gray.500" textAlign="center">
+								<Text fontSize="xs" color="panel.textMuted" textAlign="center">
 									{t("qrcodeDialog.clickToCopy")}
 								</Text>
 							</VStack>
@@ -282,7 +282,7 @@ export const QRCodeDialog: FC = () => {
 										</Text>
 										{copiedConfigIndex === activeIndex && (
 											<Box
-												bg="green.500"
+												bg="panel.success"
 												color="white"
 												fontSize="xs"
 												px={2}

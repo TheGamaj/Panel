@@ -22,7 +22,6 @@ import {
 	Text,
 	useClipboard,
 	useColorMode,
-	useColorModeValue,
 	useDisclosure,
 	useToast,
 	VStack,
@@ -111,7 +110,7 @@ const buildDailyUsageOptions = (
 	colorMode: string,
 	categories: string[],
 ): ApexOptions => {
-	const axisColor = colorMode === "dark" ? "#d8dee9" : "#1a202c";
+	const axisColor = colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)";
 	return {
 		chart: { type: "area", toolbar: { show: false }, zoom: { enabled: false } },
 		dataLabels: { enabled: false },
@@ -125,7 +124,7 @@ const buildDailyUsageOptions = (
 				stops: [0, 80, 100],
 			},
 		},
-		grid: { borderColor: colorMode === "dark" ? "#2D3748" : "#E2E8F0" },
+		grid: { borderColor: colorMode === "dark" ? "var(--gamaj-gray-700)" : "var(--gamaj-gray-200)" },
 		xaxis: {
 			categories,
 			labels: { style: { colors: categories.map(() => axisColor) } },
@@ -144,7 +143,7 @@ const buildDailyUsageOptions = (
 			fillSeriesColor: false,
 			y: { formatter: (value: number) => formatBytes(Number(value) || 0, 2) },
 		},
-		colors: [colorMode === "dark" ? "#63B3ED" : "#3182CE"],
+		colors: [colorMode === "dark" ? "var(--gm-panel-accent-hover)" : "var(--gm-panel-accent)"],
 	};
 };
 
@@ -155,7 +154,7 @@ const buildDonutOptions = (
 	labels,
 	legend: {
 		position: "bottom",
-		labels: { colors: colorMode === "dark" ? "#d8dee9" : "#1a202c" },
+		labels: { colors: colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)" },
 	},
 	tooltip: {
 		y: {
@@ -163,16 +162,16 @@ const buildDonutOptions = (
 		},
 	},
 	colors: [
-		"#3182CE",
-		"#63B3ED",
-		"#ED8936",
-		"#38A169",
-		"#9F7AEA",
-		"#F6AD55",
-		"#4299E1",
-		"#E53E3E",
-		"#D53F8C",
-		"#805AD5",
+		"var(--gm-panel-accent)",
+		"var(--gm-panel-accent-hover)",
+		"var(--gm-warning)",
+		"var(--gm-success)",
+		"var(--gm-panel-accent)",
+		"var(--gm-warning)",
+		"var(--gm-panel-accent)",
+		"var(--gm-danger)",
+		"var(--gm-panel-accent)",
+		"var(--gm-panel-accent)",
 	],
 });
 
@@ -203,7 +202,7 @@ type StatsCardProps = {
 };
 
 const StatsCard: React.FC<StatsCardProps> = ({ label, value }) => {
-	const labelColor = useColorModeValue("panel.textMuted", "panel.textMuted");
+	const labelColor = "panel.textMuted";
 
 	return (
 		<Box minW={0} py={1}>
@@ -221,7 +220,7 @@ const MiniMetric: React.FC<{ label: string; value: string }> = ({
 	label,
 	value,
 }) => {
-	const labelColor = useColorModeValue("gray.500", "gray.400");
+	const labelColor = "panel.textMuted";
 	return (
 		<Box>
 			<Text fontSize="xs" color={labelColor} fontWeight="semibold">
@@ -269,10 +268,10 @@ const ServiceLimitPanel: React.FC<{
 	colorMode: string;
 	t: (key: string, fallback?: string) => string;
 }> = ({ service, colorMode, t }) => {
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const bg = useColorModeValue("white", "whiteAlpha.50");
-	const subBg = useColorModeValue("gray.50", "whiteAlpha.100");
-	const labelColor = useColorModeValue("gray.500", "gray.400");
+	const borderColor = "panel.border";
+	const bg = "panel.surface";
+	const subBg = "panel.elevated";
+	const labelColor = "panel.textMuted";
 	const labels = getTrafficLabels(t, service.traffic_basis);
 	const dailyPoints = service.daily_usage ?? [];
 	const dailyTotal = dailyPoints.reduce(
@@ -388,9 +387,9 @@ const ServiceBalanceCard: React.FC<{
 	service: MyAccountServiceLimit;
 	t: (key: string, fallback?: string) => string;
 }> = ({ service, t }) => {
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const bg = useColorModeValue("white", "whiteAlpha.50");
-	const labelColor = useColorModeValue("gray.500", "gray.400");
+	const borderColor = "panel.border";
+	const bg = "panel.surface";
+	const labelColor = "panel.textMuted";
 	const labels = getTrafficLabels(t, service.traffic_basis);
 	const limit = service.data_limit ?? 0;
 	const remaining =
@@ -616,9 +615,9 @@ export const MyAccountPage: React.FC = () => {
 	const apiKeyModal = useDisclosure();
 	const queryClient = useQueryClient();
 	const { colorMode } = useColorMode();
-	const panelBg = useColorModeValue("gray.50", "whiteAlpha.50");
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const labelColor = useColorModeValue("gray.500", "gray.400");
+	const panelBg = "panel.elevated";
+	const borderColor = "panel.border";
+	const labelColor = "panel.textMuted";
 	const { userData, getUserIsSuccess } = useGetUser();
 	const { onCopy, setValue: setClipboardValue } = useClipboard("");
 	const [range, setRange] = useState<DateRangeValue>(() => {
@@ -1404,7 +1403,7 @@ export const MyAccountPage: React.FC = () => {
 										}}
 									/>
 								</HStack>
-								<Text fontSize="xs" color="orange.500" mt={2}>
+								<Text fontSize="xs" color="panel.warning" mt={2}>
 									{t("myaccount.apiKeyWarning")}
 								</Text>
 							</Box>
@@ -1483,7 +1482,7 @@ export const MyAccountPage: React.FC = () => {
 							</InputRightElement>
 						</InputGroup>
 						{deleteKeyMutation.isError && (
-							<Text color="red.500" fontSize="sm">
+							<Text color="panel.danger" fontSize="sm">
 								{t("myaccount.incorrectPassword")}
 							</Text>
 						)}

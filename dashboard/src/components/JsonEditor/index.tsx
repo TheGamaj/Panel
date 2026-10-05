@@ -6,7 +6,6 @@ import {
 	Text,
 	Tooltip,
 	useColorMode,
-	useColorModeValue,
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
@@ -566,26 +565,11 @@ export const JsonEditor = forwardRef<HTMLDivElement, JSONEditorProps>(
 			}
 		}, [validation, validationLabel]);
 
-		const borderColor = useColorModeValue(
-			"var(--gm-panel-border)",
-			"var(--gm-panel-border)",
-		);
-		const bg = useColorModeValue(
-			"var(--gm-panel-surface)",
-			"var(--gm-panel-surface)",
-		);
-		const elevatedBg = useColorModeValue(
-			"var(--gm-panel-elevated)",
-			"var(--gm-panel-elevated)",
-		);
-		const textColor = useColorModeValue(
-			"var(--gm-panel-text)",
-			"var(--gm-panel-text)",
-		);
-		const mutedColor = useColorModeValue(
-			"var(--gm-panel-text-muted)",
-			"var(--gm-panel-text-muted)",
-		);
+		const borderColor = "var(--gm-panel-border)";
+		const bg = "var(--gm-panel-surface)";
+		const elevatedBg = "var(--gm-panel-elevated)";
+		const textColor = "var(--gm-panel-text)";
+		const mutedColor = "var(--gm-panel-text-muted)";
 
 		return (
 			<VStack

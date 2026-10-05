@@ -39,8 +39,8 @@ export const OnlineStatus: FC<UserStatusProps> = ({
 				fontSize="xs"
 				fontWeight="medium"
 				ml={marginLeft}
-				color="gray.600"
-				_dark={{ color: "gray.400" }}
+				color="panel.textSecondary"
+				_dark={{ color:"panel.textMuted" }}
 				as="span"
 				gap={1}
 				alignItems="center"
@@ -57,9 +57,9 @@ export const OnlineStatus: FC<UserStatusProps> = ({
 				fontSize="xs"
 				fontWeight="medium"
 				ml={marginLeft}
-				color="gray.600"
+				color="panel.textSecondary"
 				_dark={{
-					color: "gray.400",
+					color:"panel.textMuted",
 				}}
 				as="span"
 				gap={1}
@@ -83,9 +83,9 @@ export const OnlineStatus: FC<UserStatusProps> = ({
 				fontSize="xs"
 				fontWeight="medium"
 				ml={marginLeft}
-				color="gray.600"
+				color="panel.textSecondary"
 				_dark={{
-					color: "gray.400",
+					color:"panel.textMuted",
 				}}
 				as="span"
 				gap={1}
@@ -103,9 +103,9 @@ export const OnlineStatus: FC<UserStatusProps> = ({
 			fontSize="xs"
 			fontWeight="medium"
 			ml={marginLeft}
-			color="gray.600"
+			color="panel.textSecondary"
 			_dark={{
-				color: "gray.400",
+				color:"panel.textMuted",
 			}}
 			as="span"
 			gap={1}

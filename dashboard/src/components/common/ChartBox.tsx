@@ -3,7 +3,6 @@ import {
 	type BoxProps,
 	Flex,
 	Text,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import type { FC, ReactNode } from "react";
 
@@ -19,9 +18,9 @@ export const ChartBox: FC<ChartBoxProps> = ({
 	headerActions,
 	...props
 }) => {
-	const borderColor = useColorModeValue("panel.border", "panel.border");
-	const bg = useColorModeValue("panel.surface", "panel.surface");
-	const headerBg = useColorModeValue("transparent", "transparent");
+	const borderColor = "panel.border";
+	const bg = "panel.surface";
+	const headerBg = "transparent";
 
 	return (
 		<Box

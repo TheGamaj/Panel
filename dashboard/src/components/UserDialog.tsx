@@ -38,7 +38,6 @@ import {
 	Tooltip,
 	useBreakpointValue,
 	useColorMode,
-	useColorModeValue,
 	useToast,
 	VStack,
 } from "@chakra-ui/react";
@@ -615,8 +614,8 @@ export const UserDialog: FC<UserDialogProps> = () => {
 			};
 
 	const { colorMode } = useColorMode();
-	const footerBg = useColorModeValue("white", "gray.900");
-	const footerBorderColor = useColorModeValue("gray.200", "whiteAlpha.300");
+	const footerBg = "panel.surface";
+	const footerBorderColor = "panel.border";
 
 	const UNIT_RADIUS = "6px";
 
@@ -629,9 +628,9 @@ export const UserDialog: FC<UserDialogProps> = () => {
 		type?: string;
 		inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
 	}) => {
-		const addonBg = colorMode === "dark" ? "whiteAlpha.100" : "blackAlpha.50";
-		const addonBorder = colorMode === "dark" ? "gray.700" : "gray.200";
-		const addonColor = colorMode === "dark" ? "gray.200" : "gray.600";
+		const addonBg = "panel.inset";
+		const addonBorder = "panel.border";
+		const addonColor = "panel.textSecondary";
 
 		return (
 			<InputGroup size="sm" dir="ltr" w="full" minW={0}>
@@ -1956,7 +1955,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 			size={isMobileDialog ? "full" : shouldCompactModal ? "lg" : "2xl"}
 			scrollBehavior="inside"
 		>
-			<ModalOverlay bg="blackAlpha.300" />
+			<ModalOverlay bg="panel.scrim" />
 
 			<FormProvider {...form}>
 				<XrayModalContent
@@ -2012,7 +2011,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 								gap={2}
 							>
 								<Box flexShrink={0}>
-									<Icon color="primary" size={30}>
+									<Icon tone="accent" size={30}>
 										{isEditing ? (
 											<EditUserIcon color="white" />
 										) : (
@@ -2070,7 +2069,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 												insetInlineEnd={0}
 												bottom={0}
 												h="2px"
-												bg="whiteAlpha.400"
+												bg="panel.elevated"
 												borderRadius="full"
 												overflow="hidden"
 												pointerEvents="none"
@@ -2078,7 +2077,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 												<Box
 													key={serviceNoticeSeed}
 													h="full"
-													bg="whiteAlpha.800"
+													bg="panel.surface"
 													transformOrigin={
 														isRTL ? "right center" : "left center"
 													}
@@ -2113,7 +2112,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 												insetInlineEnd={0}
 												bottom={0}
 												h="2px"
-												bg="whiteAlpha.400"
+												bg="panel.elevated"
 												borderRadius="full"
 												overflow="hidden"
 												pointerEvents="none"
@@ -2121,7 +2120,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 												<Box
 													key={statusNoticeSeed}
 													h="full"
-													bg="whiteAlpha.800"
+													bg="panel.surface"
 													transformOrigin={
 														isRTL ? "right center" : "left center"
 													}
@@ -2229,7 +2228,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		>
 																			<chakra.span
 																				display="inline-flex"
-																				color="gray.400"
+																				color="panel.textMuted"
 																				cursor="help"
 																			>
 																				<QuestionMarkCircleIcon
@@ -2341,7 +2340,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 
 																	<FormHelperText
 																		fontSize="xs"
-																		color="gray.500"
+																		color="panel.textMuted"
 																		textAlign={isRTL ? "end" : "start"}
 																	>
 																		{`${usernameValue?.length ?? 0}/32`}
@@ -2351,7 +2350,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		editingUser?.admin_username && (
 																			<FormHelperText
 																				fontSize="xs"
-																				color="gray.500"
+																				color="panel.textMuted"
 																				mt={1}
 																				textAlign={isRTL ? "end" : "start"}
 																			>
@@ -2399,7 +2398,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																					{isEditing && remainingDataInfo && (
 																						<FormHelperText
 																							fontSize="xs"
-																							color="gray.500"
+																							color="panel.textMuted"
 																							textAlign={
 																								isRTL ? "right" : "left"
 																							}
@@ -2439,7 +2438,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		>
 																			<chakra.span
 																				display="inline-flex"
-																				color="gray.400"
+																				color="panel.textMuted"
 																				cursor="help"
 																			>
 																				<QuestionMarkCircleIcon
@@ -2543,21 +2542,21 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																					bg={
 																						disabled ||
 																						!canConfigurePeriodicUsageReset
-																							? "gray.100"
+																							? "panel.inset"
 																							: "transparent"
 																					}
 																					_dark={{
 																						bg:
 																							disabled ||
 																							!canConfigurePeriodicUsageReset
-																								? "gray.600"
+																								? "panel.inset"
 																								: "transparent",
 																					}}
 																					sx={{
 																						option: {
 																							backgroundColor:
 																								colorMode === "dark"
-																									? "#222C3B"
+																									? "var(--gm-panel-elevated)"
 																									: "white",
 																						},
 																					}}
@@ -2852,8 +2851,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 
 																	<Text
 																		fontSize="sm"
-																		color="gray.500"
-																		_dark={{ color: "gray.400" }}
+																		color="panel.textMuted"
 																	>
 																		{t("loading")}
 																	</Text>
@@ -2907,12 +2905,12 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																				p={4}
 																				borderColor={
 																					isSelected
-																						? "primary.500"
-																						: "gray.200"
+																						? "panel.borderStrong"
+																						: "panel.border"
 																				}
 																				bg={
 																					isSelected
-																						? "primary.50"
+																						? "panel.rowSelected"
 																						: "transparent"
 																				}
 																				cursor={
@@ -2931,19 +2929,10 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																						? {}
 																						: {
 																								borderColor: isSelected
-																									? "primary.500"
-																									: "gray.300",
+																									? "panel.borderStrong"
+																									: "panel.border",
 																							}
 																				}
-																				_dark={{
-																					borderColor: isSelected
-																						? "primary.400"
-																						: "gray.700",
-
-																					bg: isSelected
-																						? "primary.900"
-																						: "transparent",
-																				}}
 																			>
 																				<HStack
 																					justify="space-between"
@@ -2960,8 +2949,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																						{service.description && (
 																							<Text
 																								fontSize="sm"
-																								color="gray.500"
-																								_dark={{ color: "gray.400" }}
+																								color="panel.textMuted"
 																							>
 																								{service.description}
 																							</Text>
@@ -2970,8 +2958,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 
 																					<Text
 																						fontSize="xs"
-																						color="gray.500"
-																						_dark={{ color: "gray.400" }}
+																						color="panel.textMuted"
 																					>
 																						{t("userDialog.serviceSummary", {
 																							hosts: service.host_count,
@@ -3003,7 +2990,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		(selectedService.broken ||
 																			selectedService.has_hosts === false) && (
 																			<Text
-																				color="red.500"
+																				color="panel.danger"
 																				fontSize="sm"
 																				mt={1}
 																			>
@@ -3142,8 +3129,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 															>
 																<Text
 																	fontSize="sm"
-																	color="gray.500"
-																	_dark={{ color: "gray.400" }}
+																	color="panel.textMuted"
 																	textAlign={isRTL ? "right" : "left"}
 																>
 																	{t("userDialog.autoRenewDescription")}
@@ -3153,7 +3139,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																	<VStack spacing={3} align="stretch">
 																		<Text
 																			textAlign="center"
-																			color="gray.400"
+																			color="panel.textMuted"
 																			fontSize="sm"
 																		>
 																			{t("autoRenew.empty")}
@@ -3184,8 +3170,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																						borderWidth="1px"
 																						borderRadius="md"
 																						p={3}
-																						bg="blackAlpha.50"
-																						_dark={{ bg: "whiteAlpha.50" }}
+																						bg="panel.inset"
 																						w="full"
 																						minW={0}
 																					>
@@ -3222,7 +3207,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																											)}
 																								</Text>
 																								<Text
-																									color="gray.500"
+																									color="panel.textMuted"
 																									fontSize="sm"
 																								>
 																									{dayText !== null
@@ -3265,7 +3250,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																						{idx > 0 && (
 																							<Text
 																								fontSize="xs"
-																								color="gray.500"
+																								color="panel.textMuted"
 																								mt={2}
 																							>
 																								{t("autoRenew.queuedNote")}
@@ -3292,8 +3277,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		borderWidth="1px"
 																		borderRadius="md"
 																		p={3}
-																		bg="blackAlpha.50"
-																		_dark={{ bg: "whiteAlpha.50" }}
+																		bg="panel.inset"
 																		minW={0}
 																	>
 																		<HStack
@@ -3639,7 +3623,6 @@ export const UserDialog: FC<UserDialogProps> = () => {
 														px={4}
 														py={3}
 														bg="white"
-														_dark={{ bg: "gray.900", borderColor: "gray.700" }}
 													>
 														<HStack spacing={2} minW={0} mb={3}>
 															<SubscriptionActionIcon />
@@ -3649,7 +3632,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 														</HStack>
 														<VStack spacing={2} align="stretch">
 															{subscriptionLinks.length === 0 ? (
-																<Text fontSize="sm" color="gray.500">
+																<Text fontSize="sm" color="panel.textMuted">
 																	{t("userDialog.links.noSubscription")}
 																</Text>
 															) : (
@@ -3660,8 +3643,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		borderRadius="md"
 																		px={3}
 																		py={2}
-																		bg="blackAlpha.50"
-																		_dark={{ bg: "whiteAlpha.50" }}
+																		bg="panel.inset"
 																	>
 																		<HStack
 																			justify="space-between"
@@ -3752,7 +3734,6 @@ export const UserDialog: FC<UserDialogProps> = () => {
 														px={4}
 														py={3}
 														bg="white"
-														_dark={{ bg: "gray.900", borderColor: "gray.700" }}
 													>
 														<HStack
 															justify="space-between"
@@ -3790,7 +3771,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 
 														<VStack spacing={2} align="stretch">
 															{configItems.length === 0 ? (
-																<Text fontSize="sm" color="gray.500">
+																<Text fontSize="sm" color="panel.textMuted">
 																	{t("userDialog.links.noConfigs")}
 																</Text>
 															) : (
@@ -3801,8 +3782,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 																		borderRadius="md"
 																		px={3}
 																		py={2}
-																		bg="blackAlpha.50"
-																		_dark={{ bg: "whiteAlpha.50" }}
+																		bg="panel.inset"
 																	>
 																		<HStack
 																			justify="space-between"
@@ -3898,11 +3878,7 @@ export const UserDialog: FC<UserDialogProps> = () => {
 									base: "var(--gm-dialog-safe-bottom)",
 									md: 3,
 								}}
-								boxShadow={{
-									base: "0 -14px 28px rgba(0, 0, 0, 0.28)",
-									md: "none",
-								}}
-							>
+						>
 								<HStack
 									justifyContent="space-between"
 									w="full"
@@ -3995,13 +3971,13 @@ export const UserDialog: FC<UserDialogProps> = () => {
 							justify="center"
 							direction="column"
 							gap={4}
-							bg="blackAlpha.600"
+							bg="panel.scrim"
 							color="white"
 							textAlign="center"
 							p={6}
 							pointerEvents="none"
 						>
-							<Icon color="primary">
+							<Icon tone="accent">
 								<LimitLockIcon />
 							</Icon>
 

@@ -159,7 +159,7 @@ export const RouteTestModal: FC<RouteTestModalProps> = ({
 						{result && (
 							<XrayDialogSection>
 								<VStack align="stretch" spacing={2}>
-									<Text color={result.success ? "green.300" : "red.300"} fontWeight="semibold" fontSize="sm">
+									<Text color={result.success ? "panel.success" : "panel.danger"} fontWeight="semibold" fontSize="sm">
 										{result.success
 											? t("pages.xray.routeTest.success")
 											: result.error || t("pages.xray.routeTest.failed")}

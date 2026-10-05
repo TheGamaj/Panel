@@ -22,7 +22,6 @@ import {
 	SimpleGrid,
 	Stack,
 	Text,
-	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
 import {
@@ -94,12 +93,9 @@ export const ExternalAppsPage = () => {
 	const { t } = useTranslation();
 	const toast = useToast();
 	const queryClient = useQueryClient();
-	const panelBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const borderColor = useColorModeValue("panel.border", "panel.border");
-	const mutedColor = useColorModeValue(
-		"panel.textSecondary",
-		"panel.textSecondary",
-	);
+	const panelBg = "panel.elevated";
+	const borderColor = "panel.border";
+	const mutedColor = "panel.textSecondary";
 	const [template, setTemplate] = useState<TemplateID>("mirzabot");
 	const [createDialogOpen, setCreateDialogOpen] = useState(false);
 	const [domain, setDomain] = useState("");
@@ -462,7 +458,7 @@ export const ExternalAppsPage = () => {
 				),
 			},
 		],
-		[mutedColor, t],
+		[t],
 	);
 
 	const appRowActions = (
@@ -643,7 +639,7 @@ export const ExternalAppsPage = () => {
 				onClose={() => setSettingsTarget(null)}
 				size="xl"
 			>
-				<ModalOverlay bg="blackAlpha.500" />
+				<ModalOverlay bg="panel.scrim" />
 				<ModalContent bg={panelBg}>
 					<ModalHeader>{t("externalApps.settingsTitle")}</ModalHeader>
 					<ModalCloseButton />
@@ -773,7 +769,7 @@ export const ExternalAppsPage = () => {
 				scrollBehavior="inside"
 				closeOnOverlayClick={!installMutation.isLoading}
 			>
-				<ModalOverlay bg="blackAlpha.500" />
+				<ModalOverlay bg="panel.scrim" />
 				<ModalContent
 					bg={panelBg}
 					borderWidth="1px"
@@ -824,7 +820,7 @@ export const ExternalAppsPage = () => {
 										gap={1}
 										mt={2}
 										fontSize="sm"
-										color="blue.300"
+										color="panel.accent"
 									>
 										{t(
 											template === "faoxima"
@@ -847,7 +843,7 @@ export const ExternalAppsPage = () => {
 								/>
 								<FormHelperText>
 									{t("externalApps.certificateHint")}{" "}
-									<Link as={RouterLink} to="/settings#ssl" color="blue.300">
+									<Link as={RouterLink} to="/settings#ssl" color="panel.accent">
 										{t("externalApps.openSSLManager")}
 									</Link>
 								</FormHelperText>
@@ -1048,7 +1044,7 @@ export const ExternalAppsPage = () => {
 							{t("externalApps.install")}
 						</Button>
 						{selectedTemplate?.detail ? (
-							<Text color="orange.300" fontSize="sm" mt={2}>
+							<Text color="panel.warning" fontSize="sm" mt={2}>
 								{selectedTemplate.detail}
 							</Text>
 						) : null}

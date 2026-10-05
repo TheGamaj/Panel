@@ -3,7 +3,6 @@ import {
 	Box,
 	Heading,
 	Text,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -15,10 +14,10 @@ type DocsStatus = "checking" | "enabled" | "disabled";
 export const ApiDocsPage = () => {
 	const { t } = useTranslation();
 	const [status, setStatus] = useState<DocsStatus>("checking");
-	const panelBg = useColorModeValue("white", "gray.950");
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const mutedColor = useColorModeValue("gray.600", "gray.400");
-	const frameBg = useColorModeValue("gray.50", "blackAlpha.300");
+	const panelBg = "panel.surface";
+	const borderColor = "panel.border";
+	const mutedColor = "panel.textSecondary";
+	const frameBg = "panel.elevated";
 
 	useEffect(() => {
 		let cancelled = false;

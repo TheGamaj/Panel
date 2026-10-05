@@ -322,7 +322,7 @@ const InfoIcon = chakra(InformationCircleIcon, {
 	baseStyle: {
 		w: 4,
 		h: 4,
-		color: "gray.400",
+		color:"panel.textMuted",
 		cursor: "pointer",
 	},
 });
@@ -361,7 +361,7 @@ const RotationControls: FC<RotationControlsProps> = ({
 	return (
 		<SimpleGrid columns={{ base: 1, sm: 2 }} spacing={2} mt={2}>
 			<FormControl>
-				<FormLabel fontSize="xs" color="gray.500" mb={1}>
+				<FormLabel fontSize="xs" color="panel.textMuted" mb={1}>
 					{t("hostsDialog.rotationMode")}
 				</FormLabel>
 				<SearchableTagSelect
@@ -379,7 +379,7 @@ const RotationControls: FC<RotationControlsProps> = ({
 				/>
 			</FormControl>
 			<FormControl>
-				<FormLabel fontSize="xs" color="gray.500" mb={1}>
+				<FormLabel fontSize="xs" color="panel.textMuted" mb={1}>
 					{t("hostsDialog.rotationTTLSeconds")}
 				</FormLabel>
 				<NumericInput
@@ -952,8 +952,8 @@ const HostAdvancedSection: FC<{
 						py={3}
 						minH="48px"
 						textAlign="start"
-						_hover={{ bg: "panel.surfaceMuted" }}
-						_expanded={{ bg: "panel.surfaceMuted" }}
+						_hover={{ bg: "panel.elevated" }}
+						_expanded={{ bg: "panel.elevated" }}
 					>
 						<AccordionIcon me={3} flexShrink={0} />
 						<HStack flex="1" minW={0} spacing={2} flexWrap="wrap">
@@ -1002,14 +1002,14 @@ const HostToggle: FC<{
 		borderRadius="lg"
 		px={4}
 		py={3}
-		borderColor={danger && isChecked ? "orange.400" : undefined}
+		borderColor={danger && isChecked ? "panel.warning" : undefined}
 	>
 		<Flex align="center" justify="space-between" gap={4}>
 			<Box minW={0}>
 				<Text fontSize="sm" fontWeight="semibold">
 					{label}
 				</Text>
-				<Text mt={1} fontSize="xs" color="gray.500">
+				<Text mt={1} fontSize="xs" color="panel.textMuted">
 					{description}
 				</Text>
 			</Box>
@@ -1394,7 +1394,7 @@ const HostForm: FC<HostFormProps> = ({
 									/>
 								</Suspense>
 								{finalMaskError && (
-									<Text mt={3} fontSize="sm" color="red.500">
+									<Text mt={3} fontSize="sm" color="panel.danger">
 										{finalMaskError}
 									</Text>
 								)}
@@ -1603,7 +1603,7 @@ const HostDetailModal: FC<HostDetailModalProps> = ({
 			isCentered
 			returnFocusOnClose={false}
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent mx="3" sx={HOST_MODAL_SX}>
 				<ModalCloseButton />
 				<XrayModalHeader
@@ -1641,7 +1641,7 @@ const HostDetailModal: FC<HostDetailModalProps> = ({
 										/>
 									</Suspense>
 									{jsonError && (
-										<Text fontSize="sm" color="red.500">
+										<Text fontSize="sm" color="panel.danger">
 											{jsonError}
 										</Text>
 									)}
@@ -1849,7 +1849,7 @@ const CreateHostModal: FC<CreateHostModalProps> = ({
 			isCentered
 			returnFocusOnClose={false}
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent mx="3" sx={HOST_MODAL_SX}>
 				<XrayModalHeader subtitle={t("hostsPage.create.description")}>
 					{t("hostsPage.create.title")}
@@ -1889,7 +1889,7 @@ const CreateHostModal: FC<CreateHostModalProps> = ({
 										/>
 									</Suspense>
 									{jsonError && (
-										<Text fontSize="sm" color="red.500">
+										<Text fontSize="sm" color="panel.danger">
 											{jsonError}
 										</Text>
 									)}
@@ -2657,7 +2657,7 @@ export const HostsManager: FC = () => {
 					<Text
 						fontSize="sm"
 						fontWeight="semibold"
-						color={host.data.is_disabled ? "red.400" : "green.400"}
+						color={host.data.is_disabled ? "panel.danger" : "panel.success"}
 					>
 						{t(
 							host.data.is_disabled ? "hostsPage.inactive" : "hostsPage.active",
@@ -2805,7 +2805,7 @@ export const HostsManager: FC = () => {
 					>
 						<MenuItem
 							icon={<TrashIcon width={16} />}
-							color="red.400"
+							color="panel.danger"
 							isDisabled={isPostLoading}
 							onClick={(event) => event.stopPropagation()}
 						>

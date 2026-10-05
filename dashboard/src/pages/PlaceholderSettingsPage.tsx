@@ -21,7 +21,6 @@ import {
 	TabPanels,
 	Tabs,
 	Text,
-	useColorModeValue,
 	useToast,
 	Wrap,
 	WrapItem,
@@ -45,9 +44,9 @@ const keyFor = (
 const PlaceholderSettingsPage = () => {
 	const { t } = useTranslation();
 	const toast = useToast();
-	const panelBg = useColorModeValue("whiteAlpha.800", "whiteAlpha.50");
-	const subtleBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50");
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
+	const panelBg = "panel.surface";
+	const subtleBg = "panel.inset";
+	const borderColor = "panel.border";
 	const query = useQuery(
 		"subscription-placeholder-settings",
 		getSubscriptionPlaceholderSettings,
@@ -257,7 +256,7 @@ const PlaceholderSettingsPage = () => {
 											<PlaceholderField
 												label={t("placeholders.expired")}
 												hint={t("placeholders.expiredHint")}
-												color="orange.400"
+												color="panel.warning"
 												value={draft.expired_remark}
 												isDisabled={draft.inherited}
 												onChange={(value) =>
@@ -267,7 +266,7 @@ const PlaceholderSettingsPage = () => {
 											<PlaceholderField
 												label={t("placeholders.limited")}
 												hint={t("placeholders.limitedHint")}
-												color="red.400"
+												color="panel.danger"
 												value={draft.limited_remark}
 												isDisabled={draft.inherited}
 												onChange={(value) =>
@@ -277,7 +276,7 @@ const PlaceholderSettingsPage = () => {
 											<PlaceholderField
 												label={t("placeholders.disabled")}
 												hint={t("placeholders.disabledHint")}
-												color="gray.400"
+												color="panel.textMuted"
 												value={draft.disabled_remark}
 												isDisabled={draft.inherited}
 												onChange={(value) =>

@@ -60,16 +60,16 @@ export const AnimatedSubmitButton: FC<AnimatedSubmitButtonProps> = ({
 	const targetWidth = status === "success" ? successWidth : isCompact ? compactWidth : "100%";
 	const buttonBg =
 		status === "success"
-			? "green.500"
+			? "panel.success"
 			: status === "error"
-				? "red.500"
-				: "primary.500";
+				? "panel.danger"
+				: "panel.accent";
 	const buttonHoverBg =
 		status === "success"
-			? "green.500"
+			? "panel.success"
 			: status === "error"
-				? "red.500"
-				: "primary.600";
+				? "panel.danger"
+				: "panel.accentHover";
 
 	const content = (() => {
 		if (status === "loading") {
@@ -77,7 +77,7 @@ export const AnimatedSubmitButton: FC<AnimatedSubmitButtonProps> = ({
 				<Box
 					aria-hidden
 					border="2px solid"
-					borderColor="whiteAlpha.600"
+					borderColor="panel.borderStrong"
 					borderTopColor="white"
 					className="animate-spin"
 					h="20px"

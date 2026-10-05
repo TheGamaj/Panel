@@ -62,7 +62,7 @@ export const HostsPage: FC = () => {
 		return (
 			<VStack spacing={4} align="stretch">
 				<PageHeader title={t("header.hostSettings")} />
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("hostsPage.noPermission")}
 				</Text>
 			</VStack>

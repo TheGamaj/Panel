@@ -4,7 +4,6 @@ import {
 	HStack,
 	Text,
 	Tooltip,
-	useColorModeValue,
 	VStack,
 } from "@chakra-ui/react";
 import {
@@ -125,22 +124,15 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 	const sectionAccess = userData.permissions?.sections;
 	const isFullAccess = userData.role === AdminRole.FullAccess;
 	const isPrivilegedAdmin = isFullAccess || userData.role === AdminRole.Sudo;
-	const sidebarBg = useColorModeValue("panel.sidebar", "panel.sidebar");
-	const sidebarBorderColor = useColorModeValue("panel.border", "panel.border");
-	const sidebarPanelBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const sidebarPanelBorder = useColorModeValue("panel.border", "panel.border");
-	const sidebarShadow = useColorModeValue(
-		"0 18px 48px rgba(15, 23, 42, 0.10)",
-		"0 18px 48px rgba(0, 0, 0, 0.32)",
-	);
-	const itemColor = useColorModeValue(
-		"panel.textSecondary",
-		"panel.textSecondary",
-	);
-	const activeItemBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const activeItemColor = useColorModeValue("panel.text", "panel.text");
-	const hoverItemBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const subNavBorder = useColorModeValue("panel.border", "panel.border");
+	const sidebarBg = "panel.sidebar";
+	const sidebarBorderColor = "panel.border";
+	const sidebarPanelBg = "panel.elevated";
+	const sidebarPanelBorder = "panel.border";
+	const itemColor = "panel.textSecondary";
+	const activeItemBg = "panel.elevated";
+	const activeItemColor = "panel.text";
+	const hoverItemBg = "panel.elevated";
+	const subNavBorder = "panel.border";
 	const defaultSelfPermissions = {
 		self_myaccount: false,
 		self_change_password: false,
@@ -450,7 +442,6 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 			borderWidth={inDrawer ? undefined : "1px"}
 			borderColor={inDrawer ? undefined : sidebarBorderColor}
 			borderRadius={inDrawer ? undefined : "2xl"}
-			boxShadow={inDrawer ? undefined : sidebarShadow}
 			transition="width 0.3s ease"
 			position={inDrawer ? "relative" : "fixed"}
 			top={inDrawer ? undefined : "12px"}

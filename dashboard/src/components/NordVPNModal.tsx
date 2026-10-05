@@ -409,7 +409,7 @@ export const NordVPNModal: FC<Props> = ({
 						{loading && (
 							<HStack>
 								<Spinner size="sm" />
-								<Text fontSize="sm" color="gray.500">
+								<Text fontSize="sm" color="panel.textMuted">
 									{t("loading")}
 								</Text>
 							</HStack>

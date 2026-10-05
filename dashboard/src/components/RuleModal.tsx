@@ -285,7 +285,7 @@ export const RuleModal: FC<RuleModalProps> = ({
 			size="3xl"
 			scrollBehavior="inside"
 		>
-			<ModalOverlay bg="blackAlpha.400" />
+			<ModalOverlay bg="panel.scrim" />
 			<XrayModalContent as="form" onSubmit={handleSave}>
 				<XrayModalHeader>{title}</XrayModalHeader>
 				<ModalCloseButton />
@@ -604,7 +604,7 @@ export const RuleModal: FC<RuleModalProps> = ({
 							</FormControl>
 							<Stack spacing={2} mt={3}>
 								{fields.length === 0 && (
-									<Text fontSize="sm" color="gray.500">
+									<Text fontSize="sm" color="panel.textMuted">
 										{t("pages.xray.rules.attrsHelper")}
 									</Text>
 								)}

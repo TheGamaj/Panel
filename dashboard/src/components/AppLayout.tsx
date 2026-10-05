@@ -21,7 +21,6 @@ import {
 	Portal,
 	Text,
 	useBreakpointValue,
-	useColorModeValue,
 	useDisclosure,
 	VStack,
 } from "@chakra-ui/react";
@@ -211,26 +210,17 @@ export function AppLayout() {
 			md: isRTL ? "left-start" : "right-start",
 		}) ?? "bottom-start";
 
-	const menuBg = useColorModeValue("panel.surface", "panel.surface");
-	const menuBorder = useColorModeValue("panel.border", "panel.border");
-	const menuHover = useColorModeValue("panel.elevated", "panel.elevated");
-	const textColor = useColorModeValue("panel.text", "panel.text");
-	const secondaryTextColor = useColorModeValue(
-		"panel.textSecondary",
-		"panel.textSecondary",
-	);
-	const activePillBg = useColorModeValue(
-		"rgba(255, 255, 255, 0.18)",
-		"rgba(255, 255, 255, 0.08)",
-	);
-	const shellBorder = useColorModeValue("panel.border", "panel.border");
-	const shellHeaderBg = useColorModeValue("panel.surface", "panel.surface");
-	const shellMainBg = useColorModeValue("panel.main", "panel.main");
-	const headerButtonBg = useColorModeValue("panel.elevated", "panel.elevated");
-	const headerButtonHoverBg = useColorModeValue(
-		"panel.borderStrong",
-		"panel.borderStrong",
-	);
+	const menuBg = "panel.surface";
+	const menuBorder = "panel.border";
+	const menuHover = "panel.elevated";
+	const textColor = "panel.text";
+	const secondaryTextColor = "panel.textSecondary";
+	const activePillBg = "panel.rowSelected";
+	const shellBorder = "panel.border";
+	const shellHeaderBg = "panel.surface";
+	const shellMainBg = "panel.main";
+	const headerButtonBg = "panel.elevated";
+	const headerButtonHoverBg = "panel.borderStrong";
 
 	useEffect(() => {
 		const syncHash = () => setActiveLocationHash(window.location.hash);
@@ -1177,7 +1167,7 @@ export function AppLayout() {
 										<MenuItem
 											className="gm-logout-menu-item"
 											icon={<LogoutIcon />}
-											color="red.500"
+											color="panel.danger"
 											bg="transparent"
 											_hover={{ bg: menuHover }}
 											_active={{ bg: "transparent" }}
@@ -1271,8 +1261,8 @@ export function AppLayout() {
 										w="8"
 										h="8"
 										borderRadius="full"
-										bg="whiteAlpha.600"
-										_dark={{ bg: "whiteAlpha.300" }}
+										bg="panel.elevated"
+										_dark={{ bg:"panel.inset" }}
 										display="flex"
 										alignItems="center"
 										justifyContent="center"
@@ -1285,8 +1275,8 @@ export function AppLayout() {
 										</Text>
 										<Text
 											fontSize="xs"
-											color="gray.600"
-											_dark={{ color: "gray.300" }}
+											color="panel.textSecondary"
+											_dark={{ color:"panel.textSecondary" }}
 										>
 											{t("pwa.ios.body")}
 										</Text>
@@ -1486,9 +1476,9 @@ export function AppLayout() {
 															onContextMenu={(event) => {
 																if (isMobile) event.preventDefault();
 															}}
-															color={isActive ? "primary.500" : "gray.600"}
+															color={isActive ? "panel.text" : "panel.textMuted"}
 															_dark={{
-																color: isActive ? "primary.300" : "gray.300",
+																color:isActive ? "panel.textMuted" : "panel.textSecondary",
 															}}
 															flex="1"
 															minW="0"
@@ -1614,9 +1604,9 @@ export function AppLayout() {
 															onContextMenu={(event) => {
 																if (isMobile) event.preventDefault();
 															}}
-															color={isActive ? "primary.500" : "gray.600"}
+															color={isActive ? "panel.text" : "panel.textMuted"}
 															_dark={{
-																color: isActive ? "primary.300" : "gray.300",
+																color:isActive ? "panel.textMuted" : "panel.textSecondary",
 															}}
 															flex="1"
 															minW="0"
@@ -1653,7 +1643,7 @@ export function AppLayout() {
 																	w="full"
 																	justifyContent="flex-start"
 																	leftIcon={<LogoutIcon />}
-																	color="red.500"
+																	color="panel.danger"
 																	_hover={{ bg: menuHover }}
 																	_active={{ bg: menuHover }}
 																	_focus={{ bg: "transparent" }}
@@ -1690,8 +1680,8 @@ export function AppLayout() {
 														handleNavClick(item.to);
 													}
 												}}
-												color={isActive ? "primary.500" : "gray.600"}
-												_dark={{ color: isActive ? "primary.300" : "gray.300" }}
+												color={isActive ? "panel.text" : "panel.textMuted"}
+												_dark={{ color: isActive ? "panel.textMuted" : "panel.textSecondary" }}
 												flex="1"
 												minW="0"
 												minH="48px"

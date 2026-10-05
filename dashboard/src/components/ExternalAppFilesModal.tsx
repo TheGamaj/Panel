@@ -14,7 +14,6 @@ import {
 	Spinner,
 	Text,
 	useColorMode,
-	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
 import {
@@ -127,7 +126,7 @@ export const ExternalAppFilesModal = ({
 }: Props) => {
 	const { t, i18n } = useTranslation();
 	const { colorMode } = useColorMode();
-	const modalBg = useColorModeValue("white", "gray.900");
+	const modalBg = "panel.surface";
 	const toast = useToast();
 	const [folder, setFolder] = useState("/");
 	const [document, setDocument] = useState<EditorDocument | null>(null);
@@ -436,7 +435,7 @@ export const ExternalAppFilesModal = ({
 											)
 										}
 										permissions={{ copy: false }}
-										primaryColor="#4299e1"
+										primaryColor="var(--gm-panel-accent)"
 									/>
 								</Box>
 							</Box>
@@ -504,7 +503,7 @@ export const ExternalAppFilesModal = ({
 										align="center"
 										justify="center"
 										zIndex={1}
-										bg="blackAlpha.400"
+										bg="panel.scrim"
 									>
 										<Spinner />
 									</Flex>

@@ -124,8 +124,8 @@ export const CoreVersionDialog = ({
 						{description && (
 							<Text
 								fontSize="sm"
-								color="gray.600"
-								_dark={{ color: "gray.300" }}
+								color="panel.textSecondary"
+								_dark={{ color:"panel.textSecondary" }}
 							>
 								{description}
 							</Text>
@@ -158,15 +158,15 @@ export const CoreVersionDialog = ({
 									<Spinner size="sm" />
 									<Text
 										fontSize="xs"
-										color="gray.500"
-										_dark={{ color: "gray.400" }}
+										color="panel.textMuted"
+										_dark={{ color:"panel.textMuted" }}
 									>
 										{t("nodes.coreVersionDialog.fetchingFromGithub")}
 									</Text>
 								</Stack>
 							)}
 							{releasesQuery.isError && (
-								<Text fontSize="xs" color="red.500" mt={1}>
+								<Text fontSize="xs" color="panel.danger" mt={1}>
 									{t("nodes.coreVersionDialog.failedToLoadReleases")}
 								</Text>
 							)}
@@ -185,8 +185,8 @@ export const CoreVersionDialog = ({
 							/>
 							<Text
 								fontSize="xs"
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 								mt={1}
 							>
 								{t("nodes.coreVersionDialog.customVersionHelper")}

@@ -10,7 +10,6 @@ import {
 	chakra,
 	Flex,
 	Text,
-	useColorModeValue,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
@@ -55,14 +54,17 @@ export const ConfirmDialog = ({
 }: ConfirmDialogProps) => {
 	const { t } = useTranslation();
 	const cancelRef = useRef<HTMLButtonElement | null>(null);
-	const dialogBg = useColorModeValue("surface.light", "surface.dark");
-	const dialogBorder = useColorModeValue("light-border", "gray.700");
-	const mutedText = useColorModeValue("gray.600", "gray.300");
-	const iconBg = useColorModeValue(`${colorScheme}.50`, `${colorScheme}.900`);
-	const iconColor = useColorModeValue(
-		`${colorScheme}.600`,
-		`${colorScheme}.300`,
-	);
+	const dialogBg = "panel.surface";
+	const dialogBorder = "panel.border";
+	const mutedText = "panel.textSecondary";
+	// The old code built the icon colours by interpolating `colorScheme` into a
+	// Chakra token path (`${colorScheme}.50`), which meant the danger dialog
+	// reached for red.50 while every other one reached for primary.50. The
+	// identity allows one status hue, so a destructive confirm says so with a
+	// role instead of a token name.
+	const isDestructive = colorScheme === "red" || colorScheme === "danger";
+	const iconBg = isDestructive ? "panel.dangerSubtle" : "panel.inset";
+	const iconColor = isDestructive ? "panel.danger" : "panel.textSecondary";
 
 	return (
 		<AlertDialog
@@ -71,7 +73,7 @@ export const ConfirmDialog = ({
 			onClose={onClose}
 			isCentered
 		>
-			<AlertDialogOverlay bg="blackAlpha.500">
+			<AlertDialogOverlay bg="panel.scrim">
 				<AlertDialogContent
 					className="gm-confirm-dialog-content"
 					bg={dialogBg}

@@ -75,7 +75,7 @@ const buildDailyUsageOptions = (
 	colorMode: string,
 	categories: string[],
 ): ApexOptions => {
-	const axisColor = colorMode === "dark" ? "#d8dee9" : "#1a202c";
+	const axisColor = colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)";
 	return {
 		chart: {
 			type: "area" as const,
@@ -93,7 +93,7 @@ const buildDailyUsageOptions = (
 				stops: [0, 80, 100],
 			},
 		},
-		grid: { borderColor: colorMode === "dark" ? "#2D3748" : "#E2E8F0" },
+		grid: { borderColor: colorMode === "dark" ? "var(--gamaj-gray-700)" : "var(--gamaj-gray-200)" },
 		xaxis: {
 			categories,
 			labels: { style: { colors: categories.map(() => axisColor) } },
@@ -112,7 +112,7 @@ const buildDailyUsageOptions = (
 			fillSeriesColor: false,
 			y: { formatter: (value: number) => formatBytes(Number(value) || 0, 2) },
 		},
-		colors: [colorMode === "dark" ? "#63B3ED" : "#3182CE"],
+		colors: [colorMode === "dark" ? "var(--gm-panel-accent-hover)" : "var(--gm-panel-accent)"],
 	};
 };
 
@@ -123,7 +123,7 @@ const buildServiceDonutOptions = (
 	labels,
 	legend: {
 		position: "bottom" as const,
-		labels: { colors: colorMode === "dark" ? "#d8dee9" : "#1a202c" },
+		labels: { colors: colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)" },
 	},
 	tooltip: {
 		y: {
@@ -137,16 +137,16 @@ const buildServiceDonutOptions = (
 		},
 	},
 	colors: [
-		"#3182CE",
-		"#63B3ED",
-		"#ED8936",
-		"#38A169",
-		"#9F7AEA",
-		"#F6AD55",
-		"#4299E1",
-		"#E53E3E",
-		"#D53F8C",
-		"#805AD5",
+		"var(--gm-panel-accent)",
+		"var(--gm-panel-accent-hover)",
+		"var(--gm-warning)",
+		"var(--gm-success)",
+		"var(--gm-panel-accent)",
+		"var(--gm-warning)",
+		"var(--gm-panel-accent)",
+		"var(--gm-danger)",
+		"var(--gm-panel-accent)",
+		"var(--gm-panel-accent)",
 	],
 });
 
@@ -499,8 +499,8 @@ const AdminsUsage: FC = () => {
 						/>
 						<HStack
 							fontSize="sm"
-							color="gray.500"
-							_dark={{ color: "gray.400" }}
+							color="panel.textMuted"
+							_dark={{ color:"panel.textMuted" }}
 						>
 							<InfoIcon />
 							<Text>
@@ -515,8 +515,8 @@ const AdminsUsage: FC = () => {
 			>
 				<Text
 					fontSize="sm"
-					color="gray.500"
-					_dark={{ color: "gray.400" }}
+					color="panel.textMuted"
+					_dark={{ color:"panel.textMuted" }}
 					mb={4}
 				>
 					{t("admins.serviceUsageHint")}
@@ -533,8 +533,8 @@ const AdminsUsage: FC = () => {
 								<Spinner />
 								<Text
 									fontSize="sm"
-									color="gray.500"
-									_dark={{ color: "gray.400" }}
+									color="panel.textMuted"
+									_dark={{ color:"panel.textMuted" }}
 								>
 									{t("loading")}
 								</Text>
@@ -549,8 +549,8 @@ const AdminsUsage: FC = () => {
 						) : (
 							<Text
 								textAlign="center"
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 							>
 								{t("noData")}
 							</Text>
@@ -581,8 +581,8 @@ const AdminsUsage: FC = () => {
 											<Text>{username}</Text>
 											<Text
 												fontSize="sm"
-												color="gray.500"
-												_dark={{ color: "gray.300" }}
+												color="panel.textMuted"
+												_dark={{ color:"panel.textSecondary" }}
 											>
 												{formatBytes(item.used_traffic || 0, 2)}
 											</Text>
@@ -591,7 +591,7 @@ const AdminsUsage: FC = () => {
 								);
 							})
 						) : (
-							<Text color="gray.500" _dark={{ color: "gray.400" }}>
+							<Text color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 								{t("noData")}
 							</Text>
 						)}
@@ -614,8 +614,8 @@ const AdminsUsage: FC = () => {
 							}
 						>
 							<InfoIcon
-								color="gray.500"
-								_dark={{ color: "gray.400" }}
+								color="panel.textMuted"
+								_dark={{ color:"panel.textMuted" }}
 								aria-label="info"
 								cursor="help"
 							/>
@@ -655,7 +655,7 @@ const AdminsUsage: FC = () => {
 				}
 			>
 				<VStack align="start" spacing={1} mb={4}>
-					<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+					<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 						{t("admins.selectedAdmin")}:{" "}
 						<chakra.span fontWeight="medium">
 							{selectedAdmin ?? "-"}
@@ -672,7 +672,7 @@ const AdminsUsage: FC = () => {
 				{loading ? (
 					<VStack spacing={3}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+						<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -686,8 +686,8 @@ const AdminsUsage: FC = () => {
 				) : (
 					<Text
 						textAlign="center"
-						color="gray.500"
-						_dark={{ color: "gray.400" }}
+						color="panel.textMuted"
+						_dark={{ color:"panel.textMuted" }}
 					>
 						{t("noData")}
 					</Text>

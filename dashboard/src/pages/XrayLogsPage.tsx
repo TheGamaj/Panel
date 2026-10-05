@@ -6,7 +6,6 @@ import {
 	Stack,
 	Tag,
 	Text,
-	useColorMode,
 	VStack,
 } from "@chakra-ui/react";
 import {
@@ -55,7 +54,7 @@ const CompactLogSelect = (props: SelectProps) => (
 		h="36px"
 		borderRadius="4px"
 		borderColor="panel.border"
-		bg="panel.input"
+		bg="panel.inset"
 		color="panel.text"
 		_focusVisible={{
 			borderColor: "panel.accent",
@@ -84,7 +83,6 @@ export const XrayLogsPage: FC<XrayLogsPageProps> = ({ showTitle = true }) => {
 	const logsDiv = useRef<HTMLDivElement | null>(null);
 	const [autoScroll, setAutoScroll] = useState(true);
 	const autoScrollRef = useRef(true);
-	const { colorMode } = useColorMode();
 
 	// Fetch inbounds list
 	useEffect(() => {
@@ -199,41 +197,41 @@ export const XrayLogsPage: FC<XrayLogsPageProps> = ({ showTitle = true }) => {
 		};
 	}, []);
 
-	const logPalette = useMemo(() => {
-		const isDark = colorMode === "dark";
-		return {
-			error: {
-				bg: isDark ? "rgba(239, 68, 68, 0.2)" : "rgba(254, 226, 226, 0.8)",
-				color: isDark ? "#fca5a5" : "#dc2626",
-				border: isDark ? "#ef4444" : "#dc2626",
-			},
-			warn: {
-				bg: isDark ? "rgba(234, 179, 8, 0.2)" : "rgba(254, 243, 199, 0.8)",
-				color: isDark ? "#fde047" : "#ca8a04",
-				border: isDark ? "#eab308" : "#facc15",
-			},
-			success: {
-				bg: isDark ? "rgba(34, 197, 94, 0.2)" : "rgba(209, 250, 229, 0.8)",
-				color: isDark ? "#86efac" : "#16a34a",
-				border: isDark ? "#22c55e" : "#22c55e",
-			},
-			info: {
-				bg: isDark ? "rgba(59, 130, 246, 0.2)" : "rgba(219, 234, 254, 0.85)",
-				color: isDark ? "#93c5fd" : "#2563eb",
-				border: isDark ? "#3b82f6" : "#3b82f6",
-			},
-			debug: {
-				bg: isDark ? "rgba(148, 163, 184, 0.16)" : "rgba(241, 245, 249, 0.8)",
-				color: isDark ? "#cbd5e1" : "#475569",
-				border: isDark ? "#94a3b8" : "#94a3b8",
-			},
-			default: {
-				bg: isDark ? "rgba(51, 65, 85, 0.1)" : "rgba(248, 250, 252, 0.8)",
-				color: isDark ? "#e2e8f0" : "#64748b",
-				border: isDark ? "#475569" : "#cbd5e1",
-			},
-		};
-	}, [colorMode]);
+	// One wash per level, taken from the palette rather than written per mode:
+	// the Gamaj washes are already mixed, so the same value reads correctly on
+	// the black canvas and on the white one.
+	const logPalette = {
+		error: {
+			bg: "var(--gm-danger-wash)",
+			color: "var(--gm-danger)",
+			border: "var(--gm-danger)",
+		},
+		warn: {
+			bg: "var(--gm-warning-wash)",
+			color: "var(--gm-warning)",
+			border: "var(--gm-warning)",
+		},
+		success: {
+			bg: "var(--gm-success-wash)",
+			color: "var(--gm-success)",
+			border: "var(--gm-success)",
+		},
+		info: {
+			bg: "var(--gm-accent-wash)",
+			color: "var(--gm-panel-accent)",
+			border: "var(--gm-panel-accent)",
+		},
+		debug: {
+			bg: "var(--gm-neutral-wash)",
+			color: "var(--gm-panel-text-secondary)",
+			border: "var(--gm-panel-border-strong)",
+		},
+		default: {
+			bg: "var(--gm-neutral-wash)",
+			color: "var(--gm-panel-text-muted)",
+			border: "var(--gm-panel-border)",
+		},
+	};
 
 	const badgeColor = "panel.textMuted";
 	const socketColorScheme =
@@ -333,7 +331,7 @@ export const XrayLogsPage: FC<XrayLogsPageProps> = ({ showTitle = true }) => {
 						{t("xrayLogs.title")}
 					</Text>
 				)}
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("xrayLogs.noPermission")}
 				</Text>
 			</VStack>
@@ -418,12 +416,12 @@ export const XrayLogsPage: FC<XrayLogsPageProps> = ({ showTitle = true }) => {
 						containerProps={{
 							maxW: { base: "full", md: "420px" },
 							flex: { base: "1 1 100%", md: "1 1 280px" },
-							bg: "panel.input",
+							bg: "panel.inset",
 						}}
 							h="36px"
 							borderRadius="4px"
 							borderColor="panel.border"
-							bg="panel.input"
+							bg="panel.inset"
 							placeholder={t("xrayLogs.searchPlaceholder")}
 							value={searchFilter}
 							onChange={(e) => setSearchFilter(e.target.value)}
@@ -483,12 +481,12 @@ export const XrayLogsPage: FC<XrayLogsPageProps> = ({ showTitle = true }) => {
 												return (
 													<chakra.span
 														key={partKey}
-														bg="yellow.300"
+														bg="panel.inset"
 														color="black"
 														px={1}
 														borderRadius="sm"
 														fontWeight="semibold"
-														_dark={{ bg: "yellow.500", color: "black" }}
+														
 													>
 														{part}
 													</chakra.span>

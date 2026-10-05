@@ -178,22 +178,22 @@ const actionOperationVisual = (
 	actionType: string,
 ) => {
 	if (nodeRuntimeActionTypes.has(actionType))
-		return { color: "blue.400", icon: <ArrowPathIcon width={18} /> };
+		return { color:"panel.accent", icon: <ArrowPathIcon width={18} /> };
 	switch (operation) {
 		case "created":
-			return { color: "green.400", icon: <PlusCircleIcon width={18} /> };
+			return { color:"panel.success", icon: <PlusCircleIcon width={18} /> };
 		case "deleted":
-			return { color: "red.400", icon: <TrashIcon width={18} /> };
+			return { color:"panel.danger", icon: <TrashIcon width={18} /> };
 		case "disabled":
-			return { color: "orange.400", icon: <NoSymbolIcon width={18} /> };
+			return { color:"panel.warning", icon: <NoSymbolIcon width={18} /> };
 		case "enabled":
-			return { color: "green.400", icon: <CheckCircleIcon width={18} /> };
+			return { color:"panel.success", icon: <CheckCircleIcon width={18} /> };
 		case "reset":
-			return { color: "orange.400", icon: <ArrowPathIcon width={18} /> };
+			return { color:"panel.warning", icon: <ArrowPathIcon width={18} /> };
 		case "regenerated":
-			return { color: "blue.400", icon: <KeyIcon width={18} /> };
+			return { color:"panel.accent", icon: <KeyIcon width={18} /> };
 		default:
-			return { color: "blue.400", icon: <PencilSquareIcon width={18} /> };
+			return { color:"panel.accent", icon: <PencilSquareIcon width={18} /> };
 	}
 };
 
@@ -458,11 +458,11 @@ const ActionPreview: FC<{ preview?: RecentActionPreview }> = ({ preview }) => {
 				</Text>
 			)}
 			<HStack spacing={1.5} minW={0} maxW="full">
-				<Text color="red.300" textDecoration="line-through" noOfLines={1}>
+				<Text color="panel.danger" textDecoration="line-through" noOfLines={1}>
 					{preview.before}
 				</Text>
 				<Text color="panel.textMuted">→</Text>
-				<Text color="green.300" noOfLines={1}>
+				<Text color="panel.success" noOfLines={1}>
 					{preview.after}
 				</Text>
 				{preview.delta && (
@@ -811,11 +811,11 @@ export const RecentActionsPage: FC = () => {
 												? t(labelKey)
 												: change.field.replaceAll("_", " ")}
 										</Text>
-										<Text color="red.300" textDecoration="line-through">
+										<Text color="panel.danger" textDecoration="line-through">
 											{change.before}
 										</Text>
 										<Text color="panel.textMuted">→</Text>
-										<Text color="green.300">{change.after}</Text>
+										<Text color="panel.success">{change.after}</Text>
 										{change.delta && (
 											<Text color="panel.textMuted">({change.delta})</Text>
 										)}

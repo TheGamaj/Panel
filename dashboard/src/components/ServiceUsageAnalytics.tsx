@@ -76,7 +76,7 @@ const buildAreaChartOptions = (
 	categories: string[],
 	label: string,
 ): ApexOptions => {
-	const axisColor = colorMode === "dark" ? "#d8dee9" : "#1a202c";
+	const axisColor = colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)";
 	return {
 		chart: {
 			type: "area" as const,
@@ -94,7 +94,7 @@ const buildAreaChartOptions = (
 				stops: [0, 80, 100],
 			},
 		},
-		grid: { borderColor: colorMode === "dark" ? "#2D3748" : "#E2E8F0" },
+		grid: { borderColor: colorMode === "dark" ? "var(--gamaj-gray-700)" : "var(--gamaj-gray-200)" },
 		xaxis: {
 			categories,
 			labels: { style: { colors: categories.map(() => axisColor) }, rotate: 0 },
@@ -114,7 +114,7 @@ const buildAreaChartOptions = (
 			fillSeriesColor: false,
 			y: { formatter: (value: number) => formatBytes(Number(value) || 0, 2) },
 		},
-		colors: [colorMode === "dark" ? "#63B3ED" : "#3182CE"],
+		colors: [colorMode === "dark" ? "var(--gm-panel-accent-hover)" : "var(--gm-panel-accent)"],
 	};
 };
 
@@ -125,7 +125,7 @@ const buildDonutOptions = (
 	labels,
 	legend: {
 		position: "bottom" as const,
-		labels: { colors: colorMode === "dark" ? "#d8dee9" : "#1a202c" },
+		labels: { colors: colorMode === "dark" ? "var(--gamaj-gray-300)" : "var(--gamaj-gray-800)" },
 	},
 	tooltip: {
 		y: {
@@ -139,16 +139,16 @@ const buildDonutOptions = (
 		},
 	},
 	colors: [
-		"#3182CE",
-		"#63B3ED",
-		"#ED8936",
-		"#38A169",
-		"#9F7AEA",
-		"#F6AD55",
-		"#4299E1",
-		"#E53E3E",
-		"#D53F8C",
-		"#805AD5",
+		"var(--gm-panel-accent)",
+		"var(--gm-panel-accent-hover)",
+		"var(--gm-warning)",
+		"var(--gm-success)",
+		"var(--gm-panel-accent)",
+		"var(--gm-warning)",
+		"var(--gm-panel-accent)",
+		"var(--gm-danger)",
+		"var(--gm-panel-accent)",
+		"var(--gm-panel-accent)",
 	],
 });
 
@@ -568,7 +568,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 					{t("services.usageAnalyticsTitle")}
 				</Text>
 				<Box borderWidth="1px" borderRadius="md" p={6}>
-					<Text color="gray.500">
+					<Text color="panel.textMuted">
 						{t("services.noServicesAvailable")}
 					</Text>
 				</Box>
@@ -616,7 +616,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 						spacing={3}
 						align={{ base: "stretch", lg: "center" }}
 					>
-						<HStack fontSize="sm" color="gray.500">
+						<HStack fontSize="sm" color="panel.textMuted">
 							<InfoIcon />
 							<Text>
 								{t("usage.selectedRangeTotal")}{" "}
@@ -643,7 +643,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 				{loadingTimeseries ? (
 					<VStack spacing={3} py={10}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500">
+						<Text fontSize="sm" color="panel.textMuted">
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -655,7 +655,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 						series={areaSeries}
 					/>
 				) : (
-					<Text textAlign="center" color="gray.500">
+					<Text textAlign="center" color="panel.textMuted">
 						{t("noData")}
 					</Text>
 				)}
@@ -672,7 +672,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 							<Text fontWeight="semibold">
 								{t("services.adminUsageTrend")}
 							</Text>
-							<InfoIcon color="gray.500" aria-label="info" cursor="help" />
+							<InfoIcon color="panel.textMuted" aria-label="info" cursor="help" />
 						</HStack>
 					</Tooltip>
 				}
@@ -715,7 +715,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 				}
 			>
 				<VStack align="start" spacing={1} mb={4}>
-					<Text fontSize="sm" color="gray.500">
+					<Text fontSize="sm" color="panel.textMuted">
 						{t("admins.admin")}:{" "}
 						<chakra.span fontWeight="medium">
 							{adminDisplayLabel || adminTimeseriesUsername || "-"}
@@ -729,7 +729,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 				{loadingAdminTimeseries ? (
 					<VStack spacing={3} py={10}>
 						<Spinner />
-						<Text fontSize="sm" color="gray.500">
+						<Text fontSize="sm" color="panel.textMuted">
 							{t("loading")}
 						</Text>
 					</VStack>
@@ -741,7 +741,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 						series={adminTimeseriesSeries}
 					/>
 				) : (
-					<Text textAlign="center" color="gray.500">
+					<Text textAlign="center" color="panel.textMuted">
 						{t("noData")}
 					</Text>
 				)}
@@ -755,7 +755,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 						spacing={3}
 						align={{ base: "stretch", lg: "center" }}
 					>
-						<HStack fontSize="sm" color="gray.500">
+						<HStack fontSize="sm" color="panel.textMuted">
 							<InfoIcon />
 							<Text>
 								{t("usage.selectedRangeTotal")}{" "}
@@ -782,7 +782,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 						{loadingAdmins ? (
 							<VStack spacing={3} py={8}>
 								<Spinner />
-								<Text fontSize="sm" color="gray.500">
+								<Text fontSize="sm" color="panel.textMuted">
 									{t("loading")}
 								</Text>
 							</VStack>
@@ -794,7 +794,7 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 								series={donutSeries}
 							/>
 						) : (
-							<Text textAlign="center" color="gray.500">
+							<Text textAlign="center" color="panel.textMuted">
 								{t("noData")}
 							</Text>
 						)}
@@ -814,13 +814,13 @@ export const ServiceUsageAnalytics: FC<ServiceUsageAnalyticsProps> = ({
 										{item.username ||
 											t("services.unassignedAdmin")}
 									</Text>
-									<Text fontSize="sm" color="gray.500">
+									<Text fontSize="sm" color="panel.textMuted">
 										{formatBytes(item.used_traffic || 0, 2)}
 									</Text>
 								</HStack>
 							))
 						) : (
-							<Text color="gray.500">{t("noData")}</Text>
+							<Text color="panel.textMuted">{t("noData")}</Text>
 						)}
 					</VStack>
 				</Stack>

@@ -83,7 +83,7 @@ const parseSessionClient = (userAgent = ""): SessionClient => {
 	let os: AgentDetail = {
 		name: "Unknown OS",
 		icon: FiMonitor,
-		color: "gray.400",
+		color:"panel.textMuted",
 	};
 	if (/windows/i.test(ua)) {
 		os = { name: "Windows", icon: FaWindows, color: "#0078D4" };
@@ -112,7 +112,7 @@ const parseSessionClient = (userAgent = ""): SessionClient => {
 	let browser: AgentDetail = {
 		name: "Unknown browser",
 		icon: FiGlobe,
-		color: "gray.400",
+		color:"panel.textMuted",
 	};
 	if (/Edg(?:A|iOS)?\//i.test(ua) || /\bEdge\b/i.test(ua)) {
 		browser = {
@@ -328,7 +328,7 @@ export const AccountSecurity = ({
 										flexShrink={0}
 										borderRadius="4px"
 										bg="panel.elevated"
-										color={totpEnabled ? "green.400" : "panel.textMuted"}
+										color={totpEnabled ? "panel.success" : "panel.textMuted"}
 										aria-hidden="true"
 									>
 										<ShieldCheckIcon width={18} />
@@ -479,7 +479,7 @@ export const AccountSecurity = ({
 							);
 						})}
 						{!sessions.isLoading && !sessions.data?.length && (
-							<Text color="gray.500">{t("noData")}</Text>
+							<Text color="panel.textMuted">{t("noData")}</Text>
 						)}
 					</Stack>
 				</ChartBox>

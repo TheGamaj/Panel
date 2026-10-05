@@ -81,9 +81,9 @@
 .external-app-files--dark .toggle-view,
 .external-app-files--dark .files.list .files-header,
 .external-app-files--dark .fm-modal {
-	background: #1a202c;
-	border-color: #4a5568;
-	color: #edf2f7;
+	background: var(--gamaj-gray-800);
+	border-color: var(--gamaj-gray-500);
+	color: var(--gamaj-gray-100);
 }
 
 .external-app-files--dark .file-item-container:hover,
@@ -97,7 +97,7 @@
 .external-app-files--dark .fm-modal-heading,
 .external-app-files--dark input,
 .external-app-files--dark textarea {
-	color: #edf2f7;
+	color: var(--gamaj-gray-100);
 }
 
 @media (max-width: 991px) {

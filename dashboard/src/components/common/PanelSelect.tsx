@@ -14,7 +14,6 @@ import {
 	TagCloseButton,
 	TagLabel,
 	Text,
-	useColorModeValue,
 	Wrap,
 	WrapItem,
 } from "@chakra-ui/react";
@@ -341,16 +340,16 @@ export const PanelSelect = forwardRef<HTMLInputElement, PanelSelectProps>(
 		);
 		const buttonText = selectedLabels[0] || placeholder || "";
 
-		const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-		const focusBorderColor = useColorModeValue("primary.500", "primary.300");
-		const controlBg = useColorModeValue("white", "whiteAlpha.50");
-		const menuBg = useColorModeValue("white", "surface.dark");
-		const hoverBg = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
-		const selectedBg = useColorModeValue("primary.50", "whiteAlpha.100");
-		const tagBg = useColorModeValue("primary.50", "whiteAlpha.100");
-		const tagColor = useColorModeValue("primary.700", "primary.200");
-		const mutedColor = useColorModeValue("gray.500", "gray.400");
-		const invalidBorderColor = useColorModeValue("red.500", "red.300");
+		const borderColor = "panel.border";
+		const focusBorderColor = "panel.borderStrong";
+		const controlBg = "panel.surface";
+		const menuBg = "panel.surface";
+		const hoverBg = "panel.rowHover";
+		const selectedBg = "panel.elevated";
+		const tagBg = "panel.elevated";
+		const tagColor = "panel.accent";
+		const mutedColor = "panel.textMuted";
+		const invalidBorderColor = "panel.danger";
 		const controlHeight = size === "md" ? "40px" : "36px";
 		const disabledState = isDisabled || Boolean(disabled);
 		const resolvedBorderColor = isInvalid ? invalidBorderColor : borderColor;
@@ -564,7 +563,7 @@ export const PanelSelect = forwardRef<HTMLInputElement, PanelSelectProps>(
 										</Text>
 									</HStack>
 									{selected && mode === "single" && (
-										<Box color="primary.500" flexShrink={0}>
+										<Box color="panel.text" flexShrink={0}>
 											<Check />
 										</Box>
 									)}
@@ -574,15 +573,15 @@ export const PanelSelect = forwardRef<HTMLInputElement, PanelSelectProps>(
 											role="button"
 											aria-label={`${removeLabel} ${option.title}`}
 											borderRadius="full"
-											color="red.500"
+											color="panel.danger"
 											p={0.5}
 											onClick={(event: MouseEvent<HTMLSpanElement>) => {
 												event.preventDefault();
 												event.stopPropagation();
 												removeValue(option.value);
 											}}
-											_hover={{ bg: "red.50" }}
-											_dark={{ _hover: { bg: "whiteAlpha.100" } }}
+											_hover={{ bg:"panel.dangerSubtle" }}
+											_dark={{ _hover: { bg:"panel.inset" } }}
 										>
 											<X />
 										</Box>

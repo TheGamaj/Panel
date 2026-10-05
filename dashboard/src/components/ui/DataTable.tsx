@@ -887,7 +887,7 @@ export function DataTable<TData>({
 	const renderState = () => {
 		if (error) {
 			return (
-				<Box className="gm-resource-state" color="red.300">
+				<Box className="gm-resource-state" color="panel.danger">
 					{error}
 				</Box>
 			);
@@ -1455,7 +1455,7 @@ export function DataTable<TData>({
 										isDisabled={action.isDisabled}
 										color={
 											action.color ??
-											(action.isDanger ? "red.400" : undefined)
+											(action.isDanger ? "panel.danger" : undefined)
 										}
 										onClick={(event) => {
 											event.stopPropagation();

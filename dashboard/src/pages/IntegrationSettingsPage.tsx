@@ -30,7 +30,6 @@ import {
 	Text,
 	Textarea,
 	useColorMode,
-	useColorModeValue,
 	useToast,
 	VStack,
 	IconButton,
@@ -693,7 +692,7 @@ const DisabledCard = ({
 				color="white"
 				px={6}
 				borderRadius="inherit"
-				bg="blackAlpha.400"
+				bg="panel.scrim"
 				backdropFilter="blur(2px)"
 			>
 				<Text>{message}</Text>
@@ -794,10 +793,10 @@ export const IntegrationSettingsPage = () => {
 	const { t } = useTranslation();
 	const { colorMode } = useColorMode();
 	const toast = useToast();
-	const cardBg = useColorModeValue("white", "whiteAlpha.50");
-	const subCardBg = useColorModeValue("gray.50", "whiteAlpha.100");
-	const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
-	const fieldBg = useColorModeValue("white", "blackAlpha.200");
+	const cardBg = "panel.surface";
+	const subCardBg = "panel.elevated";
+	const borderColor = "panel.border";
+	const fieldBg = "panel.surface";
 	const { userData, getUserIsSuccess } = useGetUser();
 	const isSudoOrFull =
 		userData?.role === "sudo" || userData?.role === "full_access";
@@ -1832,7 +1831,7 @@ export const IntegrationSettingsPage = () => {
 		return (
 			<VStack spacing={4} align="stretch">
 				<Heading size="lg">{t("header.integrationSettings")}</Heading>
-				<Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+				<Text fontSize="sm" color="panel.textMuted" _dark={{ color:"panel.textMuted" }}>
 					{t("integrations.noPermission")}
 				</Text>
 			</VStack>
@@ -2010,7 +2009,7 @@ export const IntegrationSettingsPage = () => {
 									<Heading size="sm" mb={1}>
 										{t("settings.runtime.title")}
 									</Heading>
-									<Text fontSize="sm" color="gray.500">
+									<Text fontSize="sm" color="panel.textMuted">
 										{t("settings.runtime.description")}
 									</Text>
 								</Box>
@@ -2148,7 +2147,7 @@ export const IntegrationSettingsPage = () => {
 								/>
 								<Box
 									borderWidth="1px"
-									borderColor="whiteAlpha.200"
+									borderColor="panel.border"
 									borderRadius="md"
 									p={4}
 									gridColumn={{ base: "auto", md: "1 / -1" }}
@@ -2164,7 +2163,7 @@ export const IntegrationSettingsPage = () => {
 											<Heading size="xs" mb={1}>
 												{t("phpmyadmin.title")}
 											</Heading>
-											<Text fontSize="sm" color="gray.500">
+											<Text fontSize="sm" color="panel.textMuted">
 												{t("phpmyadmin.settingsHint")}
 											</Text>
 										</Box>
@@ -2589,12 +2588,12 @@ export const IntegrationSettingsPage = () => {
 										</FormControl>
 									</SimpleGrid>
 									<SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} mt={3}>
-										<Text fontSize="xs" color="gray.500">
+										<Text fontSize="xs" color="panel.textMuted">
 											{t("settings.telegram.backupLastSent")}:{" "}
 											{data?.backup_last_sent_at || "-"}
 										</Text>
 										{data?.backup_last_error && (
-											<Text fontSize="xs" color="red.300">
+											<Text fontSize="xs" color="panel.danger">
 												{t("settings.telegram.backupLastError")}:{" "}
 												{data.backup_last_error}
 											</Text>
@@ -2684,7 +2683,7 @@ export const IntegrationSettingsPage = () => {
 											))}
 										</SimpleGrid>
 									) : (
-										<Text color="gray.500">
+										<Text color="panel.textMuted">
 											{t("settings.telegram.emptyTopics")}
 										</Text>
 									)}
@@ -2699,7 +2698,7 @@ export const IntegrationSettingsPage = () => {
 									<Heading size="sm" mb={2}>
 										{t("settings.telegram.notificationsTitle")}
 									</Heading>
-									<Text fontSize="sm" color="gray.500" mb={4}>
+									<Text fontSize="sm" color="panel.textMuted" mb={4}>
 										{t("settings.telegram.notificationsDescription")}
 									</Text>
 									<Stack spacing={4}>
@@ -2775,7 +2774,7 @@ export const IntegrationSettingsPage = () => {
 										<Heading size="sm" mb={1}>
 											{t("settings.subscriptions.globalTitle")}
 										</Heading>
-										<Text fontSize="sm" color="gray.500">
+										<Text fontSize="sm" color="panel.textMuted">
 											{t("settings.subscriptions.globalDescription")}
 										</Text>
 									</Box>
@@ -3032,7 +3031,7 @@ export const IntegrationSettingsPage = () => {
 									<Flex justify="space-between" align={{ base: "flex-start", md: "center" }} mb={4} flexDirection={{ base: "column", sm: "row" }} gap={2}>
 										<Box>
 											<Heading size="sm" mb={1}>{t("settings.subscriptions.routingRulesTitle")}</Heading>
-											<Text fontSize="sm" color="gray.500">{t("settings.subscriptions.routingRulesDesc")}</Text>
+											<Text fontSize="sm" color="panel.textMuted">{t("settings.subscriptions.routingRulesDesc")}</Text>
 										</Box>
 										<Button
 											size="xs"
@@ -3130,11 +3129,11 @@ export const IntegrationSettingsPage = () => {
 								<Heading size="sm" mb={1}>
 									{t("settings.subscriptions.adminsTitle")}
 								</Heading>
-								<Text fontSize="sm" color="gray.500" mb={4}>
+								<Text fontSize="sm" color="panel.textMuted" mb={4}>
 									{t("settings.subscriptions.adminsDescription")}
 								</Text>
 								{Object.values(adminOverrides).length === 0 ? (
-									<Text color="gray.500">
+									<Text color="panel.textMuted">
 										{t("settings.subscriptions.noAdmins")}
 									</Text>
 								) : (
@@ -3189,7 +3188,7 @@ export const IntegrationSettingsPage = () => {
 													<Box
 														p={2}
 														borderBottom="1px solid"
-														borderColor="gray.200"
+														borderColor="panel.border"
 													>
 														<SearchInput
 																textAlign="start"
@@ -3207,7 +3206,7 @@ export const IntegrationSettingsPage = () => {
 													</Box>
 													{filteredAdmins.length === 0 ? (
 														<Box px={3} py={2}>
-															<Text color="gray.500">
+															<Text color="panel.textMuted">
 																{t("settings.subscriptions.noResults")}
 															</Text>
 														</Box>
@@ -3219,17 +3218,11 @@ export const IntegrationSettingsPage = () => {
 																minH="36px"
 																py={1.5}
 																px={3}
-																bg={
-																	selectedAdminId === admin.id
-																		? "primary.50"
-																		: undefined
-																}
-																_dark={{
-																	bg:
-																		selectedAdminId === admin.id
-																			? "whiteAlpha.100"
-																			: undefined,
-																}}
+											bg={
+												selectedAdminId === admin.id
+													? "panel.rowSelected"
+													: undefined
+											}
 															>
 																<Flex
 																	justify="space-between"
@@ -3240,7 +3233,7 @@ export const IntegrationSettingsPage = () => {
 																	{admin.subscription_domain ? (
 																		<Text
 																			fontSize="xs"
-																			color="gray.500"
+																			color="panel.textMuted"
 																			maxW="160px"
 																			isTruncated
 																		>
@@ -3259,7 +3252,7 @@ export const IntegrationSettingsPage = () => {
 										</FormControl>
 										{selectedAdminId == null ||
 										!adminOverrides[selectedAdminId] ? (
-											<Text color="gray.500">
+											<Text color="panel.textMuted">
 												{t("settings.subscriptions.selectAdminPlaceholder")}
 											</Text>
 										) : (
@@ -3286,7 +3279,7 @@ export const IntegrationSettingsPage = () => {
 																	<Text fontWeight="semibold">
 																		{admin.username}
 																	</Text>
-																	<Text fontSize="sm" color="gray.500">
+																	<Text fontSize="sm" color="panel.textMuted">
 																		{t("settings.subscriptions.adminHint")}
 																	</Text>
 																</Box>
@@ -3748,7 +3741,7 @@ export const IntegrationSettingsPage = () => {
 				scrollBehavior="inside"
 				closeOnOverlayClick={!isCertificateMutationLoading}
 			>
-				<ModalOverlay bg="blackAlpha.500" />
+				<ModalOverlay bg="panel.scrim" />
 				<ModalContent
 					as="form"
 					onSubmit={(event) => {
