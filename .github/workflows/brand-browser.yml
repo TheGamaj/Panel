@@ -1,0 +1,72 @@
+name: Brand Browser Sweep
+
+# The Brand Guard workflow reads source files. It cannot see a colour that
+# only exists once the browser has resolved it — a color-mix() between two
+# values that are each on the palette but whose result is not, or a
+# component that inherits the library default instead of a Gamaj token.
+# Those are the defects that got through before: the Chakra neutral scale
+# defaulting every light-mode border to #CECECE, and Divider painting
+# itself #808080.
+#
+# This job drives the real dashboard with a real browser and reads the
+# computed styles, in both colour modes, on every route. It is the only
+# check that can see that class of problem, so it runs on every push even
+# though it is slower than the rest of the suite.
+
+on:
+  push:
+    branches:
+      - Asli
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  brand-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DASH_DIR: ./dashboard
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ${{ env.DASH_DIR }}/package-lock.json
+
+      - name: Install dashboard dependencies
+        working-directory: ${{ env.DASH_DIR }}
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: ${{ env.DASH_DIR }}
+        # The browser is pinned by the Playwright version, so every run
+        # resolves the same colours the same way. --with-deps also installs
+        # the shared libraries the headless browser needs on the runner.
+        run: npx playwright install --with-deps chromium
+
+      - name: Sweep every route in both colour modes
+        working-directory: ${{ env.DASH_DIR }}
+        # GAMAJ_PW_CHANNEL is deliberately unset: the runner uses the pinned
+        # browser above rather than whatever happens to be installed.
+        run: npm run test:brand
+
+      - name: Upload failure traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: brand-browser-traces
+          path: ${{ env.DASH_DIR }}/test-results
+          retention-days: 7

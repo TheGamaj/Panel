@@ -53,3 +53,8 @@ data/redis_backup/
 
 # Credentials never belong in version control.
 .gh-token
+
+# Playwright output from the brand browser sweep.
+dashboard/test-results/
+dashboard/playwright-report/
+dashboard/blob-report/

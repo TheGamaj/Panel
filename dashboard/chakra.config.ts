@@ -295,6 +295,18 @@ const sharedThemeConfig = {
 	},
 
 	components: {
+		// Chakra's Divider draws itself with `borderColor: inherit` and
+		// leaves the element's own colour at the library default, which
+		// resolves to #808080 — a grey that belongs to neither mode. Roughly
+		// twenty call sites use Divider without a borderColor, so the default
+		// is fixed here rather than at each of them: the divider is a
+		// hairline that separates surfaces, which is the border role.
+		Divider: {
+			baseStyle: {
+				borderColor: "panel.border",
+				color: "panel.border",
+			},
+		},
 		Card: {
 			baseStyle: {
 				container: {

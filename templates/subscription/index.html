@@ -25,61 +25,123 @@
             color-scheme: dark;
             --rb-font-ltr: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             --rb-font-rtl: "Arad", var(--rb-font-ltr);
-            --rb-panel-bg: #101010;
-            --rb-panel-main: #111111;
-            --rb-panel-sidebar: #2b2b2b;
-            --rb-panel-surface: #242424;
-            --rb-panel-elevated: #2f2f2f;
-            --rb-panel-border: #3a3a3a;
-            --rb-panel-border-strong: #4a4a4a;
-            --rb-panel-text: #f5f5f5;
-            --rb-panel-text-secondary: #b8b8b8;
-            --rb-panel-text-muted: #8a8a8a;
-            --rb-panel-accent: #e0003c;
-            --rb-panel-accent-hover: #f01446;
-            --rb-panel-success: #22c55e;
-            --rb-panel-warning: #f59e0b;
-            --rb-panel-danger: #ef4444;
-            --rb-panel-info: #2563eb;
-            --rb-accent-rgb: 224, 0, 60;
-            --primary-50: #ffe6ed;
-            --primary-100: #ffb8c9;
-            --primary-200: #ff88a5;
-            --primary-300: #fb5a82;
-            --primary-400: #f42d62;
-            --primary-500: #e0003c;
-            --primary-600: #bf0033;
-            --primary-700: #990029;
-            --primary-800: #73001f;
-            --primary-900: #4c0015;
+
+            /* The Gamaj brand ramp. This page is a Gamaj surface, so its
+               colours come from the same ramp as the dashboard. The identity
+               is monochrome apart from three status hues, and a colour is
+               named here or reached through one of these tokens, never
+               written out by hand in a rule below. */
+            --rb-black: #000000;
+            --rb-white: #FFFFFF;
+            --rb-gray-950: #0A0A0A;
+            --rb-gray-900: #111111;
+            --rb-gray-800: #1A1A1A;
+            --rb-gray-700: #333333;
+            --rb-gray-600: #4A4A4A;
+            --rb-gray-500: #666666;
+            --rb-gray-400: #999999;
+            --rb-gray-300: #CCCCCC;
+            --rb-gray-200: #E5E5E5;
+            --rb-gray-100: #F5F5F5;
+            --rb-gray-50: #FAFAFA;
+
+            /* Three radii, and nothing in between. */
+            --rb-radius-sm: 2px;
+            --rb-radius-md: 4px;
+            --rb-radius-lg: 8px;
+
+            /* The only hues in the product. They carry meaning rather than
+               decoration, which is why they sit outside the ramp. */
+            --rb-danger: #C62828;
+            --rb-warning: #8D6E00;
+            --rb-success: #1B5E20;
+
+            /* Dark is the default mode: black canvas, grey-950 surfaces. */
+            --rb-panel-bg: var(--rb-gray-950);
+            --rb-panel-main: var(--rb-gray-950);
+            --rb-panel-sidebar: var(--rb-gray-950);
+            --rb-panel-surface: var(--rb-gray-900);
+            --rb-panel-elevated: var(--rb-gray-800);
+            --rb-panel-border: var(--rb-gray-800);
+            --rb-panel-border-strong: var(--rb-gray-700);
+            --rb-panel-text: var(--rb-white);
+            --rb-panel-text-secondary: var(--rb-gray-300);
+            --rb-panel-text-muted: var(--rb-gray-400);
+            --rb-panel-accent: var(--rb-white);
+            --rb-panel-accent-hover: var(--rb-gray-200);
+            --rb-panel-success: var(--rb-success);
+            --rb-panel-warning: var(--rb-warning);
+            --rb-panel-danger: var(--rb-danger);
+            --rb-panel-info: var(--rb-panel-text-secondary);
+
+            /* Washes and the scrim are mixed from the tokens above instead of
+               written out, so a hue cannot drift away from the ramp when the
+               hue itself changes. */
+            --rb-accent-rgb: 255, 255, 255;
+            --rb-hover-wash: color-mix(in srgb, var(--rb-white) 8%, transparent);
+            --rb-row-hover: color-mix(in srgb, var(--rb-white) 4%, transparent);
+            --rb-scrim: rgba(0, 0, 0, 0.72);
+            /* A QR code has to be black on white to be scanned, in either
+               mode, so its canvas is the palette's white rather than the
+               surface it happens to sit on. */
+            --rb-qr-canvas: var(--rb-white);
+            /* The colour sitting on top of the accent. The accent flips with
+               the mode, so its contrast flips with it. */
+            --rb-on-accent: var(--rb-black);
+            --rb-danger-wash: color-mix(in srgb, var(--rb-danger) 20%, transparent);
+            --rb-warning-wash: color-mix(in srgb, var(--rb-warning) 20%, transparent);
+            --rb-success-wash: color-mix(in srgb, var(--rb-success) 20%, transparent);
+            --rb-neutral-wash: color-mix(in srgb, var(--rb-panel-text) 12%, transparent);
+
+            --primary-50: var(--rb-gray-50);
+            --primary-100: var(--rb-gray-100);
+            --primary-200: var(--rb-gray-200);
+            --primary-300: var(--rb-gray-300);
+            --primary-400: var(--rb-gray-400);
+            --primary-500: var(--rb-gray-500);
+            --primary-600: var(--rb-gray-600);
+            --primary-700: var(--rb-gray-700);
+            --primary-800: var(--rb-gray-800);
+            --primary-900: var(--rb-gray-950);
         }
 
         .rb-theme-light {
             color-scheme: light;
-            --rb-panel-bg: #f4f5f7;
-            --rb-panel-main: #f7f8fa;
-            --rb-panel-sidebar: #ffffff;
-            --rb-panel-surface: #ffffff;
-            --rb-panel-elevated: #eef0f3;
-            --rb-panel-border: #d8dce2;
-            --rb-panel-border-strong: #c2c8d0;
-            --rb-panel-text: #17191c;
-            --rb-panel-text-secondary: #4f5661;
-            --rb-panel-text-muted: #7a828e;
+            --rb-panel-bg: var(--rb-white);
+            --rb-panel-main: var(--rb-white);
+            --rb-panel-sidebar: var(--rb-white);
+            --rb-panel-surface: var(--rb-white);
+            --rb-panel-elevated: var(--rb-gray-100);
+            --rb-panel-border: var(--rb-gray-200);
+            --rb-panel-border-strong: var(--rb-gray-300);
+            --rb-panel-text: var(--rb-black);
+            --rb-panel-text-secondary: var(--rb-gray-600);
+            --rb-panel-text-muted: var(--rb-gray-500);
+            --rb-panel-accent: var(--rb-black);
+            --rb-panel-accent-hover: var(--rb-gray-800);
+            --rb-accent-rgb: 0, 0, 0;
+            --rb-on-accent: var(--rb-white);
+            --rb-hover-wash: color-mix(in srgb, var(--rb-black) 6%, transparent);
+            --rb-row-hover: color-mix(in srgb, var(--rb-black) 4%, transparent);
         }
 
         .rb-theme-dark {
             color-scheme: dark;
-            --rb-panel-bg: #101010;
-            --rb-panel-main: #111111;
-            --rb-panel-sidebar: #2b2b2b;
-            --rb-panel-surface: #242424;
-            --rb-panel-elevated: #2f2f2f;
-            --rb-panel-border: #3a3a3a;
-            --rb-panel-border-strong: #4a4a4a;
-            --rb-panel-text: #f5f5f5;
-            --rb-panel-text-secondary: #b8b8b8;
-            --rb-panel-text-muted: #8a8a8a;
+            --rb-panel-bg: var(--rb-gray-950);
+            --rb-panel-main: var(--rb-gray-950);
+            --rb-panel-sidebar: var(--rb-gray-950);
+            --rb-panel-surface: var(--rb-gray-900);
+            --rb-panel-elevated: var(--rb-gray-800);
+            --rb-panel-border: var(--rb-gray-800);
+            --rb-panel-border-strong: var(--rb-gray-700);
+            --rb-panel-text: var(--rb-white);
+            --rb-panel-text-secondary: var(--rb-gray-300);
+            --rb-panel-text-muted: var(--rb-gray-400);
+            --rb-panel-accent: var(--rb-white);
+            --rb-panel-accent-hover: var(--rb-gray-200);
+            --rb-accent-rgb: 255, 255, 255;
+            --rb-hover-wash: color-mix(in srgb, var(--rb-white) 8%, transparent);
+            --rb-row-hover: color-mix(in srgb, var(--rb-white) 4%, transparent);
         }
 
         * {
@@ -103,10 +165,7 @@
         body {
             margin: 0;
             min-height: 100vh;
-            background:
-                radial-gradient(circle at top left, rgba(var(--rb-accent-rgb), 0.18), transparent 24rem),
-                radial-gradient(circle at bottom right, rgba(var(--rb-accent-rgb), 0.1), transparent 22rem),
-                linear-gradient(180deg, var(--rb-panel-main), var(--rb-panel-bg));
+            background: var(--rb-panel-bg);
             color: var(--rb-panel-text);
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
@@ -137,9 +196,8 @@
         .rb-panel-card {
             border: 1px solid var(--rb-panel-border);
             border-radius: 18px;
-            background: rgba(17, 17, 17, 0.82);
+            background: var(--rb-panel-surface);
             background: color-mix(in srgb, var(--rb-panel-surface) 90%, transparent);
-            box-shadow: 0 22px 40px rgba(0, 0, 0, 0.16);
             backdrop-filter: blur(18px);
         }
 
@@ -227,7 +285,7 @@
             height: 44px;
             border: 1px solid var(--rb-panel-border);
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--rb-row-hover);
             color: var(--rb-panel-text);
             cursor: pointer;
             transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
@@ -249,7 +307,6 @@
             border: 1px solid var(--rb-panel-border);
             border-radius: 16px;
             background: var(--rb-panel-surface);
-            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
         }
 
         .rb-toolbar-menu[hidden] {
@@ -393,34 +450,37 @@
             text-transform: capitalize;
         }
 
+        /* Status carries meaning, so it is the one place the three hues are allowed
+           to appear. Each chip is a wash of the hue behind the text colour of
+           the same hue, mixed from the tokens so it cannot drift. */
         .rb-status-chip[data-state="active"] {
-            background: rgba(34, 197, 94, 0.14);
-            border-color: rgba(34, 197, 94, 0.34);
-            color: #7ee8a6;
+            background: var(--rb-success-wash);
+            border-color: var(--rb-success);
+            color: var(--rb-success);
         }
 
         .rb-status-chip[data-state="on_hold"] {
-            background: rgba(37, 99, 235, 0.14);
-            border-color: rgba(37, 99, 235, 0.34);
-            color: #8cb4ff;
+            background: var(--rb-neutral-wash);
+            border-color: var(--rb-panel-text-muted);
+            color: var(--rb-panel-text-secondary);
         }
 
         .rb-status-chip[data-state="limited"] {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: rgba(245, 158, 11, 0.32);
-            color: #ffd27b;
+            background: var(--rb-warning-wash);
+            border-color: var(--rb-warning);
+            color: var(--rb-warning);
         }
 
         .rb-status-chip[data-state="expired"] {
-            background: rgba(239, 68, 68, 0.14);
-            border-color: rgba(239, 68, 68, 0.32);
-            color: #ff9b9b;
+            background: var(--rb-danger-wash);
+            border-color: var(--rb-danger);
+            color: var(--rb-danger);
         }
 
         .rb-status-chip[data-state="disabled"] {
-            background: rgba(148, 163, 184, 0.16);
-            border-color: rgba(148, 163, 184, 0.28);
-            color: #d5dbe4;
+            background: var(--rb-neutral-wash);
+            border-color: var(--rb-panel-border-strong);
+            color: var(--rb-panel-text-muted);
         }
 
         .rb-status-note {
@@ -440,7 +500,7 @@
             padding: 14px;
             border: 1px solid var(--rb-panel-border);
             border-radius: 16px;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--rb-row-hover);
         }
 
         .rb-metric-value {
@@ -459,7 +519,7 @@
             padding: 18px;
             border: 1px solid var(--rb-panel-border);
             border-radius: 16px;
-            background: linear-gradient(180deg, rgba(var(--rb-accent-rgb), 0.08), transparent 120px), var(--rb-panel-main);
+            background: var(--rb-panel-main);
         }
 
         .rb-usage-row {
@@ -482,14 +542,14 @@
             height: 10px;
             border-radius: 999px;
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--rb-hover-wash);
         }
 
         .rb-progress-fill {
             height: 100%;
             width: 0;
             border-radius: inherit;
-            background: linear-gradient(90deg, var(--rb-panel-accent), var(--rb-panel-accent-hover));
+            background: var(--rb-panel-accent);
             transition: width 180ms ease;
         }
 
@@ -572,7 +632,7 @@
         .rb-button--primary {
             border-color: rgba(var(--rb-accent-rgb), 0.42);
             background: var(--rb-panel-accent);
-            color: #ffffff;
+            color: var(--rb-on-accent);
         }
 
         .rb-button--primary:hover {
@@ -608,7 +668,7 @@
             height: 36px;
             border: 1px solid transparent;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--rb-row-hover);
             color: var(--rb-panel-text-secondary);
             cursor: pointer;
             transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
@@ -631,9 +691,9 @@
         }
 
         .rb-icon-button.is-copied {
-            color: #7ee8a6;
-            border-color: rgba(34, 197, 94, 0.3);
-            background: rgba(34, 197, 94, 0.12);
+            color: var(--rb-success);
+            border-color: var(--rb-success);
+            background: var(--rb-success-wash);
         }
 
         .rb-main-grid {
@@ -764,7 +824,7 @@
             height: 30px;
             padding: 0 10px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--rb-row-hover);
             color: var(--rb-panel-text);
             font-size: 0.8rem;
             font-weight: 800;
@@ -1018,7 +1078,7 @@
             padding: 12px;
             border: 1px solid var(--rb-panel-border);
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--rb-row-hover);
         }
 
         .rb-credential-name {
@@ -1293,7 +1353,7 @@
         .rb-modal-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.62);
+            background: var(--rb-scrim);
             backdrop-filter: blur(10px);
         }
 
@@ -1304,7 +1364,6 @@
             border: 1px solid var(--rb-panel-border-strong);
             border-radius: 20px;
             background: var(--rb-panel-surface);
-            box-shadow: 0 28px 50px rgba(0, 0, 0, 0.28);
         }
 
         .rb-modal-head {
@@ -1343,7 +1402,7 @@
             padding: 10px;
             border: 1px solid var(--rb-panel-border);
             border-radius: 16px;
-            background: #ffffff;
+            background: var(--rb-qr-canvas);
         }
 
         .rb-modal-url {
@@ -1383,7 +1442,6 @@
             border-radius: 14px;
             background: var(--rb-panel-surface);
             color: var(--rb-panel-text);
-            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
         }
 
         [dir="rtl"] .rb-topbar,
@@ -2149,13 +2207,6 @@
             var onlineWindowSeconds = 20;
             var config = document.body.dataset || {};
             var rawLinks = {{ links_text|safe }};
-            var accentMap = {
-                crimson: { color: '#e0003c', hover: '#f01446' },
-                blue: { color: '#2563eb', hover: '#3b82f6' },
-                green: { color: '#16a34a', hover: '#22c55e' },
-                purple: { color: '#7c3aed', hover: '#8b5cf6' },
-                orange: { color: '#ea580c', hover: '#f97316' }
-            };
             var translations = {
                 en: {
                     panelLabel: 'Gamaj Panel',
@@ -2823,7 +2874,7 @@
             }
 
             function iconThemeDark() {
-                return '<svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><mask id="rbMoonMask"><rect width="24" height="24" fill="#fff"></rect><circle cx="15.5" cy="8.5" r="6.5" fill="#000"></circle></mask><circle cx="12" cy="12" r="8" fill="currentColor" mask="url(#rbMoonMask)"></circle></svg>';
+                return '<svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><mask id="rbMoonMask"><rect width="24" height="24" fill="white"></rect><circle cx="15.5" cy="8.5" r="6.5" fill="black"></circle></mask><circle cx="12" cy="12" r="8" fill="currentColor" mask="url(#rbMoonMask)"></circle></svg>';
             }
 
             function iconThemeLight() {

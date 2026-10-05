@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 5
     env:
       GAMAJ_BRAND_ROOT: .
-      GAMAJ_PALETTE_DIRS: dashboard/src,dashboard/public
+      GAMAJ_PALETTE_DIRS: dashboard/src,dashboard/public,templates/subscription/index.html
 
     steps:
       - name: Checkout
