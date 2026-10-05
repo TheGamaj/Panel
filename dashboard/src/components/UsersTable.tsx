@@ -2196,18 +2196,15 @@ const EmptySection: FC<EmptySectionProps> = ({
 				maxHeight="200px"
 				maxWidth="200px"
 				_dark={{
-					'path[fill="#fff"]': {
+					'path[fill="currentColor"]': {
 						fill:"panel.text",
-					},
-					'path[fill="var(--gamaj-gray-100)"], path[fill="var(--gamaj-gray-300)"], path[fill="#ccc"]': {
-						fill:"panel.textSecondary",
 					},
 					'circle[fill="var(--gm-panel-accent)"]': {
 						fill:"panel.textSecondary",
 					},
 				}}
 				_light={{
-					'path[fill="var(--gamaj-gray-100)"], path[fill="var(--gamaj-gray-300)"], path[fill="#ccc"]': {
+					'path[fill="var(--gm-panel-accent)"]': {
 						fill:"panel.textSecondary",
 					},
 					'circle[fill="var(--gm-panel-accent)"]': {

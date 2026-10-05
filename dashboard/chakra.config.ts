@@ -189,7 +189,27 @@ const sharedThemeConfig = {
 		teal: gamajHue("--gm-panel-accent"),
 		purple: gamajHue("--gm-panel-accent"),
 		pink: gamajHue("--gm-panel-accent"),
-		gray: gamajHue("var(--gamaj-gray-500)"),
+		// The neutral scale is not built by mixing, unlike the chromatic ones.
+		// Chakra reads `gray.N` for the things that are everywhere: the
+		// `chakra-border-color` semantic token that every component and the
+		// `*, ::before, ::after` reset fall back to, subtle backgrounds,
+		// placeholder text. Mixing produced values between two ramp steps
+		// (#CECECE for gray.200, #B5B5B5 for gray.300, ...) that belong to
+		// neither mode's identity, so the neutral scale points straight at the
+		// ramp and every default lands on an identity value.
+		gray: {
+			50: "var(--gamaj-gray-50)",
+			100: "var(--gamaj-gray-100)",
+			200: "var(--gamaj-gray-200)",
+			300: "var(--gamaj-gray-300)",
+			400: "var(--gamaj-gray-400)",
+			500: "var(--gamaj-gray-500)",
+			600: "var(--gamaj-gray-600)",
+			700: "var(--gamaj-gray-700)",
+			800: "var(--gamaj-gray-800)",
+			900: "var(--gamaj-gray-900)",
+			950: "var(--gamaj-gray-950)",
+		},
 		bg: {
 			light: "var(--bg-light)",
 			dark: "var(--bg-dark)",

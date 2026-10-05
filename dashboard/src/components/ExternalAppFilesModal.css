@@ -91,7 +91,7 @@
 .external-app-files--dark .sb-folders-list-item:hover,
 .external-app-files--dark .item-action:hover,
 .external-app-files--dark .fm-context-menu li:hover {
-	background: #ffffff14;
+	background: var(--gm-panel-hover-wash);
 }
 
 .external-app-files--dark .fm-modal-heading,

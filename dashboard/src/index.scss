@@ -100,6 +100,9 @@
   /* The flat scrim behind a dialog. One value in both modes, because a
      dialog dims what is behind it rather than tinting it. */
   --gm-panel-scrim: rgba(0, 0, 0, 0.72);
+  /* A surface laid over a slightly lighter one: white at low alpha, which
+     reads as a lightening wash in dark and as nothing in light. */
+  --gm-panel-hover-wash: color-mix(in srgb, var(--gamaj-white) 8%, transparent);
   /* A quiet wash of the danger hue, for the row or field that failed. */
   --gm-danger-subtle: rgba(198, 40, 40, 0.12);
   /* The same wash for the other two status hues, and the neutral one that
@@ -2189,11 +2192,14 @@ img.apple-emoji {
   transform: scale(0.92);
 }
 
-/* floating bulk action bar: fast slide up, accent tint */
+/* floating bulk action bar: fast slide up, raised off the surface.
+   Both values come straight off the ramp. The bar used to be an accent
+   tint built with color-mix, which resolved to #F0F0F0 in light and
+   #191919 in dark — a colour in neither mode's identity. */
 .gm-users-section .gm-bulk-action-bar {
   border-radius: var(--gm-radius-lg);
-  border-color: color-mix(in srgb, var(--gm-panel-accent) 35%, var(--gm-panel-border-strong));
-  background: color-mix(in srgb, var(--gm-panel-surface) 94%, var(--gm-panel-accent));
+  border-color: var(--gm-panel-border-strong);
+  background: var(--gm-panel-elevated);
 }
 
 .gm-users-section .gm-bulk-action-bar .chakra-button {

@@ -173,7 +173,7 @@ export const nodes = [
 	{
 		id: 2,
 		name: "isfahan-2",
-		status: "disconnected",
+		status: "error",
 		address: "10.20.0.12",
 		port: 62050,
 		is_connected: false,
@@ -250,10 +250,67 @@ export const services = [
 	},
 ];
 
+/**
+ * The HAProxy page reads `configs[].targets` and `configs[].settings`. A
+ * fixture that omits them renders nothing but the empty state, and the table
+ * columns throw on `.length`.
+ */
 export const haproxy = {
-	config: "global\n  stats enable\n",
-	templates: [],
-	preview_url: "http://127.0.0.1:8080",
+	configs: [
+		{
+			id: 1,
+			name: "edge",
+			enabled: true,
+			settings: {
+				max_connections: 2000,
+				inspect_delay_ms: 0,
+				connect_timeout_ms: 5000,
+				client_timeout_seconds: 50,
+				server_timeout_seconds: 50,
+				health_check: true,
+				check_interval_ms: 5000,
+				check_rise: 2,
+				check_fall: 3,
+				retries: 3,
+				tcp_keep_alive: true,
+				dont_log_null: true,
+				log_level: "warning",
+			},
+			targets: [
+				{
+					node_id: 1,
+					listeners: [
+						{
+							name: "web",
+							listen_address: "0.0.0.0",
+							listen_port: 443,
+							accept_proxy_protocol: false,
+							routes: [
+								{
+									domain: "bot.example.com",
+									matchers: [{ type: "http_host", value: "bot.example.com" }],
+									backend: "mirzabot",
+								},
+							],
+						},
+					],
+					generated_config: "global\n  stats enable\n",
+				},
+			],
+			created_at: iso(24 * 30),
+			updated_at: iso(2),
+		},
+	],
+	nodes: [
+		{ id: 1, name: "tehran-1", status: "connected", haproxy_config_id: 1 },
+		{ id: 2, name: "tehran-2", status: "connected", haproxy_config_id: 1 },
+	],
+	templates: [
+		{ id: "basic-lb", name: "Basic load balancing", preview_url: "http://127.0.0.1:8080/basic-lb" },
+		{ id: "tls-passthrough", name: "TLS passthrough", preview_url: "http://127.0.0.1:8080/tls-passthrough" },
+	],
+	uploaded_templates: [],
+	certificates: [{ domain: "bot.example.com", status: "valid", not_after: "2027-04-01T00:00:00Z" }],
 };
 
 export const core = {
@@ -392,34 +449,67 @@ export const placeholders = {
 	show_logo: true,
 };
 
-export const externalApps = [
-	{
-		id: 1,
-		name: "MirzaBot",
-		domain: "bot.example.com",
-		link: "http://bot.example.com",
-		installed: true,
-		version: "2.4.1",
-		template: "mirzabot",
-		file_name: "bot.zip",
-		static_cache_seconds: 3600,
-		not_found_file: "404.html",
-		admin_id: 1,
-	},
-	{
-		id: 2,
-		name: "FaXiMa panel",
-		domain: "panel.example.com",
-		link: "https://panel.example.com",
-		installed: false,
-		version: "",
-		template: "faoxima",
-		file_name: "panel.zip",
-		static_cache_seconds: 3600,
-		not_found_file: "404.html",
-		admin_id: 2,
-	},
-];
+/**
+ * The external-app endpoints answer with an envelope, not a bare list. The
+ * page reads `apps` and `templates` directly, so an array here leaves both
+ * undefined and the page throws before it renders.
+ */
+export const externalApps = {
+	supported: true,
+	detail: "",
+	templates: [
+		{ id: "archive", name: "Static archive", supported: true, detail: "Any zip of static files." },
+		{ id: "mirzabot", name: "MirzaBot", supported: true, detail: "A Telegram bot on PHP." },
+		{ id: "faoxima", name: "FaXiMa panel", supported: true, detail: "A PHP admin panel." },
+	],
+	apps: [
+		{
+			id: "mirzabot-1",
+			template: "mirzabot",
+			name: "MirzaBot",
+			domain: "bot.example.com",
+			path: "apps/mirzabot",
+			enabled: true,
+			runtime: "php",
+			version: "2.4.1",
+			source_sha: "b21f0c9",
+			installed_at: iso(24 * 9),
+			php_version: "8.2",
+			bot_username: "example_bot",
+			index_file: "index.php",
+			fallback_to_index: true,
+			max_request_body_mb: 16,
+			static_cache_seconds: 3600,
+			not_found_file: "404.html",
+			has_database: true,
+			public_url: "https://bot.example.com",
+			update_available: false,
+			latest_version: "2.4.1",
+		},
+		{
+			id: "faoxima-1",
+			template: "faoxima",
+			name: "FaXiMa panel",
+			domain: "panel.example.com",
+			path: "apps/faoxima",
+			enabled: false,
+			runtime: "php",
+			version: "1.9.0",
+			source_sha: "7a4e2b1",
+			installed_at: iso(24 * 3),
+			php_version: "8.2",
+			index_file: "index.php",
+			fallback_to_index: true,
+			max_request_body_mb: 16,
+			static_cache_seconds: 3600,
+			not_found_file: "404.html",
+			has_database: true,
+			public_url: "https://panel.example.com",
+			update_available: true,
+			latest_version: "1.9.4",
+		},
+	],
+};
 
 export const recentActions = [
 	{
@@ -524,6 +614,31 @@ export const nodeSettings = {
 	node_cert_key: "",
 	node_port: 62050,
 	node_type: "standalone",
+};
+
+/**
+ * What release this install is on. Every consumer reads `panel` first, so an
+ * absent key here is not a degraded panel but a thrown page.
+ */
+export const maintenanceInfo = {
+	panel: {
+		image: "ghcr.io/thegamaj/panel",
+		tag: "is.0.0.1",
+		mode: "docker",
+		install_mode: "docker",
+		channel: "stable",
+		update: {
+			current: "is.0.0.1",
+			available: false,
+			target: null,
+			latest_release: { tag: "is.0.0.1" },
+			error: null,
+		},
+	},
+	node_update: {
+		channel: "stable",
+		latest_release: { tag: "is.0.0.1" },
+	},
 };
 
 export const geoTemplates = [

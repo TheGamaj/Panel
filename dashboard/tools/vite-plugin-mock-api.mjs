@@ -93,6 +93,15 @@ const ROUTES = [
 	{ method: "GET", path: "/nodes/metrics", body: () => fixtures.metrics },
 	{ method: "GET", path: "/node", body: () => fixtures.nodes },
 
+	// What release this install is on, read by the node settings page, the
+	// dashboard controls and the integration page. Without it those pages
+	// dereference an absent `panel` and throw on `.icon`.
+	{
+		method: "GET",
+		path: "/maintenance/info",
+		body: () => fixtures.maintenanceInfo,
+	},
+
 	// The service list is fetched at /v2/services and unwrapped from a
 	// `{ services }` envelope, so the fixture must carry that shape or the
 	// store sets `undefined` and every consumer throws on `.length`.
