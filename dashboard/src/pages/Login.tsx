@@ -429,7 +429,10 @@ export const Login: FC = () => {
 			justifyContent="center"
 			minH="100dvh"
 			px={{ base: 4, md: 10 }}
-			py={{ base: 6, md: 10 }}
+			// Vertical padding stays at space-8 on desktop. At space-10 the
+			// card plus the author line exceeded a 900px viewport, so the page
+			// scrolled and the author line no longer sat at the bottom of it.
+			py={{ base: 6, md: 8 }}
 			w="full"
 		>
 			<VStack maxW="400px" spacing={6} w="full">

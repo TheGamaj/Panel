@@ -37,6 +37,18 @@ export const session = {
 	require_2fa: false,
 };
 
+/**
+ * The same session with no signed-in admin, for reaching the login screen.
+ * `GAMAJ_MOCK_API_LOGGED_OUT=1` alongside the mock switch.
+ */
+export const loggedOutSession = {
+	state: "unauthorized",
+	admin: null,
+	permissions_version: "mock-1",
+	totp_enabled: false,
+	require_2fa: false,
+};
+
 export const users = [
 	{
 		username: "amir",

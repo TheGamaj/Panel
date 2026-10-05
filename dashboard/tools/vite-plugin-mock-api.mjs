@@ -26,6 +26,16 @@ const json = (res, status, body) => {
 };
 
 const ok = (res, body) => json(res, 200, body);
+
+/**
+ * Which session the mock reports. Logged out is the state that makes the login
+ * screen reachable at all, and it is also what an expired cookie looks like to
+ * the app, so both are worth being able to open.
+ */
+const currentSession = () =>
+	process.env.GAMAJ_MOCK_API_LOGGED_OUT === "1"
+		? fixtures.loggedOutSession
+		: fixtures.session;
 const missing = (res, method, route) => {
 	if (process.env.GAMAJ_MOCK_API_VERBOSE !== "1") {
 		return json(res, 404, { error: `mock API has no fixture for ${method} ${route}` });
@@ -41,7 +51,7 @@ const missing = (res, method, route) => {
  */
 const ROUTES = [
 	// Session and auth. This is the one that decides whether the app renders.
-	{ method: "GET", path: "/auth/session", body: () => fixtures.session },
+	{ method: "GET", path: "/auth/session", body: () => currentSession() },
 	{ method: "POST", path: "/auth/login", body: () => fixtures.session },
 	{ method: "POST", path: "/auth/logout", body: () => ({}) },
 	{ method: "POST", path: "/auth/2fa/verify", body: () => fixtures.session },
@@ -83,6 +93,14 @@ const ROUTES = [
 	{ method: "GET", path: "/nodes/metrics", body: () => fixtures.metrics },
 	{ method: "GET", path: "/node", body: () => fixtures.nodes },
 
+	// The service list is fetched at /v2/services and unwrapped from a
+	// `{ services }` envelope, so the fixture must carry that shape or the
+	// store sets `undefined` and every consumer throws on `.length`.
+	{
+		method: "GET",
+		path: "/v2/services",
+		body: () => ({ services: fixtures.services }),
+	},
 	// Hosts, services, haproxy.
 	{ method: "GET", path: "/hosts", body: () => fixtures.hosts },
 	{ method: "GET", path: "/services", body: () => fixtures.services },
