@@ -564,11 +564,6 @@
         .rb-account-block .rb-label {
             margin: 0 0 12px;
         }
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            gap: 12px;
-            align-items: center;
-        }
 
         .rb-subscription-card .rb-card-body {
             padding: 14px 16px;
@@ -2201,7 +2196,6 @@
         (function () {
             var themeKey = 'rb-theme';
             var chakraThemeKey = 'chakra-ui-color-mode';
-            var accentKey = 'rb-accent';
             var languageKey = 'i18nextLng';
             var languageCookieKey = 'i18next';
             var onlineWindowSeconds = 20;
@@ -2840,37 +2834,6 @@
                     g: Math.round(g * 255),
                     b: Math.round(b * 255)
                 };
-            }
-
-            function generatePalette(baseHex) {
-                var rgb = hexToRgb(baseHex);
-                var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-                var stops = {
-                    50: 0.42,
-                    100: 0.32,
-                    200: 0.22,
-                    300: 0.12,
-                    400: 0.06,
-                    500: 0,
-                    600: -0.06,
-                    700: -0.13,
-                    800: -0.22,
-                    900: -0.32
-                };
-                Object.keys(stops).forEach(function (key) {
-                    var next = hslToRgb(hsl.h, hsl.s, clamp(hsl.l + stops[key], 0, 1));
-                    document.documentElement.style.setProperty('--primary-' + key, rgbToHex(next.r, next.g, next.b));
-                });
-            }
-
-            function applyAccent() {
-                var stored = readStorage(accentKey) || 'crimson';
-                var accent = accentMap[stored] || accentMap.crimson;
-                var rgb = hexToRgb(accent.color);
-                document.documentElement.style.setProperty('--rb-panel-accent', accent.color);
-                document.documentElement.style.setProperty('--rb-panel-accent-hover', accent.hover);
-                document.documentElement.style.setProperty('--rb-accent-rgb', rgb.r + ', ' + rgb.g + ', ' + rgb.b);
-                generatePalette(accent.color);
             }
 
             function iconThemeDark() {
@@ -4040,7 +4003,6 @@
             }
 
             buildConfigCatalog();
-            applyAccent();
             applyTheme(state.theme);
             wireEvents();
             renderAppDownloads();
