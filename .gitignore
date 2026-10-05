@@ -50,3 +50,6 @@ artifacts/
 *.sqlite3
 *.db
 data/redis_backup/
+
+# Credentials never belong in version control.
+.gh-token
