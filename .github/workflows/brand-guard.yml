@@ -1,0 +1,47 @@
+name: Brand Guard
+
+# The Gamaj identity is monochrome apart from three status hues, and every
+# surface has to reach its colours through the palette rather than by writing
+# a hex out by hand. Nothing enforced that before it was checked, so a colour
+# written directly into a component or a translation string would have merged
+# unnoticed. This job makes that a build failure instead.
+#
+# The guard is a vendored copy of Web/tools/check-brand-geometry.cjs. It runs
+# here rather than in the docs repository because this repository has a remote
+# and the docs repository does not, and because CI cannot check a repository it
+# cannot see. GAMAJ_PALETTE_DIRS limits it to the surfaces this repository owns.
+
+on:
+  push:
+    branches:
+      - Asli
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  brand-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GAMAJ_BRAND_ROOT: .
+      GAMAJ_PALETTE_DIRS: dashboard/src,dashboard/public
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Check palette and retired branding
+        run: node tools/check-brand-geometry.cjs

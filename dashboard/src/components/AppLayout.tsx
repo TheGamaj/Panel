@@ -74,7 +74,7 @@ import { AppSidebar } from "./AppSidebar";
 import PageFooter from "./PageFooter";
 import { GitHubStars } from "./GitHubStars";
 import { HeaderCalendar } from "./HeaderCalendar";
-import ThemeSelector from "./ThemeSelector";
+import ColorModeMenuItems from "./ColorModeToggle";
 import { SponsorCarousel } from "./SponsorCarousel";
 
 const iconProps = {
@@ -175,7 +175,6 @@ export function AppLayout() {
 	const tutorialsUrl = "/tutorials";
 	const sectionAccess = userData.permissions?.sections;
 	const userMenuContentRef = useRef<HTMLDivElement | null>(null);
-	const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
 	const contentRef = useRef<HTMLDivElement | null>(null);
 	const [showIosPrompt, setShowIosPrompt] = useState(false);
 	const accountHoldTimeout = useRef<number | null>(null);
@@ -394,12 +393,8 @@ export function AppLayout() {
 	};
 
 	const handleUserMenuClose = () => {
-		if (isThemeModalOpen) return;
 		closeUserMenu();
 	};
-
-	const handleThemeModalOpen = () => setIsThemeModalOpen(true);
-	const handleThemeModalClose = () => setIsThemeModalOpen(false);
 
 	useEffect(() => {
 		if (!isMobile) return;
@@ -805,9 +800,6 @@ export function AppLayout() {
 
 	return (
 		<>
-			<Box display="none" aria-hidden="true">
-				<ThemeSelector minimal trigger="icon" />
-			</Box>
 			<Flex
 				minH="100vh"
 				maxH="100vh"
@@ -1154,14 +1146,8 @@ export function AppLayout() {
 											</Portal>
 										</Menu>
 
-										{/* Theme Selector */}
-										<ThemeSelector
-											trigger="menuItem"
-											triggerLabel={t("header.theme")}
-											portalContainer={userMenuContentRef}
-											onModalOpen={handleThemeModalOpen}
-											onModalClose={handleThemeModalClose}
-										/>
+							{/* Dark / light, the panel's only appearance setting */}
+							<ColorModeMenuItems />
 
 										{/* Logout */}
 										<MenuItem

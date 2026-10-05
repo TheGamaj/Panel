@@ -62,7 +62,7 @@ import {
 	verify2FA,
 } from "service/auth";
 import { clearClientSession } from "utils/session";
-import { updateThemeColor } from "utils/themeColor";
+import { applyColorMode, normalizeColorMode } from "utils/colorMode";
 import { z } from "zod";
 
 const schema = z.object({
@@ -87,10 +87,6 @@ const Lock = chakra(LockClosedIcon, {
 const Moon = chakra(MoonIcon, { baseStyle: { h: 4, w: 4 } });
 const Sun = chakra(SunIcon, { baseStyle: { h: 4, w: 4 } });
 const Check = chakra(CheckIcon, { baseStyle: { h: 4, w: 4 } });
-
-const THEME_KEY = "gm-theme";
-const CHAKRA_THEME_KEY = "chakra-ui-color-mode";
-const CUSTOM_THEMES_KEY = "gm-custom-themes";
 
 type LoginThemeMode = "dark" | "light";
 
@@ -181,33 +177,13 @@ const LoginField: FC<LoginFieldProps> = ({
 };
 
 const applyLoginThemeMode = (theme: LoginThemeMode) => {
-	try {
-		localStorage.setItem(THEME_KEY, theme);
-		localStorage.setItem(CHAKRA_THEME_KEY, theme);
-		localStorage.removeItem(CUSTOM_THEMES_KEY);
-	} catch {}
-
-	const targets = [document.documentElement, document.body].filter(
-		Boolean,
-	) as HTMLElement[];
-	targets.forEach((target) => {
-		target.classList.remove(
-			"gm-theme-light",
-			"gm-theme-dark",
-			"chakra-ui-light",
-			"chakra-ui-dark",
-		);
-		target.classList.add(`gm-theme-${theme}`, `chakra-ui-${theme}`);
-		target.dataset.theme = theme;
-		target.style.colorScheme = theme;
-	});
-	updateThemeColor(theme);
+	applyColorMode(theme);
 };
 
 const LoginThemeMenu: FC = () => {
 	const { t } = useTranslation();
 	const { colorMode, setColorMode } = useColorMode();
-	const activeTheme = colorMode === "light" ? "light" : "dark";
+	const activeTheme = normalizeColorMode(colorMode);
 	const menuBg = "panel.surface";
 	const menuBorder = "panel.border";
 	const hoverBg = "panel.elevated";
