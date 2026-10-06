@@ -169,16 +169,56 @@ func TestSalesTetraminatorVerify(t *testing.T) {
 	}
 }
 
-func TestBotSalesEndpointsAuthorization(t *testing.T) {
-	handler := func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+// TestBotRoutesAreRegistered proves the /api/bot surface is genuinely wired
+// into the router. Every handler above can exist while answering 404, which is
+// exactly what happened before: the whole file was unrouted. The previous
+// version of this test could not catch that, because it wrapped a stub handler
+// with requireAdmin and never touched the router at all.
+//
+// The server is deliberately bare: an anonymous request is rejected by
+// requireAdmin before any handler runs, so these assertions need no database.
+// If the routes are ever unregistered again the request falls through to the
+// subscription 404 handler, which panics on the nil database — still a hard
+// failure, just a noisier one.
+func TestBotRoutesAreRegistered(t *testing.T) {
+	handler := (&Server{}).Handler()
+
+	// Every sales route is authenticated by the bot's API key, so an anonymous
+	// request must be rejected as unauthorized — never as "not found". This
+	// stops before any database access, because credentials are resolved first.
+	salesRoutes := []struct {
+		method string
+		path   string
+	}{
+		{http.MethodGet, "/api/bot/plans"},
+		{http.MethodPost, "/api/bot/plans"},
+		{http.MethodPost, "/api/bot/plans/7/orders"},
+		{http.MethodGet, "/api/bot/orders"},
+		{http.MethodGet, "/api/bot/orders/order-1"},
+		{http.MethodPost, "/api/bot/orders/order-1/pay-wallet"},
+		{http.MethodPost, "/api/bot/orders/order-1/payment-link"},
+		{http.MethodPost, "/api/bot/orders/order-1/verify"},
+		{http.MethodGet, "/api/bot/wallet?telegram_id=1"},
+		{http.MethodGet, "/api/bot/service?telegram_id=1"},
 	}
-	server := &Server{}
-	// /bot routes exist and require authentication (no credentials => 401).
+	for _, route := range salesRoutes {
+		recorder := httptest.NewRecorder()
+		handler.ServeHTTP(recorder, httptest.NewRequest(route.method, route.path, nil))
+		if recorder.Code != http.StatusUnauthorized {
+			t.Errorf("%s %s status = %d, want 401: the route is missing or unguarded", route.method, route.path, recorder.Code)
+		}
+	}
+
+	// The gateway callback is unauthenticated on purpose: Tetraminator calls it
+	// back with no Gamaj credential. It only answers GET, so a POST settles the
+	// response without reaching the payment service.
 	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/api/bot/plans", nil)
-	server.requireAdmin(handler)(recorder, request)
-	if recorder.Code != http.StatusUnauthorized {
-		t.Fatalf("unauthenticated /bot/plans status = %d", recorder.Code)
+	handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodPost, "/api/bot/payment/callback", nil))
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Errorf("POST /api/bot/payment/callback status = %d, want 405", recorder.Code)
 	}
+
+	// The 401s above cannot pass by accident: requireAdmin is only reachable
+	// once the router has matched a route, and an unmatched path never produces
+	// 401 — it falls through to the 404 handler instead.
 }

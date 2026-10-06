@@ -89,6 +89,7 @@ func (s *Server) Handler() http.Handler {
 		s.registerPanelXrayRoutes(r)
 		s.registerSubscriptionRoutes(r)
 		s.registerNodeRoutes(r)
+		s.registerBotRoutes(r)
 	})
 
 	r.NotFound(s.handleHomeOrSubscriptionPath)
@@ -230,6 +231,20 @@ func (s *Server) registerPanelXrayRoutes(r chi.Router) {
 func (s *Server) registerSubscriptionRoutes(r chi.Router) {
 	r.HandleFunc("/v1/client/subscribe/*", s.handleSubscriptionPath)
 	r.HandleFunc("/v1/client/subscribe", s.handleSubscriptionPath)
+}
+
+// registerBotRoutes exposes the sales API used by Gamaj Bot and its web
+// management panel. Every route is authenticated by the bot's admin API key
+// (bearer token), except the gateway callback which Tetraminator calls back
+// without a Gamaj credential.
+func (s *Server) registerBotRoutes(r chi.Router) {
+	r.HandleFunc("/bot/plans", s.requireAdmin(s.handleBotPlans))
+	r.HandleFunc("/bot/plans/*", s.requireAdmin(s.handleBotPlansPath))
+	r.HandleFunc("/bot/orders", s.requireAdmin(s.handleBotOrders))
+	r.HandleFunc("/bot/orders/*", s.requireAdmin(s.handleBotOrdersPath))
+	r.HandleFunc("/bot/wallet", s.requireAdmin(s.handleBotWallet))
+	r.HandleFunc("/bot/service", s.requireAdmin(s.handleBotService))
+	r.HandleFunc("/bot/payment/callback", s.handleBotPaymentCallback)
 }
 
 func (s *Server) registerNodeRoutes(r chi.Router) {

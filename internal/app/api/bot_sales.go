@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -14,7 +13,6 @@ import (
 
 	adminapp "github.com/TheGamaj/Panel/internal/app/admin"
 	salesapp "github.com/TheGamaj/Panel/internal/app/sales"
-	settingsapp "github.com/TheGamaj/Panel/internal/app/settings"
 	userapp "github.com/TheGamaj/Panel/internal/app/user"
 )
 
@@ -441,6 +439,37 @@ func (s *Server) handleBotService(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, view)
 }
 
+// handleBotPlansPath dispatches POST /api/bot/plans/{plan_id}/orders.
+func (s *Server) handleBotPlansPath(w http.ResponseWriter, r *http.Request) {
+	rest := strings.Trim(strings.TrimPrefix(r.URL.Path, "/api/bot/plans/"), "/")
+	parts := strings.Split(rest, "/")
+	if len(parts) != 2 || parts[1] != "orders" {
+		writeError(w, http.StatusNotFound, "not found")
+		return
+	}
+	planID, err := strconv.ParseInt(parts[0], 10, 64)
+	if err != nil || planID <= 0 {
+		writeError(w, http.StatusNotFound, "not found")
+		return
+	}
+	s.handleBotPlanOrders(w, r, planID)
+}
+
+// handleBotOrdersPath dispatches GET /api/bot/orders/{id} and
+// POST /api/bot/orders/{id}/{action}.
+func (s *Server) handleBotOrdersPath(w http.ResponseWriter, r *http.Request) {
+	orderID, action, ok := botOrderIDFromPath(r.URL.Path, "/api/bot/orders/")
+	if !ok {
+		writeError(w, http.StatusNotFound, "not found")
+		return
+	}
+	if action == "" {
+		s.handleBotOrder(w, r, orderID)
+		return
+	}
+	s.handleBotOrderAction(w, r, orderID, action)
+}
+
 func botOrderIDFromPath(path, prefix string) (orderID, action string, ok bool) {
 	trimmed := strings.TrimPrefix(path, prefix)
 	parts := strings.Split(strings.Trim(trimmed, "/"), "/")
@@ -455,7 +484,3 @@ func botOrderIDFromPath(path, prefix string) (orderID, action string, ok bool) {
 	}
 	return "", "", false
 }
-
-var _ = sql.ErrNoRows
-var _ = strconv.FormatInt
-var _ = settingsapp.SalesSettings{}
