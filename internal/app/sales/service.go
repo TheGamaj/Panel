@@ -137,6 +137,199 @@ ORDER BY price`, adminID)
 	return plans, rows.Err()
 }
 
+// PlanRecord is a plan as its owner sees it in a management panel: the
+// sellable fields plus whether it is still on sale. Plans() deliberately
+// hides retired ones, because that is the buyer-facing list.
+type PlanRecord struct {
+	Plan
+	Visible bool `json:"visible"`
+}
+
+// PlanUpdate is a partial edit of a plan. A nil field is left untouched, so a
+// panel can change one price without having to resend every other field and
+// risk blanking it.
+type PlanUpdate struct {
+	Name         *string `json:"name"`
+	Description  *string `json:"description"`
+	Price        *int64  `json:"price"`
+	DurationDays *int64  `json:"duration_days"`
+	DataLimit    *int64  `json:"data_limit"`
+	IPLimit      *int64  `json:"ip_limit"`
+	ServiceID    *int64  `json:"service_id"`
+	Visible      *bool   `json:"visible"`
+}
+
+// rowScanner is satisfied by both *sql.Row and *sql.Rows.
+type rowScanner interface {
+	Scan(dest ...any) error
+}
+
+func scanPlanRecord(row rowScanner) (PlanRecord, error) {
+	var record PlanRecord
+	var visible int64
+	if err := row.Scan(
+		&record.ID, &record.Name, &record.Description, &record.Price,
+		&record.DurationDays, &record.DataLimit, &record.IPLimit,
+		&record.ServiceID, &visible,
+	); err != nil {
+		return PlanRecord{}, err
+	}
+	record.Visible = visible != 0
+	return record, nil
+}
+
+const planRecordColumns = `id, name, COALESCE(description, ''), price, duration_days,
+	data_limit_bytes, ip_limit, COALESCE(service_id, 0), visible`
+
+// ManagePlans lists every plan of a selling admin, retired ones included. A
+// plan taken off sale still has orders pointing at it and still has to be
+// editable, so the management view cannot use the buyer-facing list.
+func (s *Service) ManagePlans(ctx context.Context, adminID int64) ([]PlanRecord, error) {
+	rows, err := s.db.QueryContext(ctx, `
+SELECT `+planRecordColumns+`
+FROM sale_plans
+WHERE admin_id = ?
+ORDER BY visible DESC, price`, adminID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	plans := []PlanRecord{}
+	for rows.Next() {
+		record, err := scanPlanRecord(rows)
+		if err != nil {
+			return nil, err
+		}
+		plans = append(plans, record)
+	}
+	return plans, rows.Err()
+}
+
+// planRecord reads one plan scoped to its owner. The admin id is part of the
+// WHERE clause, not checked afterwards, so one reseller can never reach
+// another's plan even holding a valid plan id.
+func (s *Service) planRecord(ctx context.Context, adminID, planID int64) (PlanRecord, error) {
+	record, err := scanPlanRecord(s.db.QueryRowContext(ctx, `
+SELECT `+planRecordColumns+`
+FROM sale_plans WHERE id = ? AND admin_id = ?`, planID, adminID))
+	if errors.Is(err, sql.ErrNoRows) {
+		return PlanRecord{}, clientError(http.StatusNotFound, "plan not found")
+	}
+	if err != nil {
+		return PlanRecord{}, err
+	}
+	return record, nil
+}
+
+// UpdatePlan applies a partial edit and returns the stored result. It
+// validates the merged plan rather than the patch, so clearing the name or
+// setting the price to zero is rejected even when the other fields were not
+// part of the request.
+func (s *Service) UpdatePlan(ctx context.Context, adminID, planID int64, update PlanUpdate) (PlanRecord, error) {
+	current, err := s.planRecord(ctx, adminID, planID)
+	if err != nil {
+		return PlanRecord{}, err
+	}
+
+	merged := current.Plan
+	if update.Name != nil {
+		merged.Name = strings.TrimSpace(*update.Name)
+	}
+	if update.Description != nil {
+		merged.Description = strings.TrimSpace(*update.Description)
+	}
+	if update.Price != nil {
+		merged.Price = *update.Price
+	}
+	if update.DurationDays != nil {
+		merged.DurationDays = *update.DurationDays
+	}
+	if update.DataLimit != nil {
+		merged.DataLimit = *update.DataLimit
+	}
+	if update.IPLimit != nil {
+		merged.IPLimit = *update.IPLimit
+	}
+	if update.ServiceID != nil {
+		merged.ServiceID = *update.ServiceID
+	}
+	if merged.Name == "" {
+		return PlanRecord{}, clientError(http.StatusUnprocessableEntity, "name must not be empty")
+	}
+	if merged.Price <= 0 {
+		return PlanRecord{}, clientError(http.StatusUnprocessableEntity, "price must be positive")
+	}
+	if merged.ServiceID <= 0 {
+		return PlanRecord{}, clientError(http.StatusUnprocessableEntity, "service_id is required")
+	}
+
+	assignments := []string{}
+	args := []any{}
+	assign := func(column string, value any) {
+		assignments = append(assignments, column+" = ?")
+		args = append(args, value)
+	}
+	if update.Name != nil {
+		assign("name", merged.Name)
+	}
+	if update.Description != nil {
+		assign("description", merged.Description)
+	}
+	if update.Price != nil {
+		assign("price", merged.Price)
+	}
+	if update.DurationDays != nil {
+		assign("duration_days", merged.DurationDays)
+	}
+	if update.DataLimit != nil {
+		assign("data_limit_bytes", merged.DataLimit)
+	}
+	if update.IPLimit != nil {
+		assign("ip_limit", merged.IPLimit)
+	}
+	if update.ServiceID != nil {
+		assign("service_id", merged.ServiceID)
+	}
+	if update.Visible != nil {
+		visible := 0
+		if *update.Visible {
+			visible = 1
+		}
+		assign("visible", visible)
+	}
+
+	// An empty patch is a read, not an error: the panel may PUT the whole
+	// form and the form may carry nothing that changed.
+	if len(assignments) > 0 {
+		assignments = append(assignments, "updated_at = ?")
+		args = append(args, dbTimeString(nowPtr()), planID, adminID)
+		if _, err := s.db.ExecContext(ctx,
+			"UPDATE sale_plans SET "+strings.Join(assignments, ", ")+" WHERE id = ? AND admin_id = ?",
+			args...,
+		); err != nil {
+			return PlanRecord{}, err
+		}
+	}
+	return s.planRecord(ctx, adminID, planID)
+}
+
+// RetirePlan takes a plan off sale. It does not delete the row: the orders
+// table joins sale_plans by id, so a hard delete would make that plan's order
+// history vanish from the orders list as well. Retiring keeps the history and
+// keeps the plan editable, and the buyer-facing list already filters it out.
+func (s *Service) RetirePlan(ctx context.Context, adminID, planID int64) error {
+	// Existence is checked first rather than inferred from RowsAffected: on
+	// MySQL an update that changes nothing reports zero affected rows, so a
+	// plan that is already retired would otherwise read as missing.
+	if _, err := s.planRecord(ctx, adminID, planID); err != nil {
+		return err
+	}
+	_, err := s.db.ExecContext(ctx, `
+UPDATE sale_plans SET visible = 0, updated_at = ? WHERE id = ? AND admin_id = ?`,
+		dbTimeString(nowPtr()), planID, adminID)
+	return err
+}
+
 // CreateOrder opens a pending order for a buyer. Orders expire after 30
 // minutes if unpaid.
 func (s *Service) CreateOrder(ctx context.Context, adminID, planID int64, buyerTelegramID string) (Order, error) {

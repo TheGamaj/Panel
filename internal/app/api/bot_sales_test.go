@@ -169,6 +169,136 @@ func TestSalesTetraminatorVerify(t *testing.T) {
 	}
 }
 
+// TestSalesPlanManagement covers what a management panel does to a plan:
+// read them all including retired ones, edit one field without disturbing the
+// rest, retire one, and bring it back. Retiring is deliberately not a delete,
+// and the order history assertion is what pins that down.
+func TestSalesPlanManagement(t *testing.T) {
+	database, dialect := openSalesTestDB(t)
+	adminID, serviceID, planID := insertSalesFixtures(t, database)
+	service := salesapp.New(database, dialect, nil, nil)
+	ctx := context.Background()
+
+	// A plan belonging to another reseller must be unreachable even when the
+	// caller holds its id. Scoping has to happen in the query, not in a check
+	// after the read.
+	other, err := database.Exec(`INSERT INTO admins (username, hashed_password, role, permissions, status) VALUES ('other', 'x', 'full_access', '{}', 'active')`)
+	if err != nil {
+		t.Fatalf("seed other admin: %v", err)
+	}
+	otherAdminID, _ := other.LastInsertId()
+	otherInsert, err := database.Exec(`INSERT INTO sale_plans (admin_id, name, price, duration_days, data_limit_bytes, service_id, visible) VALUES (?, 'theirs', 5000, 30, 0, ?, 1)`, otherAdminID, serviceID)
+	if err != nil {
+		t.Fatalf("seed other plan: %v", err)
+	}
+	otherPlanID, _ := otherInsert.LastInsertId()
+
+	price := int64(150000)
+	if _, err := service.UpdatePlan(ctx, adminID, otherPlanID, salesapp.PlanUpdate{Price: &price}); err == nil {
+		t.Fatal("updated another reseller's plan")
+	}
+	if err := service.RetirePlan(ctx, adminID, otherPlanID); err == nil {
+		t.Fatal("retired another reseller's plan")
+	}
+
+	// A partial edit touches only what it names.
+	updated, err := service.UpdatePlan(ctx, adminID, planID, salesapp.PlanUpdate{Price: &price})
+	if err != nil {
+		t.Fatalf("update price: %v", err)
+	}
+	if updated.Price != 150000 {
+		t.Fatalf("price = %d, want 150000", updated.Price)
+	}
+	if updated.Name != "10GB" || updated.DurationDays != 30 || updated.DataLimit != 10737418240 || updated.ServiceID != serviceID {
+		t.Fatalf("a partial edit changed untouched fields: %+v", updated.Plan)
+	}
+	if !updated.Visible {
+		t.Fatal("a partial edit retired the plan")
+	}
+
+	// Validation runs against the merged plan, so a patch that only clears the
+	// name is still rejected.
+	blank := "   "
+	if _, err := service.UpdatePlan(ctx, adminID, planID, salesapp.PlanUpdate{Name: &blank}); err == nil {
+		t.Fatal("accepted a blank name")
+	}
+	zero := int64(0)
+	if _, err := service.UpdatePlan(ctx, adminID, planID, salesapp.PlanUpdate{Price: &zero}); err == nil {
+		t.Fatal("accepted a zero price")
+	}
+	if _, err := service.UpdatePlan(ctx, adminID, planID, salesapp.PlanUpdate{ServiceID: &zero}); err == nil {
+		t.Fatal("accepted service_id 0")
+	}
+	// The rejected patches must not have been written.
+	after, err := service.ManagePlans(ctx, adminID)
+	if err != nil || len(after) != 1 {
+		t.Fatalf("re-read plans: %d records, %v", len(after), err)
+	}
+	if after[0].Price != 150000 || after[0].Name != "10GB" || after[0].ServiceID != serviceID {
+		t.Fatalf("a rejected patch was written anyway: %+v", after[0].Plan)
+	}
+
+	// An order exists before the plan is retired, so the orders query keeps a
+	// join to the plans table. A hard delete would drop this history.
+	if _, err := service.CreateOrder(ctx, adminID, planID, "12345"); err != nil {
+		t.Fatalf("create order: %v", err)
+	}
+
+	if err := service.RetirePlan(ctx, adminID, planID); err != nil {
+		t.Fatalf("retire: %v", err)
+	}
+	// Retiring twice must not read as "not found": an update that changes
+	// nothing reports zero affected rows on MySQL, so existence is checked
+	// before the write rather than inferred from it.
+	if err := service.RetirePlan(ctx, adminID, planID); err != nil {
+		t.Fatalf("retire again: %v", err)
+	}
+
+	// The buyer-facing list hides it; the management list still shows it.
+	visible, err := service.Plans(ctx, adminID)
+	if err != nil {
+		t.Fatalf("plans: %v", err)
+	}
+	if len(visible) != 0 {
+		t.Fatalf("buyer list returned %d plans, want 0", len(visible))
+	}
+	managed, err := service.ManagePlans(ctx, adminID)
+	if err != nil {
+		t.Fatalf("manage plans: %v", err)
+	}
+	if len(managed) != 1 || managed[0].ID != planID || managed[0].Visible {
+		t.Fatalf("management list = %+v, want the one retired plan", managed)
+	}
+	for _, record := range managed {
+		if record.ID == otherPlanID {
+			t.Fatal("management list leaked another reseller's plan")
+		}
+	}
+
+	// The order history survived the retirement.
+	orders, err := service.Orders(ctx, adminID, 0)
+	if err != nil {
+		t.Fatalf("orders: %v", err)
+	}
+	if len(orders) != 1 || orders[0].PlanName != "10GB" {
+		t.Fatalf("orders = %+v, want the order kept with its plan name", orders)
+	}
+
+	// And a retired plan can be put back on sale.
+	on := true
+	restored, err := service.UpdatePlan(ctx, adminID, planID, salesapp.PlanUpdate{Visible: &on})
+	if err != nil {
+		t.Fatalf("restore: %v", err)
+	}
+	if !restored.Visible {
+		t.Fatal("plan did not come back on sale")
+	}
+	visible, err = service.Plans(ctx, adminID)
+	if err != nil || len(visible) != 1 {
+		t.Fatalf("buyer list after restore = %d plans, %v", len(visible), err)
+	}
+}
+
 // TestBotRoutesAreRegistered proves the /api/bot surface is genuinely wired
 // into the router. Every handler above can exist while answering 404, which is
 // exactly what happened before: the whole file was unrouted. The previous
@@ -192,6 +322,9 @@ func TestBotRoutesAreRegistered(t *testing.T) {
 	}{
 		{http.MethodGet, "/api/bot/plans"},
 		{http.MethodPost, "/api/bot/plans"},
+		{http.MethodPut, "/api/bot/plans/7"},
+		{http.MethodPatch, "/api/bot/plans/7"},
+		{http.MethodDelete, "/api/bot/plans/7"},
 		{http.MethodPost, "/api/bot/plans/7/orders"},
 		{http.MethodGet, "/api/bot/orders"},
 		{http.MethodGet, "/api/bot/orders/order-1"},

@@ -146,6 +146,18 @@ func (s *Server) handleBotPlans(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case http.MethodGet:
+		// The buyer-facing list hides retired plans. A management panel has
+		// to see them too - a hidden plan still has orders pointing at it and
+		// still has to be editable - so it asks for them explicitly.
+		if isTruthy(r.URL.Query().Get("include_hidden")) {
+			plans, err := s.botSalesService().ManagePlans(r.Context(), admin.ID)
+			if err != nil {
+				writeBotError(w, err)
+				return
+			}
+			writeJSON(w, http.StatusOK, plans)
+			return
+		}
 		plans, err := s.botSalesService().Plans(r.Context(), admin.ID)
 		if err != nil {
 			writeBotError(w, err)
@@ -439,11 +451,64 @@ func (s *Server) handleBotService(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, view)
 }
 
-// handleBotPlansPath dispatches POST /api/bot/plans/{plan_id}/orders.
+// isTruthy parses the loose booleans a query string can carry.
+func isTruthy(raw string) bool {
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "1", "true", "yes", "on":
+		return true
+	}
+	return false
+}
+
+// handleBotPlanUpdate applies a partial edit to one of the selling admin's
+// plans. PUT and PATCH are both accepted: the payload is a partial either way,
+// so the distinction carries no meaning here.
+func (s *Server) handleBotPlanUpdate(w http.ResponseWriter, r *http.Request, planID int64) {
+	admin, err := s.botSalesPrincipal(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, err.Error())
+		return
+	}
+	var payload salesapp.PlanUpdate
+	if err := decodeBotJSON(r, &payload); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	record, err := s.botSalesService().UpdatePlan(r.Context(), admin.ID, planID, payload)
+	if err != nil {
+		writeBotError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, record)
+}
+
+// handleBotPlanRetire takes a plan off sale. It answers 200 with the plan's
+// new state rather than 204, because a management panel that refreshes after
+// saving wants the record back.
+func (s *Server) handleBotPlanRetire(w http.ResponseWriter, r *http.Request, planID int64) {
+	admin, err := s.botSalesPrincipal(r)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, err.Error())
+		return
+	}
+	if err := s.botSalesService().RetirePlan(r.Context(), admin.ID, planID); err != nil {
+		writeBotError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"id": planID, "visible": false})
+}
+
+// handleBotPlansPath dispatches the management routes under a plan:
+// POST /api/bot/plans/{id}/orders, PUT|PATCH /api/bot/plans/{id} and
+// DELETE /api/bot/plans/{id}.
+//
+// PUT and DELETE are not simple methods, so a cross-origin page cannot reach
+// them from a form, and the panel serves no CORS headers that would let
+// fetch() send one. The bearer key the bot proxies stays the only credential.
 func (s *Server) handleBotPlansPath(w http.ResponseWriter, r *http.Request) {
 	rest := strings.Trim(strings.TrimPrefix(r.URL.Path, "/api/bot/plans/"), "/")
 	parts := strings.Split(rest, "/")
-	if len(parts) != 2 || parts[1] != "orders" {
+	if len(parts) == 0 || parts[0] == "" || len(parts) > 2 {
 		writeError(w, http.StatusNotFound, "not found")
 		return
 	}
@@ -452,7 +517,22 @@ func (s *Server) handleBotPlansPath(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, "not found")
 		return
 	}
-	s.handleBotPlanOrders(w, r, planID)
+	if len(parts) == 2 {
+		if parts[1] != "orders" {
+			writeError(w, http.StatusNotFound, "not found")
+			return
+		}
+		s.handleBotPlanOrders(w, r, planID)
+		return
+	}
+	switch r.Method {
+	case http.MethodPut, http.MethodPatch:
+		s.handleBotPlanUpdate(w, r, planID)
+	case http.MethodDelete:
+		s.handleBotPlanRetire(w, r, planID)
+	default:
+		writeError(w, http.StatusMethodNotAllowed, "method not allowed")
+	}
 }
 
 // handleBotOrdersPath dispatches GET /api/bot/orders/{id} and

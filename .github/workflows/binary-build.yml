@@ -80,11 +80,12 @@ jobs:
       # reseller_settings and usage_coefficient), a test that writes to
       # /var/lib/gamaj, and a nil-database panic in the outbound traffic test.
       # That is why the package was never part of this workflow at all. The
-      # routing test below is self-contained, and it is the one that matters
-      # here: the bot sales API once shipped completely unrouted while every
-      # suite in this workflow stayed green.
-      - name: Test bot API routing
-        run: go test ./internal/app/api/ -run 'TestBotRoutesAreRegistered' -v
+      # tests below are self-contained - each builds its own SQLite database
+      # from the real migrations in a temp dir - and they are the ones that
+      # matter here: the bot sales API once shipped completely unrouted while
+      # every suite in this workflow stayed green.
+      - name: Test bot sales API
+        run: go test ./internal/app/api/ -run 'TestBotRoutesAreRegistered|TestSales' -v
 
       - name: Environment naming guard
         run: go test ./internal/platform/envguard/
