@@ -9,7 +9,13 @@ name: Brand Guard
 # The guard is a vendored copy of Web/tools/check-brand-geometry.cjs. It runs
 # here rather than in the docs repository because this repository has a remote
 # and the docs repository does not, and because CI cannot check a repository it
-# cannot see. GAMAJ_PALETTE_DIRS limits it to the surfaces this repository owns.
+# cannot see. GAMAJ_PALETTE_DIRS and GAMAJ_LOGO_DIRS limit it to the surfaces
+# this repository owns.
+#
+# The logo rule matters here because a colour guard cannot see a mark. A panel
+# once shipped an invented mascot drawn in exactly the right palette; nothing
+# about it was off-colour, so the palette check passed and the wrong logo went
+# out. The geometry check compares every mark against the canonical symbol.
 
 on:
   push:
@@ -33,6 +39,7 @@ jobs:
     env:
       GAMAJ_BRAND_ROOT: .
       GAMAJ_PALETTE_DIRS: dashboard/src,dashboard/public,templates/subscription/index.html
+      GAMAJ_LOGO_DIRS: dashboard/src,templates/subscription
 
     steps:
       - name: Checkout
@@ -43,5 +50,5 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Check palette and retired branding
+      - name: Check palette, retired branding and logo geometry
         run: node tools/check-brand-geometry.cjs
