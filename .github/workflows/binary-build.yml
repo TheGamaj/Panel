@@ -72,8 +72,11 @@ jobs:
       - name: Build dashboard
         run: bash scripts/build_dashboard.sh
 
+      # internal/app/api is listed deliberately: it holds the route wiring
+      # tests, and the bot sales API once shipped completely unrouted while
+      # every suite here stayed green.
       - name: Test Go
-        run: go test ./internal/app/admin ./internal/app/backup ./internal/app/migrations
+        run: go test ./internal/app/admin ./internal/app/backup ./internal/app/migrations ./internal/app/api
 
       - name: Environment naming guard
         run: go test ./internal/platform/envguard/
