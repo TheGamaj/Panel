@@ -470,19 +470,6 @@ func (s *Server) handleUsersBulkAction(w http.ResponseWriter, r *http.Request) {
 	s.handleBulkUsersAction(w, r, nil)
 }
 
-func (s *Server) handleServiceUsersActionPath(w http.ResponseWriter, r *http.Request) {
-	serviceID, ok := parseServiceUsersActionPath(r.URL.Path)
-	if !ok {
-		writeError(w, http.StatusNotFound, "not found")
-		return
-	}
-	if r.Method != http.MethodPost {
-		writeError(w, http.StatusMethodNotAllowed, "method not allowed")
-		return
-	}
-	s.handleBulkUsersAction(w, r, &serviceID)
-}
-
 func (s *Server) handleBulkUsersAction(w http.ResponseWriter, r *http.Request, serviceRouteID *int64) {
 	principal, ok := r.Context().Value(adminContextKey).(adminPrincipal)
 	if !ok {

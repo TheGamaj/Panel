@@ -110,6 +110,11 @@ func (s *Server) registerAdminRoutes(r chi.Router) {
 	r.HandleFunc("/admin/permissions/standard/bulk", s.requireAdmin(s.handleBulkStandardPermissions))
 	r.HandleFunc("/admin/usage/reset/*", s.requireAdmin(s.handleAdminUsageResetPath))
 	r.HandleFunc("/admin/usage/*", s.requireAdmin(s.handleAdminUsageValuePath))
+	// The reseller wallet of a single admin. This handler existed from the
+	// first import and was never registered, so /api/admin/wallet answered 404
+	// for every caller. It is registered ahead of the /admin/* wildcard below,
+	// which is what chi requires for the more specific pattern to win.
+	r.HandleFunc("/admin/wallet/*", s.requireAdmin(s.handleAdminWalletRoot))
 	r.HandleFunc("/admin/*", s.requireAdmin(s.handleAdminMutationPath))
 	r.HandleFunc("/admin", s.requireAdmin(s.handleAdminRoot))
 	r.HandleFunc("/admins", s.requireAdmin(s.handleAdminsList))

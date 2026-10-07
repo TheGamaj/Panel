@@ -75,6 +75,14 @@ jobs:
       - name: Test Go
         run: go test ./internal/app/admin ./internal/app/backup ./internal/app/migrations
 
+      # The Go compiler accepts a method nobody calls, so a handler can be
+      # written, reviewed and unit-tested in isolation and still be absent from
+      # the router - which is how the whole bot sales API once answered 404
+      # while every other job stayed green. This reads the package and fails on
+      # any handler no non-test code references.
+      - name: Guard against unrouted handlers
+        run: go test ./internal/platform/routeguard/ -v
+
       # internal/app/api cannot run wholesale: it carries pre-existing failures
       # in stale hand-built schema fixtures (missing columns such as
       # reseller_settings and usage_coefficient), a test that writes to
