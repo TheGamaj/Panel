@@ -203,6 +203,14 @@
             width: auto;
         }
 
+        /* The author line, the last element on the page. */
+        .rb-footer {
+            text-align: center;
+            color: var(--rb-panel-text-muted);
+            font-size: 12px;
+            padding: 28px 0 16px;
+        }
+
         .rb-shell {
             width: min(1220px, calc(100% - 24px));
             margin: 0 auto;
@@ -4028,5 +4036,8 @@
             applyLanguage(state.language);
         })();
     </script>
+<!-- The author line, the last element in the body. The modal and toast
+         above are fixed overlays and take no part in the flow. -->
+    <footer class="rb-footer">Coded by AsliCode</footer>
 </body>
 </html>
